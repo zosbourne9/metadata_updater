@@ -1,0 +1,51 @@
+# -*- mode: python ; coding: utf-8 -*-
+
+
+a = Analysis(
+    ['main.py'],
+    pathex=[],
+    binaries=[],
+    datas=[
+        ('categorized_genres.json', '.'), 
+        ('genre_characteristics.json', '.'),
+        ('model_cache/', 'model_cache/'),
+        ('hf_llm_config.json', '.'),
+        ('hf_requirements.txt', '.')
+    ],
+    hiddenimports=[],
+    hookspath=[],
+    hooksconfig={},
+    runtime_hooks=[],
+    excludes=[],
+    noarchive=False,
+    optimize=0,
+)
+pyz = PYZ(a.pure)
+
+exe = EXE(
+    pyz,
+    a.scripts,
+    a.binaries,
+    a.datas,
+    [],
+    name='Metadata Updater',
+    debug=False,
+    bootloader_ignore_signals=False,
+    strip=False,
+    upx=True,
+    upx_exclude=[],
+    runtime_tmpdir=None,
+    console=False,
+    disable_windowed_traceback=False,
+    argv_emulation=False,
+    target_arch=None,
+    codesign_identity=None,
+    entitlements_file=None,
+    icon=['icon.icns'],
+)
+app = BUNDLE(
+    exe,
+    name='Metadata Updater.app',
+    icon='icon.icns',
+    bundle_identifier=None,
+)

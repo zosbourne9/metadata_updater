@@ -1,0 +1,40 @@
+# Metadata Updater - pywebview Requirements
+# Dependencies for the modern web-based UI using pywebview
+
+# Core web UI framework
+pywebview>=5.1
+
+# Audio file handling
+mutagen>=1.46.0
+
+# API clients
+requests>=2.31.0
+spotipy>=2.22.0
+musicbrainzngs>=0.7.1
+httpx>=0.24.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+openai>=1.0.0
+fuzzywuzzy>=0.18.0
+python-Levenshtein>=0.21.0
+
+# Data processing
+urllib3>=2.0
+certifi>=2023.7.22
+
+# LLM/AI Integration
+transformers>=4.30.0
+huggingface-hub>=0.16.0
+torch>=2.0.0; sys_platform == 'darwin'
+torch>=2.0.0; sys_platform == 'linux'
+torch>=2.0.0; sys_platform == 'win32'
+
+# Caching
+requests-cache>=1.0.0
+
+# Configuration
+python-dotenv>=1.0.0
+
+# Optional: For better performance
+numpy>=1.24.0
+scipy>=1.10.0

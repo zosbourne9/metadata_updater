@@ -1,0 +1,34 @@
+2025-10-31 09:51:32,179 - INFO - Debug logging enabled - logs will be written to: /Users/djzrex/Documents/GitHub/metadata_updater/metadata_updater_debug.txt
+2025-10-31 09:51:32,179 - INFO - Initializing Metadata Updater (pywebview)...
+2025-10-31 09:51:32,180 - INFO - Initializing MetadataUpdater (webview)...
+2025-10-31 09:51:32,180 - INFO - Starting cache initialization...
+2025-10-31 09:51:32,180 - INFO - Cache manager initialized
+2025-10-31 09:51:32,180 - INFO - Initializing core components...
+2025-10-31 09:51:32,207 - INFO - Core components initialized
+2025-10-31 09:51:32,207 - INFO - Initializing API clients...
+2025-10-31 09:51:32,207 - INFO - Simplified MusicBrainz integration initialized
+2025-10-31 09:51:32,207 - INFO - Error in get_resource_path: Resource not found: spotify_credentials.json
+2025-10-31 09:51:32,207 - INFO - Error loading Spotify credentials: Resource not found: spotify_credentials.json
+2025-10-31 09:51:32,207 - INFO - Simplified Spotify integration initialized
+2025-10-31 09:51:32,207 - INFO - Simplified metadata searcher initialized
+2025-10-31 09:51:32,207 - INFO - ✅ Simplified metadata integration loaded
+2025-10-31 09:51:32,207 - INFO - Simplified integration initialized
+2025-10-31 09:51:32,233 - INFO - Loading genre characteristics in EnhancedGenreDetector from: /Users/djzrex/Documents/GitHub/metadata_updater/genre_characteristics.json
+2025-10-31 09:51:32,233 - INFO - Loading genre characteristics from: /Users/djzrex/Documents/GitHub/metadata_updater/genre_characteristics.json
+2025-10-31 09:51:32,233 - INFO - Cleared genre cache
+2025-10-31 09:51:32,233 - INFO - Genre finder initialized
+2025-10-31 09:51:32,233 - INFO - Setting up license manager...
+2025-10-31 09:51:32,233 - INFO - Valid license loaded successfully
+2025-10-31 09:51:32,233 - INFO - Initializing state variables...
+2025-10-31 09:51:32,234 - INFO - State variables initialized
+2025-10-31 09:51:32,234 - INFO - MetadataUpdater initialization complete!
+2025-10-31 09:51:32,234 - INFO - View not set; deferring drag-and-drop setup
+2025-10-31 09:51:32,234 - INFO - Loading HTML from: /Users/djzrex/Documents/GitHub/metadata_updater/index.html
+2025-10-31 09:51:32,234 - INFO - Creating webview window...
+2025-10-31 09:51:32,234 - INFO - Starting webview...
+2025-10-31 09:51:32,676 - ERROR - /Users/djzrex/Documents/GitHub/metadata_updater/.venv/lib/python3.12/site-packages/httpx/_urls.py:408: UserWarning: URL.raw is deprecated.
+  warnings.warn("URL.raw is deprecated.")
+2025-10-31 09:51:32,690 - INFO - Drag-and-drop handler registered successfully
+2025-10-31 09:51:32,709 - ERROR - /Users/djzrex/Documents/GitHub/metadata_updater/.venv/lib/python3.12/site-packages/httpx/_urls.py:408: UserWarning: URL.raw is deprecated.
+  warnings.warn("URL.raw is deprecated.")
+2025-10-31 09:51:32,726 - INFO - Drag-and-drop handler registered successfully

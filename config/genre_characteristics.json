@@ -1,0 +1,644 @@
+{
+    "Afrobeats": {
+        "bpm_range": [80, 130],
+        "related_terms": [
+            "afrobeats",
+            "afrobeat",
+            "afro pop",
+            "afro fusion"
+        ],
+        "subgenres": [
+            "Afrobeats",
+            "Afro Pop",
+            "Afro Fusion"
+        ]
+    },
+    "R&B": {
+        "bpm_range": [50, 100],
+        "related_terms": [
+            "r&b",
+            "rnb",
+            "contemporary r&b",
+            "urban contemporary",
+            "soul",
+            "neo soul",
+            "rhythm and blues",
+            "post-disco"
+        ],
+        "subgenres": [
+            "Alternative R&B",
+            "Deep Alternative R&B",
+            "Indie R&B",
+            "Japanese R&B",
+            "New Jack Swing",
+            "R&B",
+            "Neo Soul",
+            "Smooth Urban R&B",
+            "Post-disco"
+        ]
+    },
+    "Hip-Hop": {
+        "bpm_range": [80, 160],
+        "related_terms": [
+            "hip hop",
+            "rap",
+            "hip-hop",
+            "trap",
+            "urban",
+            "boom bap"
+        ],
+        "subgenres": [
+            "Abstract Hip Hop",
+            "Alternative Hip Hop",
+            "Australian Hip Hop",
+            "Austrian Hip Hop",
+            "Bay Area Hip Hop",
+            "Beats & Rhymes",
+            "Brazilian Hip Hop",
+            "Canadian Hip Hop",
+            "Chicano Rap",
+            "Chip Hop",
+            "Christian Hip Hop",
+            "Crunk",
+            "Danish Hip Hop",
+            "Deep East Coast Hip Hop",
+            "Deep G Funk",
+            "Deep Trap",
+            "Detroit Hip Hop",
+            "Dirty South Rap",
+            "Dirty Texas Rap",
+            "East Coast Hip Hop",
+            "Finnish Hip Hop",
+            "French Hip Hop",
+            "G Funk",
+            "Gangster Rap",
+            "German Hip Hop",
+            "Greek Hip Hop",
+            "Hardcore Hip Hop",
+            "Hip Hop",
+            "Hip Hop Quebecois",
+            "Hip Hop Tuga",
+            "Hungarian Hip Hop",
+            "Italian Hip Hop",
+            "J-rap",
+            "Latin Hip Hop",
+            "Memphis Hip Hop",
+            "Norwegian Hip Hop",
+            "Old School Hip Hop",
+            "Outer Hip Hop",
+            "Polish Hip Hop",
+            "Pop Rap",
+            "Rap",
+            "Southern Hip Hop",
+            "Spanish Hip Hop",
+            "Swedish Hip Hop",
+            "Swiss Hip Hop",
+            "Trap Music",
+            "Trap",
+            "Turkish Hip Hop",
+            "Uk Hip Hop",
+            "Underground Hip Hop",
+            "Underground Latin Hip Hop",
+            "Underground Pop Rap",
+            "Underground Rap",
+            "Viral Trap",
+            "West Coast Rap"
+        ]
+    },
+    "Soul": {
+        "bpm_range": [60, 100],
+        "year_range": [1950, 1979],
+        "modern_alternative": "R&B",
+        "related_terms": [
+            "soul",
+            "southern soul",
+            "deep soul",
+            "memphis soul"
+        ],
+        "subgenres": [
+            "Chicago Soul",
+            "Deep Northern Soul",
+            "Deep Soul House",
+            "Deep Southern Soul",
+            "Memphis Soul",
+            "Neo Soul-jazz",
+            "Northern Soul",
+            "Post-disco Soul",
+            "Soul",
+            "Soul Blues",
+            "Soul Christmas",
+            "Soul Flow",
+            "Soul Jazz",
+            "Southern Soul",
+            "Southern Soul Blues",
+            "Traditional Soul"
+        ]
+    },
+    "Pop": {
+        "bpm_range": [115, 130],
+        "related_terms": [
+            "pop",
+            "dance pop",
+            "urban pop",
+            "euro pop",
+            "synth pop",
+            "electropop"
+        ],
+        "subgenres": [
+            "Acoustic Pop",
+            "Alternative Pop",
+            "Dance Pop",
+            "Deep Dance Pop",
+            "Deep Pop Emo",
+            "Deep Pop Punk",
+            "Electropowerpop",
+            "Europop",
+            "Indie Pop",
+            "K-pop",
+            "Latin Pop",
+            "Pop",
+            "Pop Christmas",
+            "Pop Emo",
+            "Pop House",
+            "Pop Punk",
+            "Pop Rock",
+            "Power Pop",
+            "Synthpop",
+            "Teen Pop",
+            "Viral Pop"
+        ]
+    },
+    "Dance": {
+        "bpm_range": [120, 130],
+        "related_terms": [
+            "dance",
+            "edm",
+            "club",
+            "electronic dance",
+            "house"
+        ],
+        "subgenres": [
+            "Alternative Dance",
+            "Australian Dance",
+            "Bubblegum Dance",
+            "Christian Dance",
+            "Dance Rock",
+            "Dance-punk",
+            "Deep Eurodance",
+            "Eurodance",
+            "Intelligent Dance Music",
+            "Italo Dance",
+            "J-dance"
+        ]
+    },
+    "House": {
+        "bpm_range": [120, 130],
+        "related_terms": [
+            "house",
+            "deep house",
+            "tech house",
+            "progressive house"
+        ],
+        "subgenres": [
+            "Acid House",
+            "Chicago House",
+            "Deep House",
+            "Deep Tech House",
+            "Disco House",
+            "Electro House",
+            "Filter House",
+            "House",
+            "Progressive House",
+            "Tech House",
+            "Tribal House",
+            "Vocal House"
+        ]
+    },
+    "Funk": {
+        "bpm_range": [90, 120],
+        "year_range": [1965, 1979],
+        "modern_alternative": "R&B",
+        "related_terms": [
+            "funk",
+            "p-funk",
+            "funk soul",
+            "funky"
+        ],
+        "subgenres": [
+            "Deep Funk",
+            "Funk",
+            "Funk Metal",
+            "P Funk",
+            "Traditional Funk"
+        ]
+    },
+    "Disco": {
+        "bpm_range": [115, 125],
+        "year_range": [1974, 1982],
+        "modern_alternative": "Dance",
+        "related_terms": [
+            "disco",
+            "nu disco",
+            "disco house",
+            "classic disco"
+        ],
+        "subgenres": [
+            "Deep Disco",
+            "Disco",
+            "Italian Disco",
+            "Nu Disco",
+            "Post-disco"
+        ]
+    },
+    "Reggae": {
+        "bpm_range": [60, 90],
+        "related_terms": [
+            "reggae",
+            "roots reggae", 
+            "dub",
+            "ska",
+            "ragga",
+            "riddim",
+            "lovers rock"
+        ],
+        "subgenres": [
+            "Argentine Reggae",
+            "French Reggae",
+            "Polish Reggae",
+            "Reggae",
+            "Reggae Fusion",
+            "Reggae Rock",
+            "Rocksteady",
+            "Ska",
+            "Dub",
+            "Lovers Rock",
+            "Roots Reggae",
+            "Spanish Reggae",
+            "Swedish Reggae",
+            "Traditional Reggae",
+            "Vintage Reggae",
+            "Ragga",
+            "Riddim"
+        ]
+    },
+    "Dancehall": {
+        "bpm_range": [90, 110],
+        "related_terms": [
+            "dancehall",
+            "ragga",
+            "riddim",
+            "bashment"
+        ],
+        "subgenres": [
+            "Dancehall",
+            "Ragga",
+            "Riddim"
+        ]
+    },
+    "Amapiano": {
+        "bpm_range": [115, 125],
+        "related_terms": [
+            "amapiano",
+            "south african house",
+            "african electronic"
+        ],
+        "subgenres": []
+    },
+    "Soca": {
+            "bpm_range": [130, 135],
+            "related_terms": [
+                "soca",
+                "calypso soca",
+                "caribbean",
+                "power soca",
+                "groovy soca",
+                "chutney soca",
+                "bouyon soca",
+                "ragga soca",
+                "parang soca",
+                "jump and wave",
+                "trinidadian soca",
+                "carnival soca",
+                "rapso"
+            ],
+            "subgenres": [
+                "Power Soca",
+                "Groovy Soca",
+                "Chutney Soca",
+                "Bouyon Soca",
+                "Ragga Soca",
+                "Parang Soca",
+                "Soca"
+            ],
+            "regional_variations": [
+                "Trinidadian Soca",
+                "Bajan Soca",
+                "Grenadian Soca",
+                "Vincy Soca",
+                "Lucian Soca"
+            ],
+            "typical_tempos": {
+                "Power Soca": [135, 155],
+                "Groovy Soca": [124, 134],
+                "Chutney Soca": [130, 140],
+                "Bouyon Soca": [130, 140],
+                "Ragga Soca": [130, 140],
+                "Bashment Soca": [100, 120]
+            }
+    },
+    "Bassline": {
+        "bpm_range": [135, 142],
+        "related_terms": [
+            "bassline",
+            "uk bassline",
+            "speed garage"
+        ],
+        "subgenres": [
+            "Bassline"
+        ]
+    },
+    "Drum & Bass": {
+        "bpm_range": [160, 180],
+        "related_terms": [
+            "drum and bass",
+            "dnb",
+            "jungle",
+            "liquid"
+        ],
+        "subgenres": [
+            "Drum And Bass"
+        ]
+    },
+    "Garage": {
+        "bpm_range": [130, 135],
+        "related_terms": [
+            "uk garage",
+            "2-step",
+            "ukg",
+            "garage music"
+        ],
+        "subgenres": [
+            "Classic Garage Rock",
+            "Deep Classic Garage Rock",
+            "Future Garage",
+            "Garage Punk",
+            "Garage Punk Blues",
+            "Garage Rock",
+            "Speed Garage",
+            "Uk Garage"
+        ]
+    },
+    "Gospel": {
+        "bpm_range": [70, 120],
+        "related_terms": [
+            "gospel",
+            "christian gospel",
+            "traditional gospel",
+            "contemporary gospel"
+        ],
+        "subgenres": [
+            "Brazilian Gospel",
+            "Country Gospel",
+            "Gospel",
+            "Gospel Blues",
+            "Gospel Reggae",
+            "Norwegian Gospel",
+            "Southern Gospel",
+            "Vintage Gospel"
+        ]
+    },
+    "Jungle": {
+        "bpm_range": [160, 180],
+        "related_terms": [
+            "jungle",
+            "ragga jungle",
+            "oldschool jungle"
+        ],
+        "subgenres": [
+            "Jungle",
+            "Ragga Jungle"
+        ]
+    },
+    "Latin": {
+        "bpm_range": [90, 130],
+        "related_terms": [
+            "latin",
+            "latino",
+            "latin pop",
+            "reggaeton",
+            "latin urban"
+        ],
+        "subgenres": [
+            "Bachata",
+            "Deep Latin Alternative",
+            "Electro Latino",
+            "Latin",
+            "Latin Alternative",
+            "Latin Christian",
+            "Latin Christmas",
+            "Latin Electronica",
+            "Latin Jazz",
+            "Latin Metal",
+            "Salsa",
+            "Salsa International"
+        ]
+    },
+    "Rock": {
+        "bpm_range": [110, 140],
+        "related_terms": [
+            "rock",
+            "alternative rock",
+            "indie rock",
+            "hard rock",
+            "classic rock"
+        ],
+        "subgenres": [
+            "African Rock",
+            "Album Rock",
+            "Alternative Rock",
+            "Art Rock",
+            "Classic Rock",
+            "Folk Rock",
+            "Garage Rock",
+            "Hard Rock",
+            "Indie Rock",
+            "Progressive Rock",
+            "Psychedelic Rock",
+            "Punk Rock",
+            "Rock",
+            "Rock-and-roll",
+            "Soft Rock",
+            "Southern Rock"
+        ]
+    },
+    "Motown": {
+        "bpm_range": [90, 110],
+        "year_range": [1959, 1982],
+        "modern_alternative": "R&B",
+        "related_terms": [
+            "motown",
+            "motown soul",
+            "classic motown"
+        ],
+        "subgenres": [
+            "Deep Motown",
+            "Motown"
+        ]
+    },
+    "Jazz": {
+        "bpm_range": [80, 140],
+        "related_terms": [
+            "jazz",
+            "contemporary jazz",
+            "smooth jazz",
+            "jazz fusion",
+            "bebop"
+        ],
+        "subgenres": [
+            "Acid Jazz",
+            "Avant-garde Jazz",
+            "Big Band",
+            "Bebop",
+            "Contemporary Jazz",
+            "Cool Jazz",
+            "Free Jazz",
+            "Jazz",
+            "Jazz Fusion",
+            "Smooth Jazz",
+            "Vocal Jazz"
+        ]
+    },
+    "Folk": {
+        "bpm_range": [60, 110],
+        "related_terms": [
+            "folk",
+            "traditional folk",
+            "contemporary folk",
+            "folk rock"
+        ],
+        "subgenres": [
+            "Contemporary Folk",
+            "Folk",
+            "Folk Christmas",
+            "Folk Metal",
+            "Folk Punk",
+            "Folk Rock",
+            "Traditional Folk"
+        ]
+    },
+    "Blues": {
+        "bpm_range": [60, 100],
+        "related_terms": [
+            "blues",
+            "delta blues",
+            "chicago blues",
+            "electric blues"
+        ],
+        "subgenres": [
+            "Acoustic Blues",
+            "Blues",
+            "Chicago Blues",
+            "Delta Blues",
+            "Electric Blues",
+            "Modern Blues",
+            "Traditional Blues"
+        ]
+    },
+    "Punk": {
+        "bpm_range": [150, 180],
+        "related_terms": [
+            "punk",
+            "punk rock",
+            "hardcore punk",
+            "pop punk"
+        ],
+        "subgenres": [
+            "Folk Punk",
+            "Hardcore Punk",
+            "Pop Punk",
+            "Punk",
+            "Punk Christmas",
+            "Punk Rock"
+        ]
+    },
+    "Metal": {
+        "bpm_range": [100, 160],
+        "related_terms": [
+            "metal",
+            "heavy metal",
+            "black metal",
+            "death metal",
+            "thrash metal"
+        ],
+        "subgenres": [
+            "Alternative Metal",
+            "Black Metal",
+            "Death Metal",
+            "Doom Metal",
+            "Heavy Metal",
+            "Metal",
+            "Power Metal",
+            "Thrash Metal"
+        ]
+    },
+    "Trance": {
+        "bpm_range": [130, 150],
+        "related_terms": [
+            "trance",
+            "progressive trance",
+            "uplifting trance",
+            "psychedelic trance"
+        ],
+        "subgenres": [
+            "Ambient Trance",
+            "Progressive Trance",
+            "Psychedelic Trance",
+            "Trance",
+            "Uplifting Trance"
+        ]
+    },
+    "Lounge": {
+        "bpm_range": [70, 120],
+        "related_terms": [
+            "lounge",
+            "chill lounge",
+            "lounge music",
+            "easy listening"
+        ],
+        "subgenres": [
+            "Chill Lounge",
+            "Deep Sunset Lounge",
+            "Lounge",
+            "Sunset Lounge"
+        ]
+    },
+    "Country": {
+        "bpm_range": [70, 120],
+        "related_terms": [
+            "country",
+            "contemporary country",
+            "country pop",
+            "traditional country"
+        ],
+        "subgenres": [
+            "Alternative Country",
+            "Contemporary Country",
+            "Country",
+            "Country Christmas",
+            "Country Dawn",
+            "Country Road",
+            "Traditional Country"
+        ]
+    },
+    "Bhangra": {
+        "bpm_range": [150, 170],
+        "related_terms": [
+            "bhangra",
+            "punjabi bhangra",
+            "indian pop"
+        ],
+        "subgenres": [
+            "Bhangra"
+        ]
+    }
+}

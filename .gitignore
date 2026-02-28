@@ -1,0 +1,38 @@
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+
+# Claude Code settings and local development
+.claude/
+CLAUDE.md
+
+# Artist cache
+.artist_variations_cache
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# App cache and user data
+docs/metadata_updater_debug.txt
