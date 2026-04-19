@@ -12,7 +12,7 @@ class LicenseManager:
     def __init__(self):
         self._home_dir = Path.home()
         self._license_file = self._home_dir / '.metadata_updater_license'
-        self.max_free_files = 10
+        self.max_free_files = float('inf')  # No limit on file processing
         self.processed_files_count = 0  # Initialize counter first
         self.current_license = None  # Initialize license to None first
         
@@ -114,15 +114,14 @@ class LicenseManager:
         """
         Check if files can be processed based on license status
         Returns tuple of (can_process, message)
+
+        Note: No file processing limits - unlimited for all versions
         """
         if self.is_licensed():
-            return True, "Licensed version"
-            
-        files_after = self.processed_files_count + num_files
-        if files_after > self.max_free_files:
-            return False, f"Free version limited to {self.max_free_files} files. Please enter a license key to process more files."
-            
-        return True, f"Free version - {self.max_free_files - self.processed_files_count} files remaining"
+            return True, "Licensed version - Unlimited file processing"
+
+        # No limits on file processing
+        return True, "Free version - Unlimited file processing"
 
     def increment_processed_files(self, count=1):
         """Increment the processed files counter and save immediately"""
@@ -153,7 +152,5 @@ class LicenseManager:
             self.current_license = None
                  
     def get_remaining_files(self):
-        """Get number of remaining files in free version"""
-        if self.is_licensed():
-            return float('inf')  # Unlimited for licensed version
-        return max(0, self.max_free_files - self.processed_files_count)
+        """Get number of remaining files - unlimited for all versions"""
+        return float('inf')  # Unlimited file processing
