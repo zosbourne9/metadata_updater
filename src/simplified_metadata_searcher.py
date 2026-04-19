@@ -69,7 +69,7 @@ class SimplifiedMetadataSearcher:
 
         # Keywords that indicate compilations/bootlegs/unreliable sources
         # These are "red flags" that make MB look unreliable
-        mb_red_flags = ['house of blues', 'bootleg', 'greatest hits', 'best of', 'collection']
+        mb_red_flags = ['house of blues', 'bootleg', 'greatest hits', 'best of', 'collection', 'the essential']
 
         # Keywords that might indicate more reliable Spotify data
         sp_confidence_markers = ["cosmo's factory", "seal", "signed"]
