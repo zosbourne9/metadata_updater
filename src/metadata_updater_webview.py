@@ -351,7 +351,7 @@ class MetadataUpdater:
             # Then extract just the first artist from comma/ampersand separated list
             search_artist = re.split(r'[,&]', primary)[0].strip()
 
-            # Extract featured artists from filename for later enrichment
+            # Extract featured artists from filename for enrichment analysis
             filename = os.path.basename(file_path)
             filename_artist, filename_title = self.utility_tools._parse_filename(filename)
             enriched_artist = extract_featured_artists(filename, filename_artist)
@@ -363,7 +363,7 @@ class MetadataUpdater:
             # Log search query
             SEARCH_LOGGER.info(f"SEARCH QUERY: Artist='{search_artist}' | Title='{title}'")
             SEARCH_LOGGER.info(f"Filename: {filename}")
-            SEARCH_LOGGER.info(f"Filename Artist (for enrichment): '{filename_artist}' → '{enriched_artist}'")
+            SEARCH_LOGGER.info(f"Filename Artist (for reference): '{filename_artist}' → '{enriched_artist}'")
 
             # Search for metadata with riddim mode flag (using primary artist only)
             metadata = self.simplified_integration.search_track_metadata(
@@ -376,12 +376,6 @@ class MetadataUpdater:
                 print(f"No metadata found for: {search_artist} - {title}")
                 return False, None
 
-            # Enrich artist metadata with featured artists from filename
-            if enriched_artist and enriched_artist != search_artist:
-                metadata['artist'] = enriched_artist
-                SEARCH_LOGGER.info(f"✅ Artist enriched: '{search_artist}' → '{enriched_artist}'")
-                print(f"Enriched metadata artist: {enriched_artist}")
-
             # Log search results
             SEARCH_LOGGER.info(f"SEARCH RESULTS:")
             SEARCH_LOGGER.info(f"  Title: {metadata.get('title', 'N/A')}")
@@ -390,6 +384,13 @@ class MetadataUpdater:
             SEARCH_LOGGER.info(f"  Year: {metadata.get('year', 'N/A')}")
             SEARCH_LOGGER.info(f"  Genre: {metadata.get('genre', 'N/A')}")
             SEARCH_LOGGER.info(f"  Rating: {metadata.get('rating', 'N/A')}")
+
+            # Use API artist as the authoritative source (already includes all featured artists)
+            # Enrichment logic just validates and logs what we found
+            api_artist = metadata.get('artist', 'N/A')
+            SEARCH_LOGGER.info(f"✅ Using API artist: '{api_artist}'")
+            if enriched_artist != api_artist:
+                SEARCH_LOGGER.info(f"   (Filename enrichment was: '{enriched_artist}')")
             SEARCH_LOGGER.info(f"---")
 
             print(f"DEBUG: Raw metadata from search: {metadata}")
