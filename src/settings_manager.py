@@ -82,6 +82,15 @@ class SettingsManager:
                 del self._settings['serato_library_paths']
             self.save_settings()
     
+    def get_max_workers(self) -> int:
+        """Get the maximum number of worker threads for parallel processing"""
+        return self.get('max_workers', 4)
+
+    def set_max_workers(self, count: int) -> None:
+        """Set the maximum number of worker threads (1-8)"""
+        count = max(1, min(8, count))
+        self.set('max_workers', count)
+    
     def get_all_settings(self) -> Dict[str, Any]:
         """Get all settings as a dictionary"""
         return self._settings.copy()

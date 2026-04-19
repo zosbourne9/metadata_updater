@@ -18,6 +18,10 @@ openai>=1.0.0
 fuzzywuzzy>=0.18.0
 python-Levenshtein>=0.21.0
 
+# License management
+PyJWT>=2.8.0
+cryptography>=41.0.0
+
 # Data processing
 urllib3>=2.0
 certifi>=2023.7.22

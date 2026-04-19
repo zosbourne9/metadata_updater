@@ -192,6 +192,17 @@ class MetadataUpdaterAPI:
 
             if self.processing_active:
                 return {'success': False, 'message': 'Processing already in progress'}
+            
+            # NEW: Validate license BEFORE processing
+            license_manager = self.metadata_updater.license_manager
+            can_process, message = license_manager.can_process_files(len(self.metadata_updater.selected_files))
+            
+            if not can_process:
+                return {
+                    'success': False,
+                    'message': message,
+                    'require_license': True
+                }
 
             # Normalize riddim_mode parameter
             if riddim_mode is None:
@@ -211,11 +222,15 @@ class MetadataUpdaterAPI:
             self.metadata_updater.unfound_files = []
             self.processed_files_metadata = []  # Clear previous results
 
-            # Create and start processing thread
+            # Get max workers from settings
+            max_workers = self.settings_manager.get_max_workers()
+
+            # Create and start processing pool (ProcessingThread is an alias)
             self.processing_thread = ProcessingThread(
                 self.metadata_updater,
                 selected_fields=processing_fields,
-                riddim_mode=riddim_mode
+                riddim_mode=riddim_mode,
+                max_workers=max_workers
             )
             
             # Set up callbacks instead of signals
@@ -270,10 +285,9 @@ class MetadataUpdaterAPI:
             if not self.processing_thread:
                 return {'success': False, 'message': 'No processing in progress'}
 
-            # Directly set the metadata and flag on the processing thread
-            print(f"API: Setting selected candidate metadata: {selected_metadata}")
-            self.processing_thread.selected_candidate_metadata = selected_metadata
-            self.processing_thread.review_pending = False
+            # Use ProcessingPool's requeue method
+            print(f"API: Re-queuing reviewed file with metadata: {selected_metadata}")
+            self.processing_thread.requeue_reviewed_file(file_path, selected_metadata)
 
             return {
                 'success': True,
@@ -706,16 +720,16 @@ class MetadataUpdaterAPI:
         escaped_filename = filename.replace("'", "\\'") if filename is not None else ''
         self._safe_eval(f"window.onCurrentFileUpdate('{escaped_filename}')")
     
-    def _on_file_completed(self, index: int, successful: int, errors: int, file_path: Optional[str] = None, metadata: Optional[Dict[str, Any]] = None):
+    def _on_file_completed(self, index: int, successful: int, errors: int, file_path: Optional[str] = None, metadata: Optional[Dict[str, Any]] = None, current_success: bool = True):
         """Handle file completion updates"""
         # Store metadata for completed file
-        if file_path is not None and metadata is not None:
+        if file_path is not None:
             import os
             try:
                 self.processed_files_metadata.append({
                     'filename': os.path.basename(file_path),
                     'path': file_path,
-                    'success': successful > 0,
+                    'success': current_success,
                     'metadata': metadata
                 })
             except Exception as _e:
@@ -728,13 +742,29 @@ class MetadataUpdaterAPI:
         escaped_error = error.replace("'", "\\'") if error is not None else ''
         self._safe_eval(f"window.onProcessingError('{escaped_error}')")
     
+    def _request_user_attention(self):
+        """Request user attention (e.g., bounce dock icon on macOS)"""
+        import platform
+        if platform.system() == 'Darwin':
+            try:
+                from AppKit import NSApp, NSCriticalRequest
+                if NSApp:
+                    # NSCriticalRequest (0) bounces until app is focused
+                    NSApp.requestUserAttention_(0)
+                else:
+                    # Fallback to osascript if NSApp is not available
+                    import subprocess
+                    subprocess.run(['osascript', '-e', 'display notification "Action Required" with title "Metadata Updater"'], check=False)
+            except Exception as e:
+                print(f"Failed to request user attention on macOS: {e}")
+
     def _on_review_needed(self, file_path: str, candidates: List[Dict[str, Any]], best_match: Dict[str, Any]):
         """Handle manual review request when metadata sources differ"""
         try:
             import json
-            print(f"DEBUG _on_review_needed: file_path={file_path}")
-            print(f"DEBUG _on_review_needed: candidates={candidates}")
-            print(f"DEBUG _on_review_needed: best_match={best_match}")
+            
+            # Request user attention (bounce dock icon on macOS)
+            self._request_user_attention()
 
             # Prepare candidates for JSON serialization
             candidates_json = json.dumps(candidates)
@@ -786,7 +816,6 @@ class MetadataUpdaterAPI:
                     pass
                 attempts += 1
                 time.sleep(0.2)
-            print("Drag-and-drop setup deferred: view DOM not available after retries")
 
         t = threading.Thread(target=delayed_setup, daemon=True)
         t.start()
@@ -997,6 +1026,39 @@ class MetadataUpdaterAPI:
                 'success': False,
                 'message': f'Error clearing cache: {str(e)}'
             }
+
+    def save_edited_metadata(self, file_path: str, field: str, value: str) -> Dict[str, Any]:
+        """Save manually edited metadata back to the file"""
+        try:
+            if not self.metadata_updater:
+                return {'success': False, 'message': 'App not initialized'}
+
+            # Map 'comments' to what AudioUtilities expects if needed
+            metadata_field = field
+            if field == 'comments':
+                metadata_field = 'comments'
+            
+            audio = self.metadata_updater.utility_tools.load_audio_file(file_path)
+            if audio:
+                self.metadata_updater.utility_tools.set_metadata(audio, {metadata_field: value}, file_path)
+                return {'success': True}
+            return {'success': False, 'message': 'Could not load file'}
+        except Exception as e:
+            return {'success': False, 'message': str(e)}
+
+    def toggle_always_on_top(self) -> Dict[str, Any]:
+        """Toggle always-on-top state for the window"""
+        try:
+            if self._view:
+                self._always_on_top = not self._always_on_top
+                self._view.on_top = self._always_on_top
+                return {
+                    'success': True,
+                    'always_on_top': self._always_on_top
+                }
+            return {'success': False, 'message': 'View not initialized'}
+        except Exception as e:
+            return {'success': False, 'message': str(e)}
 
 
 # Global API instance

@@ -15,7 +15,8 @@ class UnifiedCacheManager:
         'spotify': 'spotify_cache.json',
         'musicbrainz': 'musicbrainz_cache.json',
         'metadata': 'metadata_cache.json',
-        'genre': 'genre_cache.json'
+        'genre': 'genre_cache.json',
+        'artist_genre': 'artist_genre_cache.json'
     }
 
     def __init__(self):
@@ -28,7 +29,8 @@ class UnifiedCacheManager:
         self.caches: Dict[str, Dict] = {}
         self.last_backup = time.time()
         self.backup_frequency = 12 * 60 * 60  # 12 hours
-        self.max_cache_age = 24 * 60 * 60  # 24 hours
+        self.max_cache_age = 24 * 60 * 60  # 24 hours (for metadata/API caches)
+        self.max_artist_genre_age = 365 * 24 * 60 * 60  # 1 year for artist genres
         self.max_cache_size = 10000  # entries per cache type
         
         # Load all caches
@@ -51,9 +53,11 @@ class UnifiedCacheManager:
                     
                 # Clean expired entries
                 current_time = time.time()
+                cache_age_limit = self.max_artist_genre_age if cache_type == 'artist_genre' else self.max_cache_age
+                
                 cache_data = {
                     k: v for k, v in cache_data.items()
-                    if v.get('timestamp', 0) + self.max_cache_age > current_time
+                    if v.get('timestamp', 0) + cache_age_limit > current_time
                 }
                 
                 # Limit cache size
@@ -279,11 +283,12 @@ class UnifiedCacheManager:
                 data = cache[key]
                 current_time = time.time()
                 cache_age = current_time - data.get('timestamp', 0)
+                cache_age_limit = self.max_artist_genre_age if cache_type == 'artist_genre' else self.max_cache_age
                 
                 print(f"Cache entry age: {cache_age:.2f} seconds")
-                print(f"Max allowed age: {self.max_cache_age} seconds")
+                print(f"Max allowed age: {cache_age_limit} seconds")
                 
-                if cache_age <= self.max_cache_age:
+                if cache_age <= cache_age_limit:
                     value = data.get('value')
                     print(f"Cache entry valid - Returning value type: {type(value)}")
                     if isinstance(value, dict):
@@ -299,10 +304,11 @@ class UnifiedCacheManager:
                 print("\nAttempting fuzzy matching...")
                 best_match = None
                 best_score = 0
+                cache_age_limit = self.max_artist_genre_age if cache_type == 'artist_genre' else self.max_cache_age
                 
                 for cached_key, data in cache.items():
                     # Check age first
-                    if data.get('timestamp', 0) + self.max_cache_age <= time.time():
+                    if data.get('timestamp', 0) + cache_age_limit <= time.time():
                         print(f"Skipping expired entry: {cached_key}")
                         continue
 

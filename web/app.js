@@ -39,7 +39,8 @@ const appState = {
         currentFile: null,
         candidates: [],
         bestMatch: null,
-        selectedIndex: -1
+        selectedIndex: -1,
+        queue: [] // Queue for multiple pending reviews
     }
 };
 
@@ -81,8 +82,11 @@ function showModal(modalId) {
             overlay.style.zIndex = '9999';
             // Add pulse animation to draw attention
             modal.classList.add('pulse-attention');
-            // Show notification
-            showNotification('Action Required: Please review metadata candidates', 'info');
+            
+            // Only show notification for the first item in queue
+            if (appState.reviewMode.queue.length <= 1) {
+                showNotification('Action Required: Please review metadata candidates', 'info');
+            }
         }
     }
 }
@@ -96,12 +100,47 @@ function hideModal(modalId) {
     if (modal) {
         modal.classList.remove('active');
     }
+    
+    // Check if we need to show another review modal from queue
+    if (modalId === 'candidateReviewModal' && appState.reviewMode.queue.length > 0) {
+        // Don't remove overlay, just show next review
+        setTimeout(() => processNextReview(), 100);
+        return;
+    }
+
     // Check if any other modals are open
-    const anyOpen = document.querySelectorAll('.modal.active').length > 0;
+    const openModals = document.querySelectorAll('.modal.active');
+    const anyOpen = openModals.length > 0;
+    
     if (!anyOpen && overlay) {
         overlay.classList.remove('active');
         document.body.style.overflow = 'auto';
+        // Reset any specific styles that might cause issues
+        overlay.style.display = '';
+        overlay.style.zIndex = '';
     }
+}
+
+/**
+ * Process the next review in the queue
+ */
+function processNextReview() {
+    if (appState.reviewMode.queue.length === 0) {
+        appState.reviewMode.active = false;
+        return;
+    }
+
+    const nextReview = appState.reviewMode.queue.shift();
+    appState.reviewMode.active = true;
+    appState.reviewMode.currentFile = nextReview.filePath;
+    appState.reviewMode.candidates = nextReview.candidates;
+    appState.reviewMode.bestMatch = nextReview.bestMatch;
+    appState.reviewMode.selectedIndex = -1;
+
+    console.log('Processing next review from queue:', nextReview.filePath);
+    console.log('Remaining in queue:', appState.reviewMode.queue.length);
+
+    showCandidateReviewModal();
 }
 
 /**
@@ -632,17 +671,31 @@ window.onProcessingFinished = function(processedFilesMetadata) {
         tableBody.innerHTML = filesData.map(file => {
             const statusClass = file.success ? 'status-success' : 'status-error';
             const statusText = file.success ? 'Success' : 'Error';
+            const metadata = file.metadata || {};
+            const filePath = file.file_path || '';
 
             return `
-                <tr>
-                    <td>${escapeHtml(file.filename)}</td>
+                <tr data-file-path="${escapeHtml(filePath)}">
+                    <td title="${escapeHtml(filePath)}">${escapeHtml(file.filename)}</td>
                     <td class="status-cell ${statusClass}">${statusText}</td>
-                    <td>${file.metadata && file.success ? escapeHtml(file.metadata.artist || '-') : '-'}</td>
-                    <td>${file.metadata && file.success ? escapeHtml(file.metadata.album || '-') : '-'}</td>
-                    <td>${file.metadata && file.success ? escapeHtml(file.metadata.genre || '-') : '-'}</td>
-                    <td>${file.metadata && file.success ? escapeHtml(file.metadata.year || '-') : '-'}</td>
-                    <td>${file.metadata && file.success ? escapeHtml(file.metadata.rating || '-') : '-'}</td>
-                    <td>${file.metadata && file.success ? escapeHtml(file.metadata.comments || '-') : '-'}</td>
+                    <td class="editable-cell" data-field="artist">
+                        <span contenteditable="true" onblur="handleCellEdit(this)" onkeydown="handleCellKeydown(this, event)">${escapeHtml(metadata.artist || '-')}</span>
+                    </td>
+                    <td class="editable-cell" data-field="album">
+                        <span contenteditable="true" onblur="handleCellEdit(this)" onkeydown="handleCellKeydown(this, event)">${escapeHtml(metadata.album || '-')}</span>
+                    </td>
+                    <td class="editable-cell" data-field="genre">
+                        <span contenteditable="true" onblur="handleCellEdit(this)" onkeydown="handleCellKeydown(this, event)">${escapeHtml(metadata.genre || '-')}</span>
+                    </td>
+                    <td class="editable-cell" data-field="year">
+                        <span contenteditable="true" onblur="handleCellEdit(this)" onkeydown="handleCellKeydown(this, event)">${escapeHtml(metadata.year || '-')}</span>
+                    </td>
+                    <td class="editable-cell" data-field="rating">
+                        <span contenteditable="true" onblur="handleCellEdit(this)" onkeydown="handleCellKeydown(this, event)">${escapeHtml(metadata.rating || '-')}</span>
+                    </td>
+                    <td class="editable-cell" data-field="comments">
+                        <span contenteditable="true" onblur="handleCellEdit(this)" onkeydown="handleCellKeydown(this, event)">${escapeHtml(metadata.comments || metadata.subgenres || '-')}</span>
+                    </td>
                 </tr>
             `;
         }).join('');
@@ -655,23 +708,69 @@ window.onProcessingFinished = function(processedFilesMetadata) {
 };
 
 /**
+ * Handle cell content edit
+ */
+async function handleCellEdit(element) {
+    const td = element.parentElement;
+    const tr = td.parentElement;
+    const filePath = tr.dataset.filePath;
+    const field = td.dataset.field;
+    const newValue = element.textContent.trim();
+    
+    // Skip if no change or placeholder
+    if (newValue === '-' || !filePath) return;
+    
+    // Save to backend
+    const result = await saveEditedRow(filePath, field, newValue);
+    
+    if (result.success) {
+        td.classList.add('save-success');
+        setTimeout(() => td.classList.remove('save-success'), 1000);
+    } else {
+        td.classList.add('save-error');
+        setTimeout(() => td.classList.remove('save-error'), 1000);
+        showNotification(`Failed to save ${field}: ${result.message}`, 'error');
+    }
+}
+
+/**
+ * Handle keydown in editable cell (Enter to blur)
+ */
+function handleCellKeydown(element, event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        element.blur();
+    }
+}
+
+/**
+ * Save edited metadata for a single field
+ */
+async function saveEditedRow(filePath, field, newValue) {
+    return await callAPI('save_edited_metadata', filePath, field, newValue);
+}
+
+/**
  * Callback: Manual review needed when album/year metadata differs between sources
  */
 window.onReviewNeeded = function(filePath, candidates, bestMatch) {
-    appState.reviewMode = {
-        active: true,
-        currentFile: filePath,
+    console.log('Review request received for:', filePath);
+    
+    // Add to queue
+    appState.reviewMode.queue.push({
+        filePath: filePath,
         candidates: candidates || [],
-        bestMatch: bestMatch || null,
-        selectedIndex: -1
-    };
+        bestMatch: bestMatch || null
+    });
 
-    console.log('Review needed for:', filePath);
-    console.log('Candidates:', candidates);
-    console.log('Best match:', bestMatch);
-
-    // Show the review modal
-    showCandidateReviewModal();
+    // If no review is active, start processing the queue
+    if (!appState.reviewMode.active) {
+        processNextReview();
+    } else {
+        console.log('Review already active, added to queue. Queue length:', appState.reviewMode.queue.length);
+        // Update notification
+        showNotification(`Additional file needs review: ${appState.reviewMode.queue.length} pending`, 'info');
+    }
 };
 
 // ============================================
@@ -953,6 +1052,14 @@ function setupModalOverlay() {
             });
             overlay.classList.remove('active');
             document.body.style.overflow = 'auto';
+            // Force reset blur and display if stuck
+            overlay.style.display = '';
+            overlay.style.zIndex = '';
+            
+            // If it was the review modal being closed via overlay, we might need to reset state
+            if (appState.reviewMode.active) {
+                closeCandidateReviewModal();
+            }
         }
     });
 }
@@ -1170,13 +1277,12 @@ async function skipCurrentFile() {
  */
 function closeCandidateReviewModal() {
     hideModal('candidateReviewModal');
-    appState.reviewMode = {
-        active: false,
-        currentFile: null,
-        candidates: [],
-        bestMatch: null,
-        selectedIndex: -1
-    };
+    // Reset current review state but PRESERVE queue
+    appState.reviewMode.active = false;
+    appState.reviewMode.currentFile = null;
+    appState.reviewMode.candidates = [];
+    appState.reviewMode.bestMatch = null;
+    appState.reviewMode.selectedIndex = -1;
 }
 
 // ============================================

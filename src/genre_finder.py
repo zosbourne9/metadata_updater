@@ -43,7 +43,6 @@ class GenreFinder:
             
             # Load JSON files using resource path
             characteristics_path = get_resource_path('config/genre_characteristics.json')
-            print(f"Loading genre characteristics from: {characteristics_path}")
             
             # Update genre patterns directly
             if self.enhanced_detector and hasattr(self.enhanced_detector, 'genre_patterns'):
@@ -76,10 +75,7 @@ class GenreFinder:
         if RAG_AVAILABLE and get_knowledge_base:
             try:
                 self.knowledge_base = get_knowledge_base()
-                if self.knowledge_base and self.knowledge_base.is_initialized():
-                    print("✓ RAG genre knowledge base lazily loaded in GenreFinder")
-                else:
-                    print("⚠ RAG knowledge base not available in GenreFinder, will use standard detection")
+                if not (self.knowledge_base and self.knowledge_base.is_initialized()):
                     self.knowledge_base = None
             except Exception as e:
                 logger.warning(f"Failed to initialize RAG in GenreFinder: {e}")
@@ -90,7 +86,7 @@ class GenreFinder:
 
         return self.knowledge_base
 
-    def get_artist_genre_from_ai(self, artist_name, song_title):
+    def get_artist_genre_from_ai(self, artist_name, song_title, audio_metadata=None):
         """
         Enhanced AI genre detection with strategic prompting and RAG knowledge base.
 
@@ -98,11 +94,14 @@ class GenreFinder:
         knowledge from config/genre_characteristics.json for more accurate classifications.
         """
         try:
-            print(f"Getting genre from AI for: {artist_name} - {song_title}")
-            print(f"API client configured: {self.client is not None}")
+            # Check cache first
+            if self.cache_manager:
+                cached_data = self.cache_manager.get('artist_genre', artist_name.lower().strip())
+                if cached_data:
+                    logger.debug(f"Cache hit for artist genre: {artist_name}")
+                    return cached_data
 
             if not self.client:
-                print("No AI client configured, returning No Genre")
                 return {
                     "genre": "No Genre",
                     "subs": [],
@@ -121,56 +120,64 @@ class GenreFinder:
                     )
                     if genre_context:
                         logger.debug(f"Retrieved RAG context for {artist_name} - {song_title}")
-                        print(f"Using RAG genre knowledge for better context")
                 except Exception as rag_error:
                     logger.debug(f"RAG retrieval failed in GenreFinder: {rag_error}")
                     genre_context = ""
 
+            # Load categorized genres for the prompt
+            try:
+                from resource_path import get_resource_path
+                categorized_path = get_resource_path('config/categorized_genres.json')
+                with open(categorized_path, 'r') as f:
+                    categorized_genres = json.load(f)
+
+                primary_genres_list = list(categorized_genres.keys())
+                all_subgenres_list = []
+                for sub_list in categorized_genres.values():
+                    for sub_str in sub_list:
+                        all_subgenres_list.extend([s.strip() for s in sub_str.split(',')])
+                all_subgenres_list = sorted(list(set(all_subgenres_list)))
+
+                primary_genres_str = ", ".join(primary_genres_list)
+                subgenres_str = ", ".join(all_subgenres_list)
+            except Exception as e:
+                logger.error(f"Error loading categorized genres for prompt: {e}")
+                primary_genres_str = "Hip-Hop, R&B, Pop, Electronic, Rock, Funk, Reggae, Soul, Jazz, Blues, Alternative, Soca, Afrobeats, World Music"
+                subgenres_str = "various"
+
             # Create a more strategic prompt with optional RAG context
             prompt = f"""You are a professional music curator and genre expert. Analyze this artist and song to determine the most accurate primary genre and 2-3 relevant subgenres.
 
-ARTIST: {artist_name}
-SONG: {song_title}
-"""
+    ARTIST: {artist_name}
+    SONG: {song_title}
+    """
+
+            if audio_metadata:
+                prompt += f"METADATA: {json.dumps(audio_metadata)}\n"
 
             # Include RAG context if available
             if genre_context:
                 prompt += f"\n{genre_context}\n"
 
-            prompt += """
-ANALYSIS INSTRUCTIONS:
-1. Focus on the artist's established musical style and era
-2. Consider the song title for contextual clues about style/tempo
-3. Think about what record stores and streaming services would classify this as
-4. Use standard music industry genre categories
-5. For Caribbean artists: Pay special attention to reggae variants (dancehall, dub, roots reggae, ragga) and soca
+            prompt += f"""
+    VALID PRIMARY GENRES:
+    {primary_genres_str}
 
-PREFERRED PRIMARY GENRES (choose the most appropriate):
-- Hip-Hop (for rap, trap, drill, etc.)
-- R&B (for soul, neo-soul, urban contemporary)
-- Pop (for mainstream pop, dance-pop, etc.)
-- Electronic (for EDM, house, techno, etc.)
-- Rock (for all rock subgenres)
-- Funk (for funk, P-funk, etc.)
-- Reggae (for reggae, dancehall, dub, roots reggae, ragga)
-- Soul (for classic soul, northern soul, etc.)
-- Jazz (for all jazz styles)
-- Blues (for blues and blues derivatives)
-- Alternative (for indie, alternative rock, etc.)
-- Soca (for soca, calypso-based Caribbean music)
-- Afrobeats (for Afrobeats, Afro-pop, Nigerian/Ghanaian pop)
-- World Music (for international/ethnic styles)
+    VALID SUBGENRES:
+    {subgenres_str}
 
-SUBGENRES should be specific and accurate (e.g., "alternative r&b", "neo soul", "trap", "deep house", "conscious hip hop", "dancehall", "roots reggae", etc.)
+    ANALYSIS INSTRUCTIONS:
+    1. You MUST choose the primary genre ONLY from the "VALID PRIMARY GENRES" list provided above.
+    2. Choose 2-3 specific subgenres from the "VALID SUBGENRES" list if they fit, otherwise use accurate standard subgenres.
+    3. Focus on the artist's established musical style and era.
+    4. Think about what record stores and streaming services would classify this as.
+    5. For Caribbean artists: Pay special attention to Reggae, Dancehall, and Soca.
 
-For Reggae artists: Consider if the subgenres should include "dancehall", "roots reggae", "dub", or "ragga" based on the artist's style.
+    Respond with ONLY valid JSON in this exact format:
+    {{"genre": "Primary Genre", "subs": ["specific subgenre1", "specific subgenre2"], "conf": 85}}
 
-Respond with ONLY valid JSON in this exact format:
-{{"genre": "Primary Genre", "subs": ["specific subgenre1", "specific subgenre2"], "conf": 85}}
+    The confidence should be 70-95 based on how certain you are about the classification."""
 
-The confidence should be 70-95 based on how certain you are about the classification."""
-
-            print("Making AI API call...")
             response = self.client.chat.completions.create(
                 model=AI_MODEL,
                 messages=[
@@ -181,24 +188,19 @@ The confidence should be 70-95 based on how certain you are about the classifica
                 max_tokens=300
             )
 
-            print("AI API call completed successfully")
-            
             # Extract JSON from response
             response_text = response.choices[0].message.content.strip()
-            print(f"Raw AI response: {response_text}")
-            
+
             json_start = response_text.find('{')
             json_end = response_text.rfind('}') + 1
-            
+
             if json_start != -1 and json_end > json_start:
                 json_str = response_text[json_start:json_end]
-                print(f"Extracted JSON: {json_str}")
                 result = json.loads(json_str)
             else:
-                print("No JSON found in response, using fallback")
                 # Fallback if no JSON found
                 result = {"genre": "No Genre", "subs": [], "conf": 0}
-            
+
             # Ensure we have valid data or default to "No Genre"
             if not result or not result.get("genre") or result.get("conf", 0) < 50:
                 return {
@@ -209,12 +211,15 @@ The confidence should be 70-95 based on how certain you are about the classifica
 
             # Process the LLM result through our categorized genres system
             processed_result = self.process_llm_genre_result(result)
-            
-            print(f"AI Genre Analysis (processed): {processed_result}")
+
+            # Store in cache
+            if self.cache_manager and processed_result.get("genre") != "No Genre":
+                self.cache_manager.set('artist_genre', artist_name.lower().strip(), processed_result)
+
             return processed_result
 
         except Exception as e:
-            print(f"Error in AI genre detection: {e}")
+            logger.error(f"Error in AI genre detection: {e}")
             return {
                 "genre": "No Genre",
                 "subs": [],
@@ -236,8 +241,6 @@ The confidence should be 70-95 based on how certain you are about the classifica
             llm_subgenres = llm_result.get("subs", [])
             confidence = llm_result.get("conf", 0)
             
-            print(f"Processing LLM result - Genre: {llm_genre}, Subs: {llm_subgenres}")
-            
             # Step 1: Map the primary genre to our categorized system
             final_genre = self.map_genre_to_categories(llm_genre, categorized_genres)
             
@@ -254,7 +257,6 @@ The confidence should be 70-95 based on how certain you are about the classifica
                 "conf": confidence
             }
             
-            print(f"Processed genre result: {result}")
             return result
             
         except Exception as e:
@@ -361,7 +363,6 @@ The confidence should be 70-95 based on how certain you are about the classifica
             
             # Load both JSON files using the helper
             categorized_path = get_resource_path('config/categorized_genres.json')
-            print(f"Loading categorized genres from: {categorized_path}")
 
             # Load categorized genres
             with open(categorized_path, 'r') as json_file:
@@ -408,38 +409,15 @@ The confidence should be 70-95 based on how certain you are about the classifica
     def get_cached_artist_genres(self, artist_name):
         """Get cached genres for artist with strict matching."""
         try:
-            print(f"Looking up cached genres for artist: {artist_name}")
+            if self.cache_manager:
+                cached_data = self.cache_manager.get('artist_genre', artist_name.lower().strip())
+                if cached_data and isinstance(cached_data, dict):
+                    # Check if it has 'genre' and 'subs' (from AI) or 'genre' and 'subgenres' (from legacy)
+                    genre = cached_data.get('genre')
+                    subs = cached_data.get('subs') or cached_data.get('subgenres')
+                    if genre and subs is not None:
+                        return genre, subs
             
-            # Clean the artist name for comparison
-            clean_name = self.clean_string(artist_name).lower()
-            
-            # Look for exact artist match only
-            for key, entry in self.metadata_cache.cache.items():
-                if not key.startswith('artist_genres_'):
-                    continue
-                    
-                if not isinstance(entry, dict) or 'value' not in entry:
-                    continue
-                    
-                value = entry.get('value', {})
-                if not isinstance(value, dict):
-                    continue
-                
-                # Get the cached artist name and Spotify ID
-                cached_name = value.get('artist_name', '').lower()
-                cached_id = value.get('artist_id', '')
-                
-                if not cached_name:  # Skip invalid entries
-                    continue
-                
-                # Only match if we have an exact name match or ID match
-                if (clean_name == self.clean_string(cached_name) or 
-                    (cached_id and cached_id == value.get('artist_id'))):
-                    if value.get('genre') and value.get('subgenres'):
-                        print(f"Found exact genre match for {artist_name} with cached artist: {cached_name}")
-                        return value.get('genre'), value.get('subgenres')
-                
-            print(f"No cached genres found for {artist_name}")
             return None, None
                     
         except Exception as e:
@@ -458,7 +436,6 @@ The confidence should be 70-95 based on how certain you are about the classifica
                 'timestamp': time.time()
             }
             
-            print(f"Caching metadata: {cache_data}")
             self.metadata_cache.set(cache_key, cache_data)
             
             # Create metadata for file
@@ -470,7 +447,6 @@ The confidence should be 70-95 based on how certain you are about the classifica
             # Write to file
             success = self.utility_tools.set_metadata(audio_file, metadata)
             if success:
-                print(f"Genre information written to file: {genre} | {subgenres}")
                 return True
             return False
                 
@@ -481,21 +457,17 @@ The confidence should be 70-95 based on how certain you are about the classifica
     def cache_artist_genres(self, artist_name, artist_id, genre, subgenres):
         """Cache artist genres with proper artist information."""
         try:
-            # Create a specific cache key
-            cache_key = f"artist_genres_{self.clean_string(artist_name)}"
-            
-            # Create cache data with full artist info
-            cache_data = {
-                'artist_name': artist_name,
-                'artist_id': artist_id,
-                'genre': genre,
-                'subgenres': subgenres,
-                'source': 'musicbrainz',
-                'timestamp': time.time()
-            }
-            
-            print(f"Caching genres for {artist_name} (ID: {artist_id}): {cache_data}")
-            self.metadata_cache.set(cache_key, cache_data)
+            if self.cache_manager:
+                cache_data = {
+                    'artist_name': artist_name,
+                    'artist_id': artist_id,
+                    'genre': genre,
+                    'subs': subgenres,
+                    'timestamp': time.time()
+                }
+                
+                print(f"Caching genres for {artist_name} (ID: {artist_id}): {cache_data}")
+                self.cache_manager.set('artist_genre', artist_name.lower().strip(), cache_data)
             
         except Exception as e:
             print(f"Error caching artist genres: {e}")
