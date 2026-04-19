@@ -24,7 +24,7 @@ logging.getLogger('posthog').setLevel(logging.WARNING)
 logging.getLogger('botocore').setLevel(logging.WARNING)
 
 # DEBUG LOGGING CONFIGURATION - Set to True to enable console logging to file
-ENABLE_DEBUG_LOGGING = True  # Change to True to enable debug logging
+ENABLE_DEBUG_LOGGING = False  # Change to True to enable debug logging
 
 def setup_logging():
     """Setup logging configuration for debugging."""

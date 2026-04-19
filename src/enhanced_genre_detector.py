@@ -60,6 +60,40 @@ class EnhancedGenreDetector:
 
         # Enhanced patterns that strongly indicate genres
         self.genre_patterns = {
+            'electronic': {
+                'musical_patterns': [
+                    r'(?i)electronic',
+                    r'(?i)edm',
+                    r'(?i)electro',
+                    r'(?i)synth',
+                    r'(?i)synthesizer',
+                    r'(?i)house\b',
+                    r'(?i)deep house',
+                    r'(?i)tropical house',
+                    r'(?i)techno',
+                    r'(?i)dubstep',
+                    r'(?i)trap\s*beat',
+                    r'(?i)drum\s*and\s*bass'
+                ],
+                'production_patterns': [
+                    r'(?i)electronic production',
+                    r'(?i)digital',
+                    r'(?i)synth\s*wave',
+                    r'(?i)progressive house',
+                    r'(?i)deep tech',
+                    r'(?i)future bass'
+                ],
+                'artist_indicators': [
+                    r'(?i)diplo',
+                    r'(?i)skrillex',
+                    r'(?i)deadmau5',
+                    r'(?i)daft\s*punk',
+                    r'(?i)tiësto',
+                    r'(?i)calvin\s*harris',
+                    r'(?i)david\s*guetta',
+                    r'(?i)afrojack'
+                ]
+            },
             'dancehall': {
                 'musical_patterns': [
                     r'(?i)riddim',
@@ -193,6 +227,19 @@ class EnhancedGenreDetector:
                     r'(?i)oakland'
                 ]
             },
+            'pop': {
+                'musical_patterns': [
+                    r'(?i)\bpop\b',
+                    r'(?i)chart\s*topper',
+                    r'(?i)mainstream'
+                ],
+                'artist_indicators': [
+                    r'(?i)taylor\s*swift',
+                    r'(?i)ariana\s*grande',
+                    r'(?i)ed\s*sheeran',
+                    r'(?i)dua\s*lipa'
+                ]
+            },
             'r&b': {
                 'musical_patterns': [
                     r'(?i)r\&?b',
@@ -208,6 +255,12 @@ class EnhancedGenreDetector:
                     r'(?i)ballad',
                     r'(?i)neo\s*soul',
                     r'(?i)contemporary\s*r\&?b'
+                ],
+                'artist_indicators': [
+                    r'(?i)sza',
+                    r'(?i)usher',
+                    r'(?i)starrah',
+                    r'(?i)kehlani'
                 ]
             },
             'reggae': {
@@ -267,6 +320,7 @@ class EnhancedGenreDetector:
             return self.genre_cache[cache_key]
 
         confidence_scores = {
+            'electronic': 0.0,
             'dancehall': 0.0,
             'soca': 0.0,
             'afrobeats': 0.0,
@@ -332,13 +386,14 @@ class EnhancedGenreDetector:
         def genre_priority(genre):
             """Defines priority for tie-breaking based on specificity and accuracy."""
             priority = {
+                'electronic': 2,    # High priority - very specific and well-defined
                 'dancehall': 1,     # High priority - very specific genre
                 'soca': 2,          # High priority - very specific genre  
                 'afrobeats': 3,     # High priority - specific and emerging
                 'reggae': 4,        # Medium-high priority - specific
                 'hip-hop': 5,       # Medium priority - broad but distinct
-                'r&b': 6,           # Medium priority - no special bias
                 'funk': 7,          # Medium priority
+                'r&b': 6,           # Medium priority - no special bias
                 'disco': 8,         # Medium priority
                 'rock': 9,          # Lower priority - very broad
                 'pop': 10,          # Lowest priority - most generic
@@ -370,6 +425,7 @@ class EnhancedGenreDetector:
             def genre_priority(genre):
                 """Priority for tie-breaking based on specificity."""
                 priority = {
+                    'electronic': 2,
                     'dancehall': 1,
                     'soca': 2,
                     'afrobeats': 3,
@@ -454,9 +510,6 @@ class EnhancedGenreDetector:
     def _analyze_with_ai(self, artist: str, title: str) -> Tuple[str, float]:
         """
         Use OpenRouter Gemini 2.5 Flash to analyze genre, enhanced with RAG knowledge.
-
-        The system retrieves relevant genre characteristics from the knowledge base
-        to provide better context for the AI model.
         """
         try:
             # Retrieve relevant genre context from RAG if available (lazy loaded)
@@ -467,45 +520,28 @@ class EnhancedGenreDetector:
                     genre_context = kb.get_relevant_genres(
                         artist_name=artist,
                         track_title=title,
-                        k=3  # Get top 3 most relevant genres
+                        k=3
                     )
-                    if genre_context:
-                        logger.debug(f"Retrieved RAG context for {artist} - {title}")
-                except Exception as rag_error:
-                    logger.debug(f"RAG retrieval failed: {rag_error}, continuing without context")
+                except Exception:
                     genre_context = ""
 
-            # Build prompt with optional RAG context
             prompt_text = f"""You are a music genre expert. Analyze this artist and song to determine the most likely genre.
 
 Artist: {artist}
 Song: {title}
 """
 
-            # Include RAG context if available
             if genre_context:
                 prompt_text += f"\n{genre_context}\n"
 
             prompt_text += """
-Consider the artist's origin, musical style, and song characteristics. Choose from these genres:
-- Dancehall
-- Soca
-- Afrobeats
-- Hip-Hop
-- R&B
-- Reggae
-- Pop
-- Rock
-- Funk
-- Disco
-
-Return your response as JSON only in this exact format:
-{{"genre": "genre_name", "confidence": 0.0-1.0}}"""
+Choose from: Electronic, Dancehall, Soca, Afrobeats, Hip-Hop, R&B, Reggae, Pop, Rock, Funk, Disco, Soul, Jazz, Blues.
+Return your response as JSON only: {"genre": "genre_name", "confidence": 0.0-1.0}"""
 
             response = self.ai_client.chat.completions.create(
                 model=AI_MODEL,
                 messages=[
-                    {"role": "system", "content": "You are a music genre expert. Return only JSON responses."},
+                    {"role": "system", "content": "You are a music genre expert. Return only JSON."},
                     {"role": "user", "content": prompt_text}
                 ],
                 temperature=0,
@@ -513,32 +549,38 @@ Return your response as JSON only in this exact format:
             )
 
             response_text = response.choices[0].message.content
+            
+            # Robust JSON extraction: Find all potential JSON objects and try parsing them
+            import re
+            # Try to find anything between { and }
+            # Use non-greedy match first to get individual objects
+            potential_json_matches = re.findall(r'(\{.*?\})', response_text, re.DOTALL)
+            
+            # If no non-greedy matches, try greedy as a last resort
+            if not potential_json_matches:
+                greedy_match = re.search(r'(\{.*\})', response_text, re.DOTALL)
+                if greedy_match:
+                    potential_json_matches = [greedy_match.group(1)]
 
-            # Extract and parse JSON response
-            json_str = response_text.strip()
-            if not json_str.startswith('{'):
-                json_start = json_str.find('{')
-                if json_start != -1:
-                    json_str = json_str[json_start:]
-            if not json_str.endswith('}'):
-                json_end = json_str.rfind('}')
-                if json_end != -1:
-                    json_str = json_str[:json_end + 1]
+            result = None
+            for json_str in potential_json_matches:
+                try:
+                    result = json.loads(json_str)
+                    if "genre" in result:
+                        break # Found a valid object
+                except json.JSONDecodeError:
+                    continue
 
-            result = json.loads(json_str)
+            if not result:
+                logger.error(f"Failed to parse JSON from AI response: {response_text}")
+                return None, 0.0
+
             genre = result.get("genre", "").lower()
             confidence = float(result.get("confidence", 0.0))
-
             return genre, confidence
 
         except Exception as e:
             logger.error(f"AI analysis error: {e}")
-            # Fallback to pattern-based detection when AI fails
-            logger.info(f"AI genre detection failed, falling back to pattern-based detection")
-            genre, confidence = self.detect_genre(artist, title)
-            if genre:
-                logger.info(f"Pattern-based fallback detected genre: {genre} (confidence: {confidence})")
-                return genre, confidence
             return None, 0.0
 
     def _analyze_context(self, artist: str, title: str, confidence_scores: Dict[str, float]):

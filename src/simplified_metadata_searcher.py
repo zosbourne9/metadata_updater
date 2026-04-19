@@ -1,5 +1,6 @@
 from typing import Optional, Dict
 import logging
+import threading
 from simplified_mb_integration import SimplifiedMusicBrainzIntegration
 from simplified_spotify_integration import SimplifiedSpotifyIntegration
 from artist_normalizer import ArtistNormalizer
@@ -48,7 +49,8 @@ class SimplifiedMetadataSearcher:
             print(f"Warning: AI genre detector not initialized: {e}")
             self.ai_genre_detector = None
 
-        # Store last search results for candidate review
+        # Store last search results for candidate review (thread-local for safety)
+        self._thread_local = threading.local()
         self.last_mb_result = None
         self.last_spotify_result = None
 
@@ -119,21 +121,16 @@ class SimplifiedMetadataSearcher:
                     pass
 
             normalized_artist = self.artist_normalizer.clean_artist_name(artist_name)
-            print(f"Normalized Artist: {normalized_artist}")
 
             # Normalize title to handle special characters and leetspeak
             # e.g., "$ave Dat Money" → "Save Dat Money", "Café" → "Cafe"
             # IMPORTANT: Keep original title to search Spotify with special chars intact
             original_title = track_title
             normalized_title = self.title_normalizer.normalize_title(track_title)
-            if normalized_title != track_title:
-                print(f"Normalized Title: {normalized_title}")
 
             # Remove version qualifiers for better search matching
             # Keeps remixes like (SheMix) but removes (Clean), (Dirty), etc.
             search_title = self.title_normalizer.remove_version_qualifiers(normalized_title)
-            if search_title != normalized_title:
-                print(f"Search Title (version qualifiers removed): {search_title}")
 
             mb_result = None
             spotify_result = None
@@ -145,7 +142,6 @@ class SimplifiedMetadataSearcher:
             try:
                 mb_result = self.musicbrainz.search_metadata(normalized_artist, search_title)
                 if mb_result:
-                    print(f"MusicBrainz found: {mb_result}")
                     SEARCH_LOGGER.info(f"  ✅ FOUND:")
                     SEARCH_LOGGER.info(f"    Title: {mb_result.get('title', 'N/A')}")
                     SEARCH_LOGGER.info(f"    Artist: {mb_result.get('artist', 'N/A')}")
@@ -159,8 +155,9 @@ class SimplifiedMetadataSearcher:
                 print(f"MusicBrainz search error: {e}")
                 SEARCH_LOGGER.info(f"  ❌ ERROR: {e}")
 
-            # Store MB result for candidate review
-            self.last_mb_result = mb_result
+            # Store MB result for candidate review (thread-local)
+            self._thread_local.last_mb_result = mb_result
+            self.last_mb_result = mb_result  # backward compat for single-thread
 
             # 2. Try Spotify (for additional coverage)
             print("\n--- Trying Spotify ---")
@@ -170,7 +167,6 @@ class SimplifiedMetadataSearcher:
                 # Pass original title to Spotify so it can search with special chars intact (e.g., "$ave Dat Money")
                 spotify_result = self.spotify.search_metadata(normalized_artist, search_title, original_track_title=original_title)
                 if spotify_result:
-                    print(f"Spotify found: {spotify_result}")
                     SEARCH_LOGGER.info(f"  ✅ FOUND:")
                     SEARCH_LOGGER.info(f"    Title: {spotify_result.get('title', 'N/A')}")
                     SEARCH_LOGGER.info(f"    Artist: {spotify_result.get('artist', 'N/A')}")
@@ -186,8 +182,9 @@ class SimplifiedMetadataSearcher:
                 print(f"Spotify search error: {e}")
                 SEARCH_LOGGER.info(f"  ❌ ERROR: {e}")
 
-            # Store Spotify result for candidate review
-            self.last_spotify_result = spotify_result
+            # Store Spotify result for candidate review (thread-local)
+            self._thread_local.last_spotify_result = spotify_result
+            self.last_spotify_result = spotify_result  # backward compat for single-thread
 
             # 3. Merge results intelligently
             print("\n--- Merging Results ---")
@@ -200,7 +197,6 @@ class SimplifiedMetadataSearcher:
             merged = self._merge_metadata(mb_result, spotify_result, normalized_artist, artist_name, track_title, preserve_album=preserve_album)
 
             if merged:
-                print(f"Final merged result: {merged}")
                 SEARCH_LOGGER.info(f"\n✅ FINAL MERGED RESULT:")
                 SEARCH_LOGGER.info(f"  Title: {merged.get('title', 'N/A')}")
                 SEARCH_LOGGER.info(f"  Artist: {merged.get('artist', 'N/A')}")
@@ -590,7 +586,6 @@ class SimplifiedMetadataSearcher:
                 if field not in result:
                     result[field] = ''
 
-            print(f"RiddimGuide result: {result}")
             return result
 
         except Exception as e:

@@ -207,7 +207,6 @@ class SimplifiedMusicBrainzIntegration:
                 return None
 
             recordings = response['recording-list']
-            print(f"Found {len(recordings)} exact recordings")
             
             # Filter and rank candidates
             candidates = []
@@ -215,13 +214,11 @@ class SimplifiedMusicBrainzIntegration:
                 if self._is_exact_match(recording, artist, title):
                     score = self._score_recording(recording, artist)
                     candidates.append((recording, score))
-                    print(f"Candidate: {recording.get('title')} - Score: {score}")
             
             # Return best candidate
             if candidates:
                 candidates.sort(key=lambda x: x[1], reverse=True)
                 best_recording = candidates[0][0]
-                print(f"Best match: {best_recording.get('title')} - Score: {candidates[0][1]}")
                 return self._extract_metadata(best_recording)
                 
             return None
@@ -281,7 +278,6 @@ class SimplifiedMusicBrainzIntegration:
                 return None
 
             recordings = response['recording-list']
-            print(f"Found {len(recordings)} fuzzy recordings")
 
             # More lenient matching and scoring
             candidates = []
@@ -302,19 +298,13 @@ class SimplifiedMusicBrainzIntegration:
                     search_artist_clean = artist.lower().strip()
                     if rec_main_artist and self._string_similarity(rec_main_artist, search_artist_clean) > 0.85:
                         score += 50  # Significant boost for exact main artist match
-                        print(f"    -> BOOST: Main artist matches '{rec_main_artist}' (+50)")
 
                     candidates.append((recording, score))
-                    # Debug: show which artist matched
-                    rec_artists = [c['artist']['name'] for c in recording.get('artist-credit', []) if isinstance(c, dict)]
-                    print(f"  -> Added candidate: {', '.join(rec_artists)} - Final Score: {score}")
 
             if candidates:
                 candidates.sort(key=lambda x: x[1], reverse=True)
                 best_recording = candidates[0][0]
                 best_score = candidates[0][1]
-                best_artists = [c['artist']['name'] for c in best_recording.get('artist-credit', []) if isinstance(c, dict)]
-                print(f"Fuzzy best match: {best_recording.get('title')} by {', '.join(best_artists)} - Score: {best_score}")
                 metadata = self._extract_metadata(best_recording)
                 if metadata:
                     return metadata
@@ -337,7 +327,6 @@ class SimplifiedMusicBrainzIntegration:
                     var_response = self._api_call('search_recordings', query=query, limit=20)
                     if var_response and 'recording-list' in var_response:
                         var_recordings = var_response['recording-list']
-                        print(f"Found {len(var_recordings)} recordings with title variation")
 
                         for recording in var_recordings:
                             if self._is_fuzzy_match(recording, artist, title_variation):
@@ -357,7 +346,6 @@ class SimplifiedMusicBrainzIntegration:
                 primary_response = self._api_call('search_recordings', query=primary_query, limit=25)
                 if primary_response and 'recording-list' in primary_response:
                     primary_recordings = primary_response['recording-list']
-                    print(f"Found {len(primary_recordings)} recordings by primary artist '{primary_artist}'")
 
                     for recording in primary_recordings:
                         if self._is_fuzzy_match(recording, primary_artist, title):
@@ -374,7 +362,6 @@ class SimplifiedMusicBrainzIntegration:
             artist_response = self._api_call('search_recordings', query=artist_query, limit=100)
             if artist_response and 'recording-list' in artist_response:
                 artist_recordings = artist_response['recording-list']
-                print(f"Found {len(artist_recordings)} recordings by artist")
 
                 # Extract title words to filter results
                 title_words = set(title.lower().split())
@@ -409,7 +396,6 @@ class SimplifiedMusicBrainzIntegration:
                 keyword_response = self._api_call('search_recordings', query=keyword_query, limit=30)
                 if keyword_response and 'recording-list' in keyword_response:
                     keyword_recordings = keyword_response['recording-list']
-                    print(f"Found {len(keyword_recordings)} recordings with keyword '{first_word}'")
 
                     for recording in keyword_recordings:
                         # Verify main artist matches
@@ -423,7 +409,6 @@ class SimplifiedMusicBrainzIntegration:
                                         break
 
                         if not main_artist_match:
-                            print(f"  Skipping keyword recording with non-matching artist")
                             continue
 
                         score = self._score_recording(recording, artist)
@@ -499,22 +484,19 @@ class SimplifiedMusicBrainzIntegration:
                 album_name = recording['release-list'][0].get('title', 'N/A')
 
             title_similarity = self._string_similarity(recording_title, target_title_clean)
-            print(f"  Checking recording: '{recording_title}' vs target: '{target_title_clean}' (similarity: {title_similarity:.2f})")
 
             # Improved threshold: be more lenient with title matches
             # since fuzzy matching already means exact didn't work
             if not title_similarity > 0.75:  # Relaxed from 0.8 to 0.75
-                rejection_msg = f"    REJECTED: Title similarity {title_similarity:.2f} < 0.75 | Title: '{recording_title}' | Artist: '{recording_artists_str}' | Album: '{album_name}'"
-                print(rejection_msg)
                 if self.debug_logger:
+                    rejection_msg = f"    REJECTED: Title similarity {title_similarity:.2f} < 0.75 | Title: '{recording_title}' | Artist: '{recording_artists_str}' | Album: '{album_name}'"
                     self.debug_logger.info(rejection_msg)
                 return False
 
             # Artist fuzzy match
             if 'artist-credit' not in recording:
-                rejection_msg = f"    REJECTED: No artist-credit | Title: '{recording_title}' | Album: '{album_name}'"
-                print(rejection_msg)
                 if self.debug_logger:
+                    rejection_msg = f"    REJECTED: No artist-credit | Title: '{recording_title}' | Album: '{album_name}'"
                     self.debug_logger.info(rejection_msg)
                 return False
 
@@ -528,24 +510,19 @@ class SimplifiedMusicBrainzIntegration:
             # Check if any artist is similar enough
             # Use more lenient matching for very short artist names
             similarity_threshold = 0.70 if len(target_artist_clean) <= 5 else 0.80  # Slightly more lenient
-            print(f"    Artists: {recording_artists} vs target: '{target_artist_clean}' (threshold: {similarity_threshold})")
 
             for artist in recording_artists:
                 similarity = self._string_similarity(target_artist_clean, artist)
-                print(f"      Artist similarity: '{artist}' vs '{target_artist_clean}' = {similarity:.2f}")
                 if similarity > similarity_threshold:
-                    print(f"    ACCEPTED: Artist similarity {similarity:.2f} > {similarity_threshold}")
                     return True
                 # Also check for exact word match (useful for short names like "Total")
                 if target_artist_clean.lower() in artist.lower() or artist.lower() in target_artist_clean.lower():
                     if len(target_artist_clean) <= 6:  # Only for short artist names
-                        print(f"    ACCEPTED: Exact word match for short artist name")
                         return True
 
-            recording_artists_str = ', '.join(recording_artists) if recording_artists else 'N/A'
-            rejection_msg = f"    REJECTED: No artist similarity above threshold | Title: '{recording_title}' | Artist: '{recording_artists_str}' | Album: '{album_name}'"
-            print(rejection_msg)
             if self.debug_logger:
+                recording_artists_str = ', '.join(recording_artists) if recording_artists else 'N/A'
+                rejection_msg = f"    REJECTED: No artist similarity above threshold | Title: '{recording_title}' | Artist: '{recording_artists_str}' | Album: '{album_name}'"
                 self.debug_logger.info(rejection_msg)
             return False
 
@@ -606,7 +583,6 @@ class SimplifiedMusicBrainzIntegration:
                     is_substring = target_clean in main_artist or main_artist in target_clean
                     if similarity < 0.5 and not is_substring:
                         release_score -= 100  # Heavy penalty for genuinely wrong main artist
-                        print(f"  Recording's first artist '{main_artist}' doesn't match search artist '{target_artist}' - applying -100 penalty")
 
                 # Heavy penalties for non-studio releases
                 penalties = [
@@ -1344,15 +1320,11 @@ class SimplifiedMusicBrainzIntegration:
             True if API is accessible, False otherwise
         """
         try:
-            print("Checking MusicBrainz API health...")
             # Try a simple artist search - MusicBrainz's simplest endpoint
             response = self._api_call('search_artists', query='artist:beatles', limit=1)
             if response and 'artist-list' in response:
-                print("✓ MusicBrainz API is accessible")
                 return True
             else:
-                print("✗ MusicBrainz API returned empty response")
                 return False
         except Exception as e:
             print(f"✗ MusicBrainz API health check failed: {e}")
-            return False

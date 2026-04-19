@@ -1,63 +1,99 @@
 """
-License management module - handles license validation and file processing limits.
-PyQt6 UI components (LicenseDialog, LicenseBanner) have been removed and migrated to HTML/JavaScript.
+License management module - handles signed JWT token validation.
+Supports Phase 2: JWT-based licensing with automatic expiration.
 """
 
 import json
+import jwt
 from pathlib import Path
 from datetime import datetime, timezone
+from typing import Tuple, Dict, Optional
 
 
 class LicenseManager:
     def __init__(self):
         self._home_dir = Path.home()
         self._license_file = self._home_dir / '.metadata_updater_license'
+        self._project_root = Path(__file__).parent.parent
+        self._public_key_path = self._project_root / 'config' / 'license_public.pem'
+        
         self.max_free_files = 10  # Free version limited to 10 files
-        self.processed_files_count = 0  # Initialize counter first
-        self.current_license = None  # Initialize license to None first
+        self.processed_files_count = 0
+        self.current_license = None
+        self.public_key = None
         
-        # Valid license keys
-        self.valid_keys = {
-            "MDUX-2024-PRO1-K8N9",
-            "MDUX-2024-PRO2-M5L7",
-            "MDUX-2024-PRO3-P2Q4",
-            "MDUX-2024-PRO4-R6T8",
-            "MDUX-2024-PRO5-W3X5",
-            "MDUX-2024-PRO6-Y9Z1",
-            "MDUX-2024-PRO7-B4C6",
-            "MDUX-2024-PRO8-F7H9",
-            "MDUX-2024-PRO9-J2K4",
-            "MDUX-2024-P10A-N5P7",
-            "MDUX-2024-P11B-Q8R1",
-            "MDUX-2024-P12C-T3V5",
-            "MDUX-2024-P13D-W6X8",
-            "MDUX-2024-P14E-Y1Z3",
-            "MDUX-2024-P15F-B4C6",
-            "MDUX-2024-P16G-H7J9",
-            "MDUX-2024-P17H-K2L4",
-            "MDUX-2024-P18I-M5N7",
-            "MDUX-2024-P19J-P8Q1",
-            "MDUX-2024-P20K-R3T5"
-        }
+        # Load public key for JWT verification
+        self._load_public_key()
         
-        # Load existing license and count after initializing attributes
+        # Load existing license
         self.load_license()
 
-    def validate_key(self, key):
+    def _load_public_key(self):
+        """Load RSA public key from config directory."""
+        try:
+            if self._public_key_path.exists():
+                self.public_key = self._public_key_path.read_text()
+                print(f"✓ Public key loaded from {self._public_key_path}")
+            else:
+                print(f"⚠ Public key not found at {self._public_key_path}")
+                self.public_key = None
+        except Exception as e:
+            print(f"Error loading public key: {e}")
+            self.public_key = None
+
+    def validate_key(self, key: str) -> Tuple[bool, str]:
         """
-        Validate a license key.
+        Validate a license key (JWT token format: MDUX_{jwt_token})
         Returns tuple of (is_valid, message)
         """
         if not key:
             return False, "No license key provided"
-            
-        # Check if key is in valid keys set
-        if key in self.valid_keys:
-            # Save valid license
-            self.save_license(key)
-            return True, "License key validated successfully!"
         
-        return False, "Invalid license key"
+        if not self.public_key:
+            return False, "License validation unavailable (public key missing)"
+        
+        try:
+            # Check format
+            if not key.startswith('MDUX_'):
+                return False, "Invalid license format (must start with MDUX_)"
+            
+            # Extract JWT portion
+            jwt_token = key[5:]  # Remove "MDUX_" prefix
+            
+            # Verify JWT signature
+            payload = jwt.decode(jwt_token, self.public_key, algorithms=['RS256'])
+            
+            # Check expiration
+            expires_str = payload.get('expires')
+            if not expires_str:
+                return False, "Invalid license (missing expiration)"
+            
+            expires = datetime.fromisoformat(expires_str.replace('Z', '+00:00'))
+            now = datetime.now(timezone.utc)
+            
+            if now > expires:
+                return False, f"License expired on {expires.strftime('%Y-%m-%d')}"
+            
+            # Check required fields
+            required_fields = ['user_email', 'issued', 'expires', 'app_version']
+            for field in required_fields:
+                if field not in payload:
+                    return False, f"Invalid license (missing {field})"
+            
+            # Save valid license
+            self.save_license(key, payload)
+            
+            days_left = (expires - now).days
+            return True, f"✓ License valid! Expires in {days_left} days ({expires.strftime('%Y-%m-%d')})"
+        
+        except jwt.ExpiredSignatureError:
+            return False, "License has expired"
+        except jwt.InvalidSignatureError:
+            return False, "Invalid license signature (key may be corrupted)"
+        except jwt.DecodeError as e:
+            return False, f"Invalid license format: {str(e)}"
+        except Exception as e:
+            return False, f"License validation error: {str(e)}"
 
     @property
     def home_dir(self):
@@ -69,57 +105,88 @@ class LicenseManager:
         """Return license file path as string for API serialization."""
         return str(self._license_file)
 
-    def load_license(self):
-        """Load license information from file - no expiration"""
+    def load_license(self) -> Optional[Dict]:
+        """Load and validate license from file."""
         try:
             if self._license_file.exists():
                 license_data = json.loads(self._license_file.read_text())
+                stored_key = license_data.get('key')
                 
-                # Simply check if the key exists in our valid keys
-                if license_data.get('key') in self.valid_keys:
-                    self.current_license = license_data
+                if not stored_key:
+                    print("Invalid license file (no key)")
+                    self.current_license = None
+                    return None
+                
+                # Validate the stored key
+                is_valid, message = self.validate_key(stored_key)
+                
+                if is_valid:
+                    # Restore processed files count from disk
                     self.processed_files_count = license_data.get('processed_files', 0)
-                    print("Valid license loaded successfully")
+                    self.current_license = license_data
+                    print(f"✓ Valid license loaded: {license_data.get('user_email')}")
                     return license_data
                 else:
-                    print("Invalid license found")
+                    print(f"Invalid license: {message}")
                     self.current_license = None
-                    
+                    return None
+            
         except Exception as e:
             print(f"Error loading license: {e}")
             self.current_license = None
+        
         return None
-     
-    def save_license(self, key):
-        """Save license information to file - no expiration"""
+
+    def save_license(self, key: str, payload: Dict = None) -> None:
+        """Save license information to file."""
         try:
             license_data = {
                 'key': key,
-                'processed_files': self.processed_files_count
+                'processed_files': self.processed_files_count,
+                'user_email': payload.get('user_email') if payload else 'unknown',
+                'activated': datetime.now(timezone.utc).isoformat(),
             }
+            
+            if payload:
+                license_data['expires'] = payload.get('expires')
+                license_data['features'] = payload.get('features', [])
             
             self._license_file.write_text(json.dumps(license_data, indent=2))
             self.current_license = license_data
-            print(f"License saved successfully: {key}")
-            
+            print(f"✓ License saved: {license_data.get('user_email')}")
+        
         except Exception as e:
             print(f"Error saving license: {e}")
 
-    def is_licensed(self):
-        """Check if app is licensed"""
-        return (self.current_license is not None and 
-                self.current_license.get('key') in self.valid_keys)
+    def is_licensed(self) -> bool:
+        """Check if app has valid, non-expired license."""
+        if not self.current_license:
+            return False
+        
+        try:
+            key = self.current_license.get('key')
+            if not key:
+                return False
+            
+            # Validate the key (checks expiration, signature, etc.)
+            is_valid, _ = self.validate_key(key)
+            return is_valid
+        
+        except Exception:
+            return False
 
-    def can_process_files(self, num_files=1):
+    def can_process_files(self, num_files: int = 1) -> Tuple[bool, str]:
         """
-        Check if files can be processed based on license status
+        Check if files can be processed based on license status.
         Returns tuple of (can_process, message)
-
+        
         Licensed version: Unlimited
         Free version: Limited to 10 files
         """
         if self.is_licensed():
-            return True, "Licensed version - Unlimited file processing"
+            license_info = self.current_license or {}
+            user_email = license_info.get('user_email', 'User')
+            return True, f"✓ Licensed ({user_email}) - Unlimited file processing"
 
         # Free version has 10-file limit
         files_after = self.processed_files_count + num_files
@@ -127,42 +194,76 @@ class LicenseManager:
             return False, f"Free version limited to {self.max_free_files} files. Please enter a license key to process more files."
 
         remaining = self.max_free_files - self.processed_files_count
-        return True, f"Free version - {remaining} files remaining"
+        return True, f"✓ Free version - {remaining} files remaining"
 
-    def increment_processed_files(self, count=1):
-        """Increment the processed files counter and save immediately"""
+    def increment_processed_files(self, count: int = 1) -> None:
+        """Increment the processed files counter and save immediately."""
         self.processed_files_count += count
         
         # Save the updated count
         if self.current_license:
-            self.save_license(self.current_license['key'])
+            key = self.current_license.get('key')
+            if key:
+                self.save_license(key)
         else:
-            # Save a temporary license data just to track the count
+            # Save count for free version
             license_data = {
                 'key': None,
-                'activation_date': datetime.now(timezone.utc).isoformat(),
-                'processed_files': self.processed_files_count
+                'processed_files': self.processed_files_count,
+                'activated': datetime.now(timezone.utc).isoformat(),
             }
             self._license_file.write_text(json.dumps(license_data))
             self.current_license = license_data
 
-    def reset_processed_files(self):
-        """Reset the processed files counter and save"""
+    def reset_processed_files(self) -> None:
+        """Reset the processed files counter."""
         self.processed_files_count = 0
-        if self.current_license:
+        if self.current_license and self.current_license.get('key'):
             self.save_license(self.current_license['key'])
         else:
             # Clear the license file if it exists
-            if self.license_file.exists():
-                self.license_file.unlink()
+            if self._license_file.exists():
+                self._license_file.unlink()
             self.current_license = None
-                 
-    def get_remaining_files(self):
+
+    def get_remaining_files(self) -> float:
         """
-        Get number of remaining files
+        Get number of remaining files.
         Licensed: unlimited (infinity)
         Free: up to 10 files
         """
         if self.is_licensed():
             return float('inf')  # Unlimited for licensed version
         return max(0, self.max_free_files - self.processed_files_count)
+
+    def get_license_status(self) -> Dict:
+        """Get license status for UI display."""
+        if self.is_licensed():
+            license_info = self.current_license or {}
+            try:
+                expires_str = license_info.get('expires', '')
+                if expires_str:
+                    expires = datetime.fromisoformat(expires_str.replace('Z', '+00:00'))
+                    now = datetime.now(timezone.utc)
+                    days_left = (expires - now).days
+                else:
+                    days_left = None
+            except:
+                days_left = None
+            
+            return {
+                'licensed': True,
+                'user_email': license_info.get('user_email', 'Unknown'),
+                'expires': license_info.get('expires'),
+                'days_left': days_left,
+                'processed_files': self.processed_files_count,
+                'remaining_files': float('inf'),
+                'features': license_info.get('features', [])
+            }
+        else:
+            return {
+                'licensed': False,
+                'processed_files': self.processed_files_count,
+                'remaining_files': max(0, self.max_free_files - self.processed_files_count),
+                'max_free_files': self.max_free_files
+            }

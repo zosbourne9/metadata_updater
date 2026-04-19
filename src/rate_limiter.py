@@ -4,107 +4,107 @@ from datetime import datetime, timedelta
 from typing import Dict, Optional
 
 class UnifiedRateLimiter:
-    """Centralized rate limiter for all API services."""
-    
+    """Centralized rate limiter for all API services.
+
+    Threads acquire a scheduled slot, then sleep outside the lock
+    so other threads can schedule their own slots concurrently.
+    """
+
     _instance = None
     _lock = threading.Lock()
-    
+
     def __new__(cls):
         if cls._instance is None:
             with cls._lock:
                 if cls._instance is None:
                     cls._instance = super().__new__(cls)
         return cls._instance
-    
+
     def __init__(self):
         if hasattr(self, '_initialized'):
             return
         self._initialized = True
-        
-        # Service-specific rate limits (calls per second)
-        self.service_limits = {
-            'spotify': 0.2,       # 1 call per 5 seconds
-            'musicbrainz': 0.25,  # 1 call per 4 seconds
-            'openrouter': 2.0     # 2 calls per second (OpenRouter Gemini 2.5 Flash)
+
+        # Service-specific rate limits (minimum seconds between calls)
+        # MusicBrainz: 1 req/sec officially, we use 1.1s to be safe
+        # Spotify: generous rate limits, 0.1s gap is plenty
+        # OpenRouter: 2 calls/sec
+        self.service_gaps = {
+            'spotify': 0.1,
+            'musicbrainz': 1.1,
+            'openrouter': 0.5
         }
-        
-        # Track last call times per service
-        self.last_call_times: Dict[str, Optional[float]] = {
-            service: None for service in self.service_limits
+
+        # Next allowed call time per service
+        self.next_allowed: Dict[str, float] = {
+            service: 0.0 for service in self.service_gaps
         }
-        
+
         # Track consecutive calls for backoff
         self.consecutive_calls: Dict[str, int] = {
-            service: 0 for service in self.service_limits
+            service: 0 for service in self.service_gaps
         }
-        
-        # Locks for thread safety per service
+
+        # Scheduling lock per service (held briefly, not during sleep)
         self.service_locks = {
-            service: threading.Lock() for service in self.service_limits
+            service: threading.Lock() for service in self.service_gaps
         }
-    
+
     def wait_if_needed(self, service: str, enable_backoff: bool = True) -> None:
         """
         Wait if needed based on service rate limits.
-        
-        Args:
-            service: Service name ('spotify', 'musicbrainz', 'openrouter')
-            enable_backoff: Whether to apply exponential backoff for consecutive calls
+
+        The lock is only held to compute and reserve a time slot.
+        The actual sleep happens outside the lock so other threads
+        can schedule their own slots in parallel.
         """
-        if service not in self.service_limits:
+        if service not in self.service_gaps:
             print(f"Warning: Unknown service '{service}' for rate limiting")
             return
-        
+
+        gap = self.service_gaps[service]
+
+        # Acquire lock briefly to reserve our slot
         with self.service_locks[service]:
-            current_time = time.time()
-            calls_per_second = self.service_limits[service]
-            required_gap = 1.0 / calls_per_second
-            
-            if self.last_call_times[service] is not None:
-                elapsed = current_time - self.last_call_times[service]
-                
-                if elapsed < required_gap:
-                    sleep_time = required_gap - elapsed
-                    
-                    # Apply backoff for consecutive calls
-                    if enable_backoff and self.consecutive_calls[service] > 5:
-                        backoff_multiplier = min(self.consecutive_calls[service] * 0.1, 2.0)
-                        sleep_time *= (1 + backoff_multiplier)
-                        print(f"Applying backoff for {service}: {sleep_time:.2f}s")
-                    
-                    print(f"Rate limiting {service}: waiting {sleep_time:.2f}s")
-                    time.sleep(sleep_time)
-                    
-                    # Reset consecutive calls after backoff
-                    if enable_backoff and sleep_time > required_gap * 1.5:
-                        self.consecutive_calls[service] = 0
-                else:
-                    # Reset consecutive calls if enough time has passed
-                    if elapsed > required_gap * 2:
-                        self.consecutive_calls[service] = 0
-            
-            # Update tracking
-            self.last_call_times[service] = time.time()
+            now = time.time()
+
+            # Apply backoff for many consecutive calls
+            effective_gap = gap
+            if enable_backoff and self.consecutive_calls[service] > 10:
+                backoff_multiplier = min(self.consecutive_calls[service] * 0.05, 1.0)
+                effective_gap = gap * (1 + backoff_multiplier)
+
+            # Our slot is the next allowed time
+            my_slot = max(now, self.next_allowed[service])
+
+            # Reserve slot: next caller must wait after us
+            self.next_allowed[service] = my_slot + effective_gap
             self.consecutive_calls[service] += 1
-    
+
+            sleep_time = my_slot - now
+
+        # Sleep OUTSIDE the lock — other threads can schedule while we wait
+        if sleep_time > 0.01:
+            time.sleep(sleep_time)
+
     def reset_service(self, service: str) -> None:
         """Reset rate limiting state for a service."""
-        if service in self.service_limits:
+        if service in self.service_gaps:
             with self.service_locks[service]:
-                self.last_call_times[service] = None
+                self.next_allowed[service] = 0.0
                 self.consecutive_calls[service] = 0
-    
+
     def get_service_status(self, service: str) -> Dict:
         """Get current status for a service."""
-        if service not in self.service_limits:
+        if service not in self.service_gaps:
             return {}
-        
+
         with self.service_locks[service]:
-            last_call = self.last_call_times[service]
+            next_at = self.next_allowed[service]
+            now = time.time()
             return {
                 'service': service,
-                'calls_per_second': self.service_limits[service],
-                'last_call': datetime.fromtimestamp(last_call) if last_call else None,
+                'min_gap_seconds': self.service_gaps[service],
+                'next_allowed_in': max(0, next_at - now),
                 'consecutive_calls': self.consecutive_calls[service],
-                'time_since_last_call': time.time() - last_call if last_call else None
             }
