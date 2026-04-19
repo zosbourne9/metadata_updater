@@ -209,13 +209,21 @@ class ProcessingThread(Thread):
                         self._emit(self.on_review_needed, file_path, candidates, best_match)
 
                         # Wait for user selection (blocking until set_selected_candidate is called)
+                        # This pauses processing until the user responds to the review modal
                         import time as time_module
                         timeout = 0
-                        while self.review_pending and timeout < 600:  # 10 minute timeout
-                            time_module.sleep(0.1)
-                            timeout += 1
+                        max_timeout_seconds = 600  # 10 minutes
+                        start_time = time_module.time()
 
-                        print(f"DEBUG: review_pending={self.review_pending}, selected_candidate_metadata={self.selected_candidate_metadata}")
+                        print(f"⏸️  PAUSING processing - waiting for user to respond to review modal for: {os.path.basename(file_path)}")
+                        while self.review_pending and timeout < max_timeout_seconds:
+                            time_module.sleep(0.1)
+                            timeout = time_module.time() - start_time
+
+                        if self.review_pending:
+                            print(f"⚠️  Review timeout after {max_timeout_seconds}s - moving to next file")
+
+                        print(f"✅ Resuming processing - review_pending={self.review_pending}, selected_candidate_metadata={self.selected_candidate_metadata is not None}")
 
                         # Use user's selected metadata if available
                         if self.selected_candidate_metadata:

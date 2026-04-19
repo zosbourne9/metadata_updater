@@ -1132,3 +1132,225 @@
 2026-04-19 11:15:26 - ✅ Using API artist: 'Denise LaSalle'
 2026-04-19 11:15:26 -    (Filename enrichment was: 'Denise Lasalle')
 2026-04-19 11:15:26 - ---
+2026-04-19 11:16:28 - SEARCH QUERY: Artist='Diplo' | Title='Imperfections (Original Mix)'
+2026-04-19 11:16:28 - Filename: Diplo Starrah - Imperfections (Original Mix).mp3
+2026-04-19 11:16:28 - Filename Artist (for reference): 'Diplo Starrah' → 'Diplo Starrah'
+2026-04-19 11:16:28 - 
+🎵 MUSICBRAINZ SEARCH
+2026-04-19 11:16:28 -   Query: Artist='diplo' | Title='Imperfections (Original Mix)'
+2026-04-19 11:16:33 -     REJECTED: Title similarity 0.63 < 0.75 | Title: 'imperfections' | Artist: 'starrah, diplo' | Album: 'Starrah x Diplo'
+2026-04-19 11:16:41 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'diplo rhythm' | Artist: 'diplo' | Album: 'Invasion of the Mysteron Killer Sounds in 3D'
+2026-04-19 11:16:41 -     REJECTED: Title similarity 0.09 < 0.75 | Title: 'mia (sunshowers) vs. salt n pepa (push it)' | Artist: 'diplo' | Album: 'It’s the Motherfucking Remix, Volume 2'
+2026-04-19 11:16:41 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'lost under my sheets' | Artist: 'diplo' | Album: 'Sound and Fury'
+2026-04-19 11:16:41 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'diplo rhythm' | Artist: 'diplo' | Album: 'Doing It Real Big'
+2026-04-19 11:16:41 -     REJECTED: Title similarity 0.22 < 0.75 | Title: 'toad wop' | Artist: 'diplo' | Album: 'Sound and Fury'
+2026-04-19 11:16:41 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'support' | Artist: 'diplo' | Album: 'Sound and Fury'
+2026-04-19 11:16:41 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'one' | Artist: 'diplo' | Album: 'Sound and Fury'
+2026-04-19 11:16:41 -     REJECTED: Title similarity 0.35 < 0.75 | Title: 'summer’s gonna hurt you' | Artist: 'diplo' | Album: 'Florida'
+2026-04-19 11:16:41 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'sarah' | Artist: 'diplo' | Album: 'F10RIDA'
+2026-04-19 11:16:41 -     REJECTED: Title similarity 0.33 < 0.75 | Title: 'mad decent radio #2: new orleans' | Artist: 'diplo' | Album: 'Mad Decent Radio, Volume 1'
+2026-04-19 11:16:41 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'work is never over / bamboo banger / bamboo banger (dubplate)' | Artist: 'diplo' | Album: 'I Like Turtles'
+2026-04-19 11:16:41 -   ✅ FOUND:
+2026-04-19 11:16:41 -     Title: Crispy / Bartman (So Krispy mix)
+2026-04-19 11:16:41 -     Artist: Diplo
+2026-04-19 11:16:41 -     Album: I Like Turtles
+2026-04-19 11:16:41 -     Year: 2007
+2026-04-19 11:16:41 -     Genre: 
+2026-04-19 11:16:41 - 
+🎵 SPOTIFY SEARCH
+2026-04-19 11:16:41 -   Query: Artist='diplo' | Title='Imperfections (Original Mix)'
+2026-04-19 11:16:41 -   ✅ FOUND:
+2026-04-19 11:16:41 -     Title: Imperfections
+2026-04-19 11:16:41 -     Artist: Starrah, Diplo
+2026-04-19 11:16:41 -     Album: Starrah X Diplo
+2026-04-19 11:16:41 -     Year: 2017
+2026-04-19 11:16:41 -     Genre: 
+2026-04-19 11:16:41 -     Spotify ID: 08Sm0dYXShN6ItqRajtfF1
+2026-04-19 11:16:41 -     Rating: 1
+2026-04-19 11:16:41 - 
+📊 MERGE RESULTS
+2026-04-19 11:16:41 -   MusicBrainz result: ✅ FOUND
+2026-04-19 11:16:41 -   Spotify result: ✅ FOUND
+2026-04-19 11:16:41 -   ✅ Album intelligent match: using Spotify 'Starrah X Diplo' (MB was 'i like turtles')
+2026-04-19 11:16:41 -   ⚠️  Year mismatch: MB=2007 vs Spotify=2017 (10 year gap) - flagging for review
+2026-04-19 11:16:43 - 
+✅ FINAL MERGED RESULT:
+2026-04-19 11:16:43 -   Title: Crispy / Bartman (So Krispy mix)
+2026-04-19 11:16:43 -   Artist: Starrah, Diplo
+2026-04-19 11:16:43 -   Album: Starrah X Diplo
+2026-04-19 11:16:43 -   Year: 2007
+2026-04-19 11:16:43 -   Genre: Pop
+2026-04-19 11:16:43 -   Rating: 1
+2026-04-19 11:16:44 - SEARCH RESULTS:
+2026-04-19 11:16:44 -   Title: Crispy / Bartman (So Krispy mix)
+2026-04-19 11:16:44 -   Artist: Starrah, Diplo
+2026-04-19 11:16:44 -   Album: Starrah X Diplo
+2026-04-19 11:16:44 -   Year: 2007
+2026-04-19 11:16:44 -   Genre: Pop
+2026-04-19 11:16:44 -   Rating: 1
+2026-04-19 11:16:44 - ✅ Using API artist: 'Starrah, Diplo'
+2026-04-19 11:16:44 -    (Filename enrichment was: 'Diplo Starrah')
+2026-04-19 11:16:44 - ---
+2026-04-19 11:17:15 - SEARCH QUERY: Artist='Dr. Hook and The Medicine Show' | Title='The Cover Of Rolling Stone'
+2026-04-19 11:17:15 - Filename: Dr. Hook and The Medicine Show - The Cover Of Rolling Stone.mp3
+2026-04-19 11:17:15 - Filename Artist (for reference): 'Dr. Hook and The Medicine Show' → 'Dr. Hook and The Medicine Show'
+2026-04-19 11:17:15 - 
+🎵 MUSICBRAINZ SEARCH
+2026-04-19 11:17:15 -   Query: Artist='dr. hook and the medicine show' | Title='The Cover Of Rolling Stone'
+2026-04-19 11:17:22 -     REJECTED: No artist similarity above threshold | Title: 'cover of the rolling stone' | Artist: 'dr. hook' | Album: 'Super Hits'
+2026-04-19 11:17:22 -     REJECTED: No artist similarity above threshold | Title: 'the cover of “rolling stone”' | Artist: 'dr. hook' | Album: 'Dr. Hook & the Medicine Show / Sloppy Seconds / Belly Up!'
+2026-04-19 11:17:22 -     REJECTED: No artist similarity above threshold | Title: 'cover of the rolling stone' | Artist: 'dr. hook' | Album: 'Dr. Hook & the Medicine Show: Super Hits'
+2026-04-19 11:17:22 -     REJECTED: No artist similarity above threshold | Title: 'cover of the rolling stone' | Artist: 'dr. hook' | Album: 'Best of Musikladen 1970–1983, Vol. 1'
+2026-04-19 11:17:22 -     REJECTED: No artist similarity above threshold | Title: 'the cover of 'rolling stone'' | Artist: 'dr. hook' | Album: 'Pure Gold Hits: 1970’s Pop Classics'
+2026-04-19 11:17:22 -     REJECTED: No artist similarity above threshold | Title: 'cover of the “rolling stone”' | Artist: 'dr. hook' | Album: 'Greatest Hits'
+2026-04-19 11:17:22 -     REJECTED: No artist similarity above threshold | Title: 'the cover of “rolling stone”' | Artist: 'dr. hook' | Album: 'Pop Goes the ’70s'
+2026-04-19 11:17:22 -     REJECTED: No artist similarity above threshold | Title: 'the cover of “rolling stone”' | Artist: 'dr. hook' | Album: 'The Cover of “Rolling Stone” / Roland the Roadie and Gertrude the Groupie'
+2026-04-19 11:17:22 -     REJECTED: No artist similarity above threshold | Title: 'the cover of “rolling stone”' | Artist: 'dr. hook' | Album: 'Sylvia’s Mother / The Cover of “Rolling Stone”'
+2026-04-19 11:17:22 -     REJECTED: No artist similarity above threshold | Title: 'the cover of “rolling stone”' | Artist: 'dr. hook' | Album: 'The Cover of “Rolling Stone” / Life Ain’t Easy'
+2026-04-19 11:17:22 -     REJECTED: No artist similarity above threshold | Title: 'the cover of “rolling stone”' | Artist: 'dr. hook' | Album: 'The Cover of “Rolling Stone” / Queen of the Silver Dollar'
+2026-04-19 11:17:22 -     REJECTED: No artist similarity above threshold | Title: 'the cover of the rolling stone' | Artist: 'dr. hook' | Album: 'Flower Power: Do You Believe in Magic'
+2026-04-19 11:17:22 -     REJECTED: No artist similarity above threshold | Title: 'cover of the rolling stone' | Artist: 'jackyl' | Album: 'Best in Show'
+2026-04-19 11:17:22 -     REJECTED: Title similarity 0.35 < 0.75 | Title: 'the hook' | Artist: 'candy johnson show' | Album: 'Son Of Blunderbuss - More Scattershot Sleaze 58-67'
+2026-04-19 11:17:22 -     REJECTED: Title similarity 0.38 < 0.75 | Title: 'queen of the silver dollar' | Artist: 'dr. hook' | Album: 'The Cover of “Rolling Stone” / Queen of the Silver Dollar'
+2026-04-19 11:17:22 -     REJECTED: Title similarity 0.44 < 0.75 | Title: 'off the hook (tami show)' | Artist: 'the rolling stones' | Album: 'W H Smith Cable Jukebox, Disc 3'
+2026-04-19 11:17:22 -     REJECTED: Title similarity 0.35 < 0.75 | Title: 'the hook' | Artist: 'the candy rock show' | Album: 'Jookin’ 4: 27 Raw Slices of Maximum R&B!'
+2026-04-19 11:17:22 -     REJECTED: Title similarity 0.47 < 0.75 | Title: 'the medicine show' | Artist: 'the dream syndicate' | Album: 'Tell Me When It’s Over: The Best Of'
+2026-04-19 11:17:22 -     REJECTED: Title similarity 0.57 < 0.75 | Title: 'the hook of love' | Artist: 'show of hands' | Album: 'Beat About the Bush'
+2026-04-19 11:17:22 -     REJECTED: Title similarity 0.47 < 0.75 | Title: 'the medicine show' | Artist: 'the mostar diving club' | Album: 'November 2009 Chrysalis Music Singles Sampler'
+2026-04-19 11:17:27 -     REJECTED: Title similarity 0.23 < 0.75 | Title: 'sing me a rainbow' | Artist: 'dr. hook' | Album: 'Doctor Hook'
+2026-04-19 11:17:27 -     REJECTED: Title similarity 0.35 < 0.75 | Title: 'when she cries' | Artist: 'dr. hook' | Album: 'Doctor Hook'
+2026-04-19 11:17:27 -     REJECTED: Title similarity 0.16 < 0.75 | Title: 'kiss it away' | Artist: 'dr. hook' | Album: 'Dr. Hook & the Medicine Show'
+2026-04-19 11:17:27 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'i call this true love' | Artist: 'dr. hook' | Album: 'Dr Hook & the Medicine Show Super Hits'
+2026-04-19 11:17:27 -     REJECTED: Title similarity 0.33 < 0.75 | Title: 'carry me, carrie' | Artist: 'dr. hook' | Album: 'Dr. Hook & the Medicine Show: Super Hits'
+2026-04-19 11:17:27 -     REJECTED: Title similarity 0.15 < 0.75 | Title: 'life ain’t easy' | Artist: 'dr. hook' | Album: 'Dr. Hook & the Medicine Show: Super Hits'
+2026-04-19 11:17:27 -     REJECTED: Title similarity 0.39 < 0.75 | Title: 'if i’d only come and gone' | Artist: 'dr. hook' | Album: 'Dr. Hook & the Medicine Show: Super Hits'
+2026-04-19 11:17:27 -     REJECTED: Title similarity 0.16 < 0.75 | Title: 'kiss it away' | Artist: 'dr. hook' | Album: 'Dr. Hook & the Medicine Show: Super Hits'
+2026-04-19 11:17:27 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'i call that true love' | Artist: 'dr. hook' | Album: 'Dr. Hook & the Medicine Show: Super Hits'
+2026-04-19 11:17:27 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'i call that true love' | Artist: 'dr. hook' | Album: 'Doctor Hook'
+2026-04-19 11:17:27 -     REJECTED: Title similarity 0.34 < 0.75 | Title: 'mama, i’ll sing one song for you' | Artist: 'dr. hook' | Album: 'Doctor Hook'
+2026-04-19 11:17:27 -     REJECTED: Title similarity 0.28 < 0.75 | Title: 'four years older than me' | Artist: 'dr. hook' | Album: 'Doctor Hook'
+2026-04-19 11:17:32 -   ✅ FOUND:
+2026-04-19 11:17:32 -     Title: The Things I Didn’t Say
+2026-04-19 11:17:32 -     Artist: Dr. Hook
+2026-04-19 11:17:32 -     Album: Sloppy Seconds
+2026-04-19 11:17:32 -     Year: 1972
+2026-04-19 11:17:32 -     Genre: 
+2026-04-19 11:17:32 - 
+🎵 SPOTIFY SEARCH
+2026-04-19 11:17:32 -   Query: Artist='dr. hook and the medicine show' | Title='The Cover Of Rolling Stone'
+2026-04-19 11:17:34 -       Rejected: title sim 0.96, best artist sim 0.42 <= 0.7 | Title: 'The Cover of "Rolling Stone"' | Artist: 'Dr. Hook' | Album: 'Sloppy Seconds'
+2026-04-19 11:17:34 -       Rejected: title sim 0.96, best artist sim 0.42 <= 0.7 | Title: 'The Cover of 'Rolling Stone'' | Artist: 'Dr. Hook' | Album: 'Revisited'
+2026-04-19 11:17:34 -       Rejected: title sim 0.96, best artist sim 0.42 <= 0.7 | Title: 'The Cover of "Rolling Stone"' | Artist: 'Dr. Hook' | Album: 'The Essential Dr. Hook And The Medicine Show'
+2026-04-19 11:17:34 -       Rejected: title sim 0.96, best artist sim 0.42 <= 0.7 | Title: 'The Cover of "Rolling Stone"' | Artist: 'Dr. Hook' | Album: 'Super Hits'
+2026-04-19 11:17:34 -       Rejected: title sim 0.96, best artist sim 0.42 <= 0.7 | Title: 'The Cover of "Rolling Stone"' | Artist: 'Dr. Hook' | Album: 'Playlist: The Very Best Of Dr. Hook And The Medicine Show'
+2026-04-19 11:17:34 -   ❌ NO RESULTS
+2026-04-19 11:17:34 - 
+📊 MERGE RESULTS
+2026-04-19 11:17:34 -   MusicBrainz result: ✅ FOUND
+2026-04-19 11:17:34 -   Spotify result: ❌ NOT FOUND
+2026-04-19 11:17:42 - 
+✅ FINAL MERGED RESULT:
+2026-04-19 11:17:42 -   Title: The Things I Didn’t Say
+2026-04-19 11:17:42 -   Artist: Dr. Hook
+2026-04-19 11:17:42 -   Album: Sloppy Seconds
+2026-04-19 11:17:42 -   Year: 1972
+2026-04-19 11:17:42 -   Genre: Rock
+2026-04-19 11:17:42 -   Rating: 
+2026-04-19 11:17:43 - SEARCH RESULTS:
+2026-04-19 11:17:43 -   Title: The Things I Didn’t Say
+2026-04-19 11:17:43 -   Artist: Dr. Hook
+2026-04-19 11:17:43 -   Album: Sloppy Seconds
+2026-04-19 11:17:43 -   Year: 1972
+2026-04-19 11:17:43 -   Genre: Rock
+2026-04-19 11:17:43 -   Rating: 
+2026-04-19 11:17:43 - ✅ Using API artist: 'Dr. Hook'
+2026-04-19 11:17:43 -    (Filename enrichment was: 'Dr. Hook and The Medicine Show')
+2026-04-19 11:17:43 - ---
+2026-04-19 11:17:43 - SEARCH QUERY: Artist='Electric Light Orchestra' | Title='Telephone Line'
+2026-04-19 11:17:43 - Filename: Electric Light Orchestra - Telephone Line.mp3
+2026-04-19 11:17:43 - Filename Artist (for reference): 'Electric Light Orchestra' → 'Electric Light Orchestra'
+2026-04-19 11:17:43 - 
+🎵 MUSICBRAINZ SEARCH
+2026-04-19 11:17:43 -   Query: Artist='electric light orchestra' | Title='Telephone Line'
+2026-04-19 11:18:09 -   ✅ FOUND:
+2026-04-19 11:18:09 -     Title: Telephone Line
+2026-04-19 11:18:09 -     Artist: Electric Light Orchestra
+2026-04-19 11:18:09 -     Album: A New World Record
+2026-04-19 11:18:09 -     Year: 1976
+2026-04-19 11:18:09 -     Genre: 
+2026-04-19 11:18:09 - 
+🎵 SPOTIFY SEARCH
+2026-04-19 11:18:09 -   Query: Artist='electric light orchestra' | Title='Telephone Line'
+2026-04-19 11:18:09 -   ✅ FOUND:
+2026-04-19 11:18:09 -     Title: Telephone Line
+2026-04-19 11:18:09 -     Artist: Electric Light Orchestra
+2026-04-19 11:18:09 -     Album: A New World Record
+2026-04-19 11:18:09 -     Year: 1976
+2026-04-19 11:18:09 -     Genre: 
+2026-04-19 11:18:09 -     Spotify ID: 3SPcBPzvbmWLl8NU5efx4W
+2026-04-19 11:18:09 -     Rating: 128
+2026-04-19 11:18:09 - 
+📊 MERGE RESULTS
+2026-04-19 11:18:09 -   MusicBrainz result: ✅ FOUND
+2026-04-19 11:18:09 -   Spotify result: ✅ FOUND
+2026-04-19 11:18:17 - 
+✅ FINAL MERGED RESULT:
+2026-04-19 11:18:17 -   Title: Telephone Line
+2026-04-19 11:18:17 -   Artist: Electric Light Orchestra
+2026-04-19 11:18:17 -   Album: A New World Record
+2026-04-19 11:18:17 -   Year: 1976
+2026-04-19 11:18:17 -   Genre: Pop
+2026-04-19 11:18:17 -   Rating: 128
+2026-04-19 11:18:18 - SEARCH RESULTS:
+2026-04-19 11:18:18 -   Title: Telephone Line
+2026-04-19 11:18:18 -   Artist: Electric Light Orchestra
+2026-04-19 11:18:18 -   Album: A New World Record
+2026-04-19 11:18:18 -   Year: 1976
+2026-04-19 11:18:18 -   Genre: Pop
+2026-04-19 11:18:18 -   Rating: 128
+2026-04-19 11:18:18 - ✅ Using API artist: 'Electric Light Orchestra'
+2026-04-19 11:18:18 - ---
+2026-04-19 11:18:18 - SEARCH QUERY: Artist='Electric Light Orchestra' | Title='Turn To Stone'
+2026-04-19 11:18:18 - Filename: Electric Light Orchestra - Turn To Stone.mp3
+2026-04-19 11:18:18 - Filename Artist (for reference): 'Electric Light Orchestra' → 'Electric Light Orchestra'
+2026-04-19 11:18:18 - 
+🎵 MUSICBRAINZ SEARCH
+2026-04-19 11:18:18 -   Query: Artist='electric light orchestra' | Title='Turn To Stone'
+2026-04-19 11:18:19 -   ✅ FOUND:
+2026-04-19 11:18:19 -     Title: Telephone Line
+2026-04-19 11:18:19 -     Artist: Electric Light Orchestra
+2026-04-19 11:18:19 -     Album: A New World Record
+2026-04-19 11:18:19 -     Year: 1976
+2026-04-19 11:18:19 -     Genre: Pop
+2026-04-19 11:18:19 - 
+🎵 SPOTIFY SEARCH
+2026-04-19 11:18:19 -   Query: Artist='electric light orchestra' | Title='Turn To Stone'
+2026-04-19 11:18:20 -   ✅ FOUND:
+2026-04-19 11:18:20 -     Title: Telephone Line
+2026-04-19 11:18:20 -     Artist: Electric Light Orchestra
+2026-04-19 11:18:20 -     Album: A New World Record
+2026-04-19 11:18:20 -     Year: 1976
+2026-04-19 11:18:20 -     Genre: Pop
+2026-04-19 11:18:20 -     Spotify ID: 3SPcBPzvbmWLl8NU5efx4W
+2026-04-19 11:18:20 -     Rating: 128
+2026-04-19 11:18:20 - 
+📊 MERGE RESULTS
+2026-04-19 11:18:20 -   MusicBrainz result: ✅ FOUND
+2026-04-19 11:18:20 -   Spotify result: ✅ FOUND
+2026-04-19 11:18:20 - 
+✅ FINAL MERGED RESULT:
+2026-04-19 11:18:20 -   Title: Telephone Line
+2026-04-19 11:18:20 -   Artist: Electric Light Orchestra
+2026-04-19 11:18:20 -   Album: A New World Record
+2026-04-19 11:18:20 -   Year: 1976
+2026-04-19 11:18:20 -   Genre: Pop
+2026-04-19 11:18:20 -   Rating: 128
+2026-04-19 11:18:21 - SEARCH RESULTS:
+2026-04-19 11:18:21 -   Title: Telephone Line
+2026-04-19 11:18:21 -   Artist: Electric Light Orchestra
+2026-04-19 11:18:21 -   Album: A New World Record
+2026-04-19 11:18:21 -   Year: 1976
+2026-04-19 11:18:21 -   Genre: Pop
+2026-04-19 11:18:21 -   Rating: 128
+2026-04-19 11:18:21 - ✅ Using API artist: 'Electric Light Orchestra'
+2026-04-19 11:18:21 - ---
