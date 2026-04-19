@@ -457,10 +457,14 @@ class SimplifiedMusicBrainzIntegration:
 
             # Require target artist to be the FIRST (main) artist in artist-credit
             # This prevents matching recordings where target artist is only a featuring artist
+            # Use substring/prefix matching to handle partial names (e.g., "tyler" → "tyler, the creator")
             for credit in recording['artist-credit']:
                 if isinstance(credit, dict) and 'artist' in credit:
                     first_artist = credit['artist']['name'].lower().strip()
-                    return target_artist_clean == first_artist
+                    # Allow exact match or substring match (e.g., "tyler" in "tyler, the creator")
+                    return (target_artist_clean == first_artist or
+                            target_artist_clean in first_artist or
+                            first_artist in target_artist_clean)
 
             return False
             
@@ -595,9 +599,14 @@ class SimplifiedMusicBrainzIntegration:
 
                 # CRITICAL: Check if recording's first artist (main artist) matches search artist
                 # This prevents selecting recordings featuring the target artist instead of recordings by the target artist
-                if target_artist and main_artist and main_artist != target_artist.lower().strip():
-                    release_score -= 100  # Heavy penalty for wrong main artist
-                    print(f"  Recording's first artist '{main_artist}' doesn't match search artist '{target_artist}' - applying -100 penalty")
+                # Use fuzzy matching + substring check to handle partial names (e.g., "tyler" → "tyler, the creator")
+                if target_artist and main_artist:
+                    target_clean = target_artist.lower().strip()
+                    similarity = self._string_similarity(target_clean, main_artist)
+                    is_substring = target_clean in main_artist or main_artist in target_clean
+                    if similarity < 0.5 and not is_substring:
+                        release_score -= 100  # Heavy penalty for genuinely wrong main artist
+                        print(f"  Recording's first artist '{main_artist}' doesn't match search artist '{target_artist}' - applying -100 penalty")
 
                 # Heavy penalties for non-studio releases
                 penalties = [
