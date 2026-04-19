@@ -5,6 +5,7 @@ import unicodedata
 from openai import OpenAI
 from typing import List, Dict, Optional
 from fuzzywuzzy import fuzz
+from constants import AI_MODEL
 
 VERSION = "1.2.0"
 
@@ -128,12 +129,12 @@ Return only a JSON array of strings with all known variations:
 ["variation1", "variation2", "variation3"]"""
 
             response = self.client.chat.completions.create(
-                model="google/gemini-2.5-flash",
+                model=AI_MODEL,
                 messages=[
                     {"role": "system", "content": "Generate artist name variations. Return only JSON array."},
                     {"role": "user", "content": prompt}
                 ],
-                temperature=0.1,
+                temperature=0,
                 max_tokens=200
             )
             response_text = response.choices[0].message.content
@@ -219,7 +220,18 @@ Return only a JSON array of strings with all known variations:
             return 0
 
     def clean_artist_name(self, name: str) -> str:
-        """Clean and normalize artist name, including leetspeak and special characters."""
+        """
+        Clean and normalize artist name, including leetspeak and special characters.
+
+        For collaborative tracks, keeps primary artists but removes featured artist clauses.
+
+        Examples:
+            "Compton Av, Steelz, Blueface & Lola Brooke ft Natalie Nunn & India Love"
+            → "compton av steelz blueface lola brooke"
+            (removes "ft Natalie Nunn & India Love")
+
+            "The Beatles feat. Yoko Ono" → "the beatles"
+        """
         try:
             # Convert to lowercase
             name = name.lower()
@@ -237,15 +249,26 @@ Return only a JSON array of strings with all known variations:
             nfd_form = unicodedata.normalize('NFD', name)
             name = ''.join(char for char in nfd_form if unicodedata.category(char) != 'Mn')
 
-            # Step 3: Remove featuring artists
-            feat_patterns = [
-                r'\s*(\(|\)|\[|\]|\s|,)(ft\.?|f\./|feat\.|featuring|&|vs|·|x|,)\s*[^)\]]*(\)|\|)?',
-                r',.*'
+            # Step 3: Remove featured artist clauses (but keep collaborators)
+            # Only remove content that comes AFTER explicit feature keywords
+            # This preserves "Artist1, Artist2 & Artist3" but removes "ft. Guest Artist"
+            featured_patterns = [
+                # Remove "featuring ...", "feat. ...", "ft. ...", etc. and everything after
+                r'\s+(featuring|feat\.?|ft\.?)\s+.*$',
+                # Remove "with ..." when followed by typical featured artist names
+                r'\s+with\s+[^,&]+$',
+                # Remove content in parentheses that are ONLY featuring info
+                r'\s*\(\s*feat\.?.*?\)',
+                r'\s*\(\s*featuring.*?\)',
             ]
-            for pattern in feat_patterns:
+            for pattern in featured_patterns:
                 name = re.sub(pattern, '', name, flags=re.IGNORECASE)
 
-            # Step 4: Clean up extra spaces and special characters
+            # Step 4: Replace common collaborator separators with spaces for consistency
+            # Convert "&" and "," to spaces so "Artist1, Artist2 & Artist3" becomes "artist1 artist2 artist3"
+            name = re.sub(r'[,&]', ' ', name)
+
+            # Step 5: Clean up extra spaces
             name = re.sub(r'\s+', ' ', name)
             return name.strip()
 

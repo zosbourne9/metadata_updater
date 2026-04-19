@@ -5,6 +5,7 @@ import os
 import logging
 from datetime import datetime
 from openai import OpenAI
+from constants import AI_MODEL
 
 # Import RAG knowledge base
 try:
@@ -179,6 +180,17 @@ class EnhancedGenreDetector:
                     r'(?i)lil\s*\w+',
                     r'(?i)young\s*\w+',
                     r'(?i)big\s*\w+'
+                ],
+                'location_indicators': [
+                    r'(?i)compton',
+                    r'(?i)los\s*angeles',
+                    r'(?i)new\s*york',
+                    r'(?i)atlanta',
+                    r'(?i)miami',
+                    r'(?i)houston',
+                    r'(?i)chicago',
+                    r'(?i)brooklyn',
+                    r'(?i)oakland'
                 ]
             },
             'r&b': {
@@ -283,7 +295,8 @@ class EnhancedGenreDetector:
                 weight = {
                     'musical_patterns': 0.4,
                     'production_patterns': 0.3,
-                    'artist_indicators': 0.5
+                    'artist_indicators': 0.5,
+                    'location_indicators': 0.35
                 }.get(pattern_type, 0.3)
                 
                 for pattern in pattern_list:
@@ -490,12 +503,12 @@ Return your response as JSON only in this exact format:
 {{"genre": "genre_name", "confidence": 0.0-1.0}}"""
 
             response = self.ai_client.chat.completions.create(
-                model="google/gemini-2.5-flash",
+                model=AI_MODEL,
                 messages=[
                     {"role": "system", "content": "You are a music genre expert. Return only JSON responses."},
                     {"role": "user", "content": prompt_text}
                 ],
-                temperature=0.1,
+                temperature=0,
                 max_tokens=100
             )
 
@@ -520,6 +533,12 @@ Return your response as JSON only in this exact format:
 
         except Exception as e:
             logger.error(f"AI analysis error: {e}")
+            # Fallback to pattern-based detection when AI fails
+            logger.info(f"AI genre detection failed, falling back to pattern-based detection")
+            genre, confidence = self.detect_genre(artist, title)
+            if genre:
+                logger.info(f"Pattern-based fallback detected genre: {genre} (confidence: {confidence})")
+                return genre, confidence
             return None, 0.0
 
     def _analyze_context(self, artist: str, title: str, confidence_scores: Dict[str, float]):

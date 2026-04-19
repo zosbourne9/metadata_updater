@@ -1,4 +1,5 @@
 from typing import Optional, Dict
+import logging
 from simplified_mb_integration import SimplifiedMusicBrainzIntegration
 from simplified_spotify_integration import SimplifiedSpotifyIntegration
 from artist_normalizer import ArtistNormalizer
@@ -6,6 +7,9 @@ from title_normalizer import TitleNormalizer
 from enhanced_genre_detector import EnhancedGenreDetector
 from constants import OPENROUTER_API_KEY
 from riddim_scraper import get_riddim_scraper
+
+# Get the search logger (created in metadata_updater_webview)
+SEARCH_LOGGER = logging.getLogger('search_debug')
 
 class SimplifiedMetadataSearcher:
     """
@@ -20,18 +24,20 @@ class SimplifiedMetadataSearcher:
     
     def __init__(self, parent=None, status_update_callback=None, cache_manager=None):
         self.cache_manager = cache_manager
-        
+
         self.musicbrainz = SimplifiedMusicBrainzIntegration(
             parent=parent,
             status_update_callback=status_update_callback,
-            cache_manager=cache_manager
+            cache_manager=cache_manager,
+            debug_logger=SEARCH_LOGGER
         )
-        
+
         self.spotify = SimplifiedSpotifyIntegration(
             cache_manager=cache_manager,
-            status_update_callback=status_update_callback
+            status_update_callback=status_update_callback,
+            debug_logger=SEARCH_LOGGER
         )
-        
+
         self.artist_normalizer = ArtistNormalizer()
         self.title_normalizer = TitleNormalizer()
 
@@ -41,7 +47,7 @@ class SimplifiedMetadataSearcher:
         except Exception as e:
             print(f"Warning: AI genre detector not initialized: {e}")
             self.ai_genre_detector = None
-        
+
         print("Simplified metadata searcher initialized")
 
     def search_metadata(self, artist_name: str, track_title: str, riddim_mode: Dict = None) -> Optional[Dict]:
@@ -92,48 +98,90 @@ class SimplifiedMetadataSearcher:
             if normalized_title != track_title:
                 print(f"Normalized Title: {normalized_title}")
 
+            # Remove version qualifiers for better search matching
+            # Keeps remixes like (SheMix) but removes (Clean), (Dirty), etc.
+            search_title = self.title_normalizer.remove_version_qualifiers(normalized_title)
+            if search_title != normalized_title:
+                print(f"Search Title (version qualifiers removed): {search_title}")
+
             mb_result = None
             spotify_result = None
 
             # 1. Try MusicBrainz first (more reliable for metadata)
             print("\n--- Trying MusicBrainz ---")
+            SEARCH_LOGGER.info(f"\n🎵 MUSICBRAINZ SEARCH")
+            SEARCH_LOGGER.info(f"  Query: Artist='{normalized_artist}' | Title='{search_title}'")
             try:
-                mb_result = self.musicbrainz.search_metadata(normalized_artist, normalized_title)
+                mb_result = self.musicbrainz.search_metadata(normalized_artist, search_title)
                 if mb_result:
                     print(f"MusicBrainz found: {mb_result}")
+                    SEARCH_LOGGER.info(f"  ✅ FOUND:")
+                    SEARCH_LOGGER.info(f"    Title: {mb_result.get('title', 'N/A')}")
+                    SEARCH_LOGGER.info(f"    Artist: {mb_result.get('artist', 'N/A')}")
+                    SEARCH_LOGGER.info(f"    Album: {mb_result.get('album', 'N/A')}")
+                    SEARCH_LOGGER.info(f"    Year: {mb_result.get('year', 'N/A')}")
+                    SEARCH_LOGGER.info(f"    Genre: {mb_result.get('genre', 'N/A')}")
                 else:
                     print("MusicBrainz: No results")
+                    SEARCH_LOGGER.info(f"  ❌ NO RESULTS")
             except Exception as e:
                 print(f"MusicBrainz search error: {e}")
+                SEARCH_LOGGER.info(f"  ❌ ERROR: {e}")
 
             # 2. Try Spotify (for additional coverage)
             print("\n--- Trying Spotify ---")
+            SEARCH_LOGGER.info(f"\n🎵 SPOTIFY SEARCH")
+            SEARCH_LOGGER.info(f"  Query: Artist='{normalized_artist}' | Title='{search_title}'")
             try:
                 # Pass original title to Spotify so it can search with special chars intact (e.g., "$ave Dat Money")
-                spotify_result = self.spotify.search_metadata(normalized_artist, normalized_title, original_track_title=original_title)
+                spotify_result = self.spotify.search_metadata(normalized_artist, search_title, original_track_title=original_title)
                 if spotify_result:
                     print(f"Spotify found: {spotify_result}")
+                    SEARCH_LOGGER.info(f"  ✅ FOUND:")
+                    SEARCH_LOGGER.info(f"    Title: {spotify_result.get('title', 'N/A')}")
+                    SEARCH_LOGGER.info(f"    Artist: {spotify_result.get('artist', 'N/A')}")
+                    SEARCH_LOGGER.info(f"    Album: {spotify_result.get('album', 'N/A')}")
+                    SEARCH_LOGGER.info(f"    Year: {spotify_result.get('year', 'N/A')}")
+                    SEARCH_LOGGER.info(f"    Genre: {spotify_result.get('genre', 'N/A')}")
+                    SEARCH_LOGGER.info(f"    Spotify ID: {spotify_result.get('spotify_id', 'N/A')}")
+                    SEARCH_LOGGER.info(f"    Rating: {spotify_result.get('rating', 'N/A')}")
                 else:
                     print("Spotify: No results")
+                    SEARCH_LOGGER.info(f"  ❌ NO RESULTS")
             except Exception as e:
                 print(f"Spotify search error: {e}")
+                SEARCH_LOGGER.info(f"  ❌ ERROR: {e}")
 
             # 3. Merge results intelligently
             print("\n--- Merging Results ---")
+            SEARCH_LOGGER.info(f"\n📊 MERGE RESULTS")
+            SEARCH_LOGGER.info(f"  MusicBrainz result: {'✅ FOUND' if mb_result else '❌ NOT FOUND'}")
+            SEARCH_LOGGER.info(f"  Spotify result: {'✅ FOUND' if spotify_result else '❌ NOT FOUND'}")
+
             # If we're in riddim mode but didn't find on RiddimGuide, preserve album field
             preserve_album = is_riddim_mode
             merged = self._merge_metadata(mb_result, spotify_result, normalized_artist, artist_name, track_title, preserve_album=preserve_album)
 
             if merged:
                 print(f"Final merged result: {merged}")
+                SEARCH_LOGGER.info(f"\n✅ FINAL MERGED RESULT:")
+                SEARCH_LOGGER.info(f"  Title: {merged.get('title', 'N/A')}")
+                SEARCH_LOGGER.info(f"  Artist: {merged.get('artist', 'N/A')}")
+                SEARCH_LOGGER.info(f"  Album: {merged.get('album', 'N/A')}")
+                SEARCH_LOGGER.info(f"  Year: {merged.get('year', 'N/A')}")
+                SEARCH_LOGGER.info(f"  Genre: {merged.get('genre', 'N/A')}")
+                SEARCH_LOGGER.info(f"  Rating: {merged.get('rating', 'N/A')}")
                 # Cache the COMPLETE result (with genre populated) after merging
+                # IMPORTANT: Cache with normalized/search values, not original filename values
+                # This ensures cache lookups match between search and cache operations
                 if self.cache_manager:
                     try:
-                        self.cache_manager.set_metadata(artist_name, track_title, merged)
+                        self.cache_manager.set_metadata(normalized_artist, search_title, merged)
                     except Exception as e:
                         print(f"Error caching merged metadata: {e}")
             else:
                 print("No metadata found from any source")
+                SEARCH_LOGGER.info(f"\n❌ NO METADATA FOUND FROM ANY SOURCE")
 
             return merged
 
