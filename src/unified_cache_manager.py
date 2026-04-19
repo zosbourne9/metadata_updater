@@ -111,65 +111,59 @@ class UnifiedCacheManager:
 
     # Metadata-specific methods
     def generate_metadata_key(self, artist_name: str, title: str) -> str:
+        """Generate cache key using primary artist (first artist only) and cleaned title.
+
+        This is much simpler and more reliable:
+        - "Artist1, Artist2, Artist3" → "artist1"
+        - "YAYA (SheMix) (Clean)" → "yaya"
+        - Result: "artist1_yaya"
+        """
         print(f"\nGenerating cache key:")
         print(f"Input artist: {artist_name}")
         print(f"Input title: {title}")
-        
-        # Normalize artist name - handle various separators and unicode punctuation
-        artist = artist_name.lower()
-        # Normalize various dash/hyphen characters to ASCII hyphen
-        artist = re.sub(r'[\u2010\u2011\u2012\u2013\u2014\u2212]', '-', artist)
-        # Normalize fancy apostrophes to ASCII
-        artist = artist.replace('\u2019', "'")
-        # Convert common separators into a standard ' feat ' token
-        artist = re.sub(r'[\/,&+x×]', ' feat ', artist)
-        # Remove unwanted characters but keep letters, digits, spaces, hyphen and apostrophe
-        artist = re.sub(r"[^a-z0-9\s\-']", '', artist)
-        # Collapse multiple spaces and trim
-        artist = re.sub(r'\s+', ' ', artist).strip()
-        # Normalize different ways of writing featuring to a single token
-        artist = re.sub(r'\b(ft|feat|featuring|f\.?)\b', 'feat', artist)
-        # Clean surrounding spaces around 'feat'
-        artist = re.sub(r'\s*feat\s*', ' feat ', artist).strip()
-        print(f"Normalized artist: {artist}")
 
-        
-        # Enhanced title normalization for better cache matching
-        base_title = title
-        
-        # Remove version indicators and extra info
-        base_title = re.sub(r'\s*[\(\[](Clean|Dirty|Explicit|Radio Edit|Album Version)[\)\]]', '', base_title, flags=re.IGNORECASE)
-        base_title = re.sub(r'\s*[\(\[](Official.*Video|Music.*Video|Audio|HD|4K)[\)\]]', '', base_title, flags=re.IGNORECASE)
-        
-        # Handle potential title variations and truncations
-        # Better approach: preserve the structure but normalize for cache matching
-        
-        # First, normalize the title and clean special characters for consistent cache keys
-        normalized_title = base_title.lower()
-        # Remove apostrophes and other special characters for cleaner cache keys
-        normalized_title = re.sub(r'[^\w\s\-]', '', normalized_title)
-        
-        # Split into words but keep the comma structure
-        title_words = normalized_title.split()
-        
-        # Keep first 4-5 significant words to handle truncated titles
-        significant_words = []
-        for word in title_words:
-            # Clean each word but preserve important punctuation
-            clean_word = word.strip()
-            
-            if clean_word and len(clean_word) >= 1:  # Keep all meaningful words
-                significant_words.append(clean_word)
-            if len(significant_words) >= 5:  # Increased limit to capture full titles better
+        # Extract PRIMARY ARTIST ONLY (first artist before any separator)
+        # Handles: "Artist1, Artist2", "Artist1 & Artist2", "Artist1 feat Artist2", etc.
+        primary_artist = artist_name.lower()
+
+        # Split by common separators and take the first part
+        for separator in [',', '&', '|', '/']:
+            if separator in primary_artist:
+                primary_artist = primary_artist.split(separator)[0].strip()
                 break
-        
-        title_key = '_'.join(significant_words) if significant_words else 'unknown'
-        print(f"Base title: {base_title}")
-        print(f"Title words extracted: {significant_words}")
+
+        # Remove featuring/feat keywords and everything after
+        primary_artist = re.sub(r'\s+(feat|ft|featuring|f\.?)\s+.*$', '', primary_artist)
+
+        # Clean special characters
+        primary_artist = re.sub(r"[^a-z0-9\s\-']", '', primary_artist)
+        primary_artist = re.sub(r'\s+', ' ', primary_artist).strip()
+
+        print(f"Primary artist: {primary_artist}")
+
+        # CLEAN TITLE: Remove all version indicators and extra info
+        base_title = title.lower()
+
+        # Remove ALL version indicators and extra info (comprehensive pattern)
+        # Handles: (Clean), (Dirty), (Intro Clean), (Intro Dirty), (Radio Edit), (Album Version), (SheMix), etc.
+        version_keywords = r'(intro|clean|dirty|explicit|radio\s+edit|album\s+version|mix|remix|version|edit|audio|video|hd|4k|remaster)'
+        base_title = re.sub(rf'\s*[\(\[].*?{version_keywords}.*?[\)\]]', '', base_title, flags=re.IGNORECASE)
+
+        # Also remove standalone version indicators that might not be in parentheses
+        base_title = re.sub(r'\s*-\s*(clean|dirty|explicit|remix|remaster|version|mix|edit).*$', '', base_title, flags=re.IGNORECASE)
+
+        # Clean special characters from title
+        normalized_title = re.sub(r'[^\w\s\-]', '', base_title)
+        normalized_title = re.sub(r'\s+', ' ', normalized_title).strip()
+
+        # Create simple title key (just use the cleaned title as-is)
+        title_key = normalized_title if normalized_title else 'unknown'
+
+        print(f"Cleaned title: {base_title}")
         print(f"Title key: {title_key}")
-        
-        # Combine for final key
-        key = f"{artist}_{title_key}"
+
+        # Combine for final key: "artist_title"
+        key = f"{primary_artist}_{title_key}"
         print(f"Generated cache key: {key}")
         return key
 

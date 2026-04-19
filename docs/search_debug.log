@@ -1,0 +1,271 @@
+2026-04-19 09:23:46 - SEARCH QUERY: Artist='Compton Av' | Title='YAYA (SheMix) (Clean)'
+2026-04-19 09:23:46 - Filename: Compton Av, Steelz, Blueface & Lola Brooke ft Natalie Nunn & India Love - YAYA (SheMix) (Clean).mp3
+2026-04-19 09:23:46 - Filename Artist (for enrichment): 'Compton Av, Steelz, Blueface & Lola Brooke ft Natalie Nunn & India Love' → 'Compton Av, Steelz, Blueface, Lola Brooke, Natalie Nunn, India Love'
+2026-04-19 09:23:46 - 
+🎵 MUSICBRAINZ SEARCH
+2026-04-19 09:23:46 -   Query: Artist='compton av' | Title='YAYA (SheMix)'
+2026-04-19 09:23:51 -     REJECTED: Title similarity 0.47 < 0.75 | Title: 'yaya' | Artist: 'compton av, steelz' | Album: 'Rap Life: November 2025'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.14 < 0.75 | Title: 'av, av, av, av!' | Artist: 'carsten knudsen' | Album: 'På vej mod de høje tindinger'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'let em hate' | Artist: 'compton av' | Album: '185 DJ Loaded Work Emblem'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'jealousy' | Artist: 'compton av' | Album: 'All In'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'let em hate' | Artist: 'compton av' | Album: '185 DJ Loaded Work Emblem'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.37 < 0.75 | Title: 'all in (intro)' | Artist: 'compton av' | Album: 'All In'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.40 < 0.75 | Title: 'true story (skit)' | Artist: 'compton av' | Album: 'Compton 2 Riches'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.41 < 0.75 | Title: 'voicemail (skit)' | Artist: 'compton av' | Album: 'Compton 2 Riches'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.35 < 0.75 | Title: 'everyday b' | Artist: 'compton av' | Album: 'Compton 2 Riches'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.08 < 0.75 | Title: 'money dance' | Artist: 'compton av' | Album: 'Compton 2 Riches'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.30 < 0.75 | Title: 'all in (outro)' | Artist: 'compton av' | Album: 'All In'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'intro' | Artist: 'compton av' | Album: 'Compton 2 Riches'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.37 < 0.75 | Title: 'groupie (skit)' | Artist: 'compton av' | Album: 'Compton 2 Riches'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.45 < 0.75 | Title: 'bye felecia (skit)' | Artist: 'compton av' | Album: 'Compton 2 Riches'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.16 < 0.75 | Title: 'care for you' | Artist: 'compton av' | Album: 'All In'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'ticc tocc (tik tok)' | Artist: 'compton av' | Album: 'All In'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'beacons' | Artist: 'av av av' | Album: 'No Statues'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.26 < 0.75 | Title: 'no statues' | Artist: 'av av av' | Album: 'No Statues'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.29 < 0.75 | Title: 'daylight' | Artist: 'av av av' | Album: 'No Statues'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'all good' | Artist: 'av av av' | Album: 'Sound Of Copenhagen Vol. 13'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'mello' | Artist: 'av av av' | Album: 'Everything is True'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.08 < 0.75 | Title: 'manhunt space' | Artist: 'av av av' | Album: 'They Live'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.35 < 0.75 | Title: 'grand prix' | Artist: 'av av av' | Album: 'All Inclusive'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.40 < 0.75 | Title: 'leia's theme' | Artist: 'av av av' | Album: 'They Live'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'all good' | Artist: 'av av av' | Album: 'They Live'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'baileys' | Artist: 'av av av' | Album: 'They Live'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'stakes' | Artist: 'av av av' | Album: 'Everything is True'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'habitat' | Artist: 'av av av' | Album: 'Everything is True'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'need you' | Artist: 'av av av' | Album: 'All Inclusive'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'tears in my mind' | Artist: 'av av av' | Album: 'All Inclusive'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 'baby' | Artist: 'av av av' | Album: 'All Inclusive'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'geuze' | Artist: 'av av av' | Album: 'All Inclusive'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'ethan' | Artist: 'av av av' | Album: 'All Inclusive'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.26 < 0.75 | Title: 'all we got' | Artist: 'av av av' | Album: 'No Statues'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'pigeons' | Artist: 'av av av' | Album: 'No Statues'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'never really here' | Artist: 'av av av' | Album: 'No Statues'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.00 < 0.75 | Title: '22.27' | Artist: 'av av av' | Album: 'No Statues'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'comeback' | Artist: 'av av av' | Album: 'All Inclusive'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.09 < 0.75 | Title: 'happy now' | Artist: 'av av av' | Album: 'All Inclusive'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.08 < 0.75 | Title: 'intet intet' | Artist: 'av av av' | Album: 'Everything is True'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 'total recall' | Artist: 'av av av' | Album: 'Everything is True'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'about you' | Artist: 'av av av' | Album: 'Everything is True'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.16 < 0.75 | Title: 'olympus mons' | Artist: 'av av av' | Album: 'They Live'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 'a number of things (reprise)' | Artist: 'av av av' | Album: 'No Statues'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.29 < 0.75 | Title: 'love is the law' | Artist: 'av av av' | Album: 'No Statues'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'felt' | Artist: 'av av av' | Album: 'No Statues'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'in the name of love' | Artist: 'av av av' | Album: 'All Inclusive'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'loving' | Artist: 'av av av' | Album: 'All Inclusive'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.08 < 0.75 | Title: 'even though' | Artist: 'av av av' | Album: 'All Inclusive'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'av tu av' | Artist: 'věra bílá, kale' | Album: 'C’est comme ça'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'av tu av' | Artist: 'věra bílá, kale' | Album: 'Retrovision - The Best Of'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'av tu av' | Artist: 'cigánski diabli' | Album: 'Kone'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.23 < 0.75 | Title: 'av av augusta' | Artist: 'hans w. petersen' | Album: 'De Bedste Danske Evergreens 1960-69'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'av' | Artist: 'sibel alaş' | Album: 'Carpe Diem'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'a.v.' | Artist: 'the down troddence' | Album: 'How Are You? We Are Fine, Thank You'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'av' | Artist: 'realjondough' | Album: 'Been Solid'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'av' | Artist: 'zülfü livaneli' | Album: 'Otobüs (Orijinal Film Müzikleri)'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'a.v.' | Artist: 'tom fahy' | Album: 'Rivers Trilogy: India on Sainte-Anne'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'av' | Artist: 'パール兄弟' | Album: '大ピース'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'av' | Artist: 'dioslepague' | Album: 'Bronceador'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.12 < 0.75 | Title: '#av' | Artist: 'hunny madu, al caponey, supa mojo, nadhira, kayda, rubba.bend, shikara' | Album: '#AV'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'av' | Artist: 'elijah who' | Album: 'Gentle Boy'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'av!' | Artist: 'emil kruse' | Album: 'MAGIC'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'av' | Artist: 'avant' | Album: 'Private Room'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'a.v.' | Artist: 'montana montekristo' | Album: 'Ultimatumas 3: Gatvės Lyga Pristato'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'av' | Artist: 'jupiter' | Album: 'Bandana Republic (Deluxe Edition)'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'av' | Artist: 'karl korts' | Album: 'Arm'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'av' | Artist: 'orion' | Album: 'VEZ'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'av' | Artist: 'kuomo' | Album: 'AQUA-VISION'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'av' | Artist: 'gustavoegatotv, zetsnow' | Album: 'ALEDMIM'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'av' | Artist: 'dj ritualist' | Album: 'dj ritualist discography 2025-2026'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'av!' | Artist: 'karen marie bille' | Album: 'Små sange til de små'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'av!' | Artist: 'knifven' | Album: 'Gaphals'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'av!' | Artist: 'knifven' | Album: 'Av! / Den sista jäveln'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.11 < 0.75 | Title: '<<av>>' | Artist: 'david kristian' | Album: 'Beneath the Valley of the Modulars'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'av' | Artist: 'zülfü livaneli' | Album: 'Otobüs (Orijinal Film Müzikleri)'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'av' | Artist: 'dj ritualist' | Album: 'Fields'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'facts 2.0' | Artist: 'av av av, chino' | Album: 'All Inclusive'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'talk 2 me' | Artist: 'compton av, stats' | Album: 'Compton 2 Riches'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'hours' | Artist: 'compton av, meco' | Album: 'Compton 2 Riches'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.36 < 0.75 | Title: '6 in the mornin' | Artist: 'compton av, ease' | Album: 'Compton 2 Riches'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.15 < 0.75 | Title: 'where u been?' | Artist: 'compton av, 89' | Album: 'All In'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.26 < 0.75 | Title: 'fucc the opps (interlude)' | Artist: 'compton av, steelz' | Album: 'NET 30'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.08 < 0.75 | Title: 'quit trollin' | Artist: 'compton av, steelz' | Album: 'RPM (Respect, Power, Money)'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'one two' | Artist: 'compton av, yelohill' | Album: 'All In'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.25 < 0.75 | Title: '2 occasions' | Artist: 'compton av, lavish' | Album: 'Compton 2 Riches'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'no love' | Artist: 'compton av, steelz' | Album: 'RPM (Respect, Power, Money)'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.09 < 0.75 | Title: 'me myself' | Artist: 'compton av, mama' | Album: 'Compton 2 Riches'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 'hit the dash' | Artist: 'compton av, steelz' | Album: 'All In'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.30 < 0.75 | Title: 'net 30 (intro)' | Artist: 'compton av, steelz' | Album: 'NET 30'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'shhhhh' | Artist: 'compton av, dupri' | Album: 'NET 30'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.22 < 0.75 | Title: 'smoke' | Artist: 'compton av, steelz' | Album: 'RPM (Respect, Power, Money)'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.33 < 0.75 | Title: 'rpm (intro)' | Artist: 'compton av, steelz' | Album: 'RPM (Respect, Power, Money)'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'av längtan av glädje' | Artist: 'nordic' | Album: 'Metropol'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'av kärlek, av längtan' | Artist: 'charlies' | Album: 'När jag ser dig'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.29 < 0.75 | Title: 'av tu av, čhaje' | Artist: 'desiderius dužda, marko ivanovic, čhavorenge, ida kelarová, česká filharmonie' | Album: 'Hej Romale'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'lullaby' | Artist: 'jonn hart, av' | Album: 'Heart 2 Hart 3'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.00 < 0.75 | Title: 'ａｖ' | Artist: 'kratzwerk' | Album: '余命𝟏𝐮𝐩'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.09 < 0.75 | Title: 'venus bar' | Artist: 'av' | Album: 'Venus Bar'
+2026-04-19 09:23:55 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'that obscure object of desire (venus bar cover)' | Artist: 'av' | Album: 'Venus Bar'
+2026-04-19 09:23:59 -   ❌ NO RESULTS
+2026-04-19 09:23:59 - 
+🎵 SPOTIFY SEARCH
+2026-04-19 09:23:59 -   Query: Artist='compton av' | Title='YAYA (SheMix)'
+2026-04-19 09:24:00 -   ✅ FOUND:
+2026-04-19 09:24:00 -     Title: YAYA
+2026-04-19 09:24:00 -     Artist: Compton Av, Steelz
+2026-04-19 09:24:00 -     Album: YAYA
+2026-04-19 09:24:00 -     Year: 2025
+2026-04-19 09:24:00 -     Genre: 
+2026-04-19 09:24:00 -     Spotify ID: 4gkmGJEVKq2h1yFmsTsVd0
+2026-04-19 09:24:00 -     Rating: 128
+2026-04-19 09:24:00 - 
+📊 MERGE RESULTS
+2026-04-19 09:24:00 -   MusicBrainz result: ❌ NOT FOUND
+2026-04-19 09:24:00 -   Spotify result: ✅ FOUND
+2026-04-19 09:24:03 - 
+✅ FINAL MERGED RESULT:
+2026-04-19 09:24:03 -   Title: YAYA
+2026-04-19 09:24:03 -   Artist: Compton Av, Steelz
+2026-04-19 09:24:03 -   Album: YAYA
+2026-04-19 09:24:03 -   Year: 2025
+2026-04-19 09:24:03 -   Genre: Hip-Hop
+2026-04-19 09:24:03 -   Rating: 128
+2026-04-19 09:24:04 - ✅ Artist enriched: 'Compton Av' → 'Compton Av, Steelz, Blueface, Lola Brooke, Natalie Nunn, India Love'
+2026-04-19 09:24:04 - SEARCH RESULTS:
+2026-04-19 09:24:04 -   Title: YAYA
+2026-04-19 09:24:04 -   Artist: Compton Av, Steelz, Blueface, Lola Brooke, Natalie Nunn, India Love
+2026-04-19 09:24:04 -   Album: YAYA
+2026-04-19 09:24:04 -   Year: 2025
+2026-04-19 09:24:04 -   Genre: Hip-Hop
+2026-04-19 09:24:04 -   Rating: 128
+2026-04-19 09:24:04 - ---
+2026-04-19 09:24:04 - SEARCH QUERY: Artist='Compton Av' | Title='YAYA (SheMix) (Dirty)'
+2026-04-19 09:24:04 - Filename: Compton Av, Steelz, Blueface & Lola Brooke ft Natalie Nunn & India Love - YAYA (SheMix) (Dirty).mp3
+2026-04-19 09:24:04 - Filename Artist (for enrichment): 'Compton Av, Steelz, Blueface & Lola Brooke ft Natalie Nunn & India Love' → 'Compton Av, Steelz, Blueface, Lola Brooke, Natalie Nunn, India Love'
+2026-04-19 09:24:04 - 
+🎵 MUSICBRAINZ SEARCH
+2026-04-19 09:24:04 -   Query: Artist='compton av' | Title='YAYA (SheMix)'
+2026-04-19 09:24:05 -   ✅ FOUND:
+2026-04-19 09:24:05 -     Title: YAYA
+2026-04-19 09:24:05 -     Artist: Compton Av, Steelz
+2026-04-19 09:24:05 -     Album: YAYA
+2026-04-19 09:24:05 -     Year: 2025
+2026-04-19 09:24:05 -     Genre: Hip-Hop
+2026-04-19 09:24:05 - 
+🎵 SPOTIFY SEARCH
+2026-04-19 09:24:05 -   Query: Artist='compton av' | Title='YAYA (SheMix)'
+2026-04-19 09:24:06 -   ✅ FOUND:
+2026-04-19 09:24:06 -     Title: YAYA
+2026-04-19 09:24:06 -     Artist: Compton Av, Steelz
+2026-04-19 09:24:06 -     Album: YAYA
+2026-04-19 09:24:06 -     Year: 2025
+2026-04-19 09:24:06 -     Genre: Hip-Hop
+2026-04-19 09:24:06 -     Spotify ID: 4gkmGJEVKq2h1yFmsTsVd0
+2026-04-19 09:24:06 -     Rating: 128
+2026-04-19 09:24:06 - 
+📊 MERGE RESULTS
+2026-04-19 09:24:06 -   MusicBrainz result: ✅ FOUND
+2026-04-19 09:24:06 -   Spotify result: ✅ FOUND
+2026-04-19 09:24:06 - 
+✅ FINAL MERGED RESULT:
+2026-04-19 09:24:06 -   Title: YAYA
+2026-04-19 09:24:06 -   Artist: Compton Av, Steelz
+2026-04-19 09:24:06 -   Album: YAYA
+2026-04-19 09:24:06 -   Year: 2025
+2026-04-19 09:24:06 -   Genre: Hip-Hop
+2026-04-19 09:24:06 -   Rating: 128
+2026-04-19 09:24:07 - ✅ Artist enriched: 'Compton Av' → 'Compton Av, Steelz, Blueface, Lola Brooke, Natalie Nunn, India Love'
+2026-04-19 09:24:07 - SEARCH RESULTS:
+2026-04-19 09:24:07 -   Title: YAYA
+2026-04-19 09:24:07 -   Artist: Compton Av, Steelz, Blueface, Lola Brooke, Natalie Nunn, India Love
+2026-04-19 09:24:07 -   Album: YAYA
+2026-04-19 09:24:07 -   Year: 2025
+2026-04-19 09:24:07 -   Genre: Hip-Hop
+2026-04-19 09:24:07 -   Rating: 128
+2026-04-19 09:24:07 - ---
+2026-04-19 09:24:07 - SEARCH QUERY: Artist='Compton Av' | Title='YAYA (SheMix) (Intro Clean)'
+2026-04-19 09:24:07 - Filename: Compton Av, Steelz, Blueface & Lola Brooke ft Natalie Nunn & India Love - YAYA (SheMix) (Intro Clean).mp3
+2026-04-19 09:24:07 - Filename Artist (for enrichment): 'Compton Av, Steelz, Blueface & Lola Brooke ft Natalie Nunn & India Love' → 'Compton Av, Steelz, Blueface, Lola Brooke, Natalie Nunn, India Love'
+2026-04-19 09:24:07 - 
+🎵 MUSICBRAINZ SEARCH
+2026-04-19 09:24:07 -   Query: Artist='compton av' | Title='YAYA (SheMix)'
+2026-04-19 09:24:08 -   ✅ FOUND:
+2026-04-19 09:24:08 -     Title: YAYA
+2026-04-19 09:24:08 -     Artist: Compton Av, Steelz
+2026-04-19 09:24:08 -     Album: YAYA
+2026-04-19 09:24:08 -     Year: 2025
+2026-04-19 09:24:08 -     Genre: Hip-Hop
+2026-04-19 09:24:08 - 
+🎵 SPOTIFY SEARCH
+2026-04-19 09:24:08 -   Query: Artist='compton av' | Title='YAYA (SheMix)'
+2026-04-19 09:24:09 -   ✅ FOUND:
+2026-04-19 09:24:09 -     Title: YAYA
+2026-04-19 09:24:09 -     Artist: Compton Av, Steelz
+2026-04-19 09:24:09 -     Album: YAYA
+2026-04-19 09:24:10 -     Year: 2025
+2026-04-19 09:24:10 -     Genre: Hip-Hop
+2026-04-19 09:24:10 -     Spotify ID: 4gkmGJEVKq2h1yFmsTsVd0
+2026-04-19 09:24:10 -     Rating: 128
+2026-04-19 09:24:10 - 
+📊 MERGE RESULTS
+2026-04-19 09:24:10 -   MusicBrainz result: ✅ FOUND
+2026-04-19 09:24:10 -   Spotify result: ✅ FOUND
+2026-04-19 09:24:10 - 
+✅ FINAL MERGED RESULT:
+2026-04-19 09:24:10 -   Title: YAYA
+2026-04-19 09:24:10 -   Artist: Compton Av, Steelz
+2026-04-19 09:24:10 -   Album: YAYA
+2026-04-19 09:24:10 -   Year: 2025
+2026-04-19 09:24:10 -   Genre: Hip-Hop
+2026-04-19 09:24:10 -   Rating: 128
+2026-04-19 09:24:11 - ✅ Artist enriched: 'Compton Av' → 'Compton Av, Steelz, Blueface, Lola Brooke, Natalie Nunn, India Love'
+2026-04-19 09:24:11 - SEARCH RESULTS:
+2026-04-19 09:24:11 -   Title: YAYA
+2026-04-19 09:24:11 -   Artist: Compton Av, Steelz, Blueface, Lola Brooke, Natalie Nunn, India Love
+2026-04-19 09:24:11 -   Album: YAYA
+2026-04-19 09:24:11 -   Year: 2025
+2026-04-19 09:24:11 -   Genre: Hip-Hop
+2026-04-19 09:24:11 -   Rating: 128
+2026-04-19 09:24:11 - ---
+2026-04-19 09:24:11 - SEARCH QUERY: Artist='Compton Av' | Title='YAYA (SheMix) (Intro Dirty)'
+2026-04-19 09:24:11 - Filename: Compton Av, Steelz, Blueface & Lola Brooke ft Natalie Nunn & India Love - YAYA (SheMix) (Intro Dirty).mp3
+2026-04-19 09:24:11 - Filename Artist (for enrichment): 'Compton Av, Steelz, Blueface & Lola Brooke ft Natalie Nunn & India Love' → 'Compton Av, Steelz, Blueface, Lola Brooke, Natalie Nunn, India Love'
+2026-04-19 09:24:11 - 
+🎵 MUSICBRAINZ SEARCH
+2026-04-19 09:24:11 -   Query: Artist='compton av' | Title='YAYA (SheMix)'
+2026-04-19 09:24:12 -   ✅ FOUND:
+2026-04-19 09:24:12 -     Title: YAYA
+2026-04-19 09:24:12 -     Artist: Compton Av, Steelz
+2026-04-19 09:24:12 -     Album: YAYA
+2026-04-19 09:24:12 -     Year: 2025
+2026-04-19 09:24:12 -     Genre: Hip-Hop
+2026-04-19 09:24:12 - 
+🎵 SPOTIFY SEARCH
+2026-04-19 09:24:12 -   Query: Artist='compton av' | Title='YAYA (SheMix)'
+2026-04-19 09:24:13 -   ✅ FOUND:
+2026-04-19 09:24:13 -     Title: YAYA
+2026-04-19 09:24:13 -     Artist: Compton Av, Steelz
+2026-04-19 09:24:13 -     Album: YAYA
+2026-04-19 09:24:13 -     Year: 2025
+2026-04-19 09:24:13 -     Genre: Hip-Hop
+2026-04-19 09:24:13 -     Spotify ID: 4gkmGJEVKq2h1yFmsTsVd0
+2026-04-19 09:24:13 -     Rating: 128
+2026-04-19 09:24:13 - 
+📊 MERGE RESULTS
+2026-04-19 09:24:13 -   MusicBrainz result: ✅ FOUND
+2026-04-19 09:24:13 -   Spotify result: ✅ FOUND
+2026-04-19 09:24:13 - 
+✅ FINAL MERGED RESULT:
+2026-04-19 09:24:13 -   Title: YAYA
+2026-04-19 09:24:13 -   Artist: Compton Av, Steelz
+2026-04-19 09:24:13 -   Album: YAYA
+2026-04-19 09:24:13 -   Year: 2025
+2026-04-19 09:24:13 -   Genre: Hip-Hop
+2026-04-19 09:24:13 -   Rating: 128
+2026-04-19 09:24:14 - ✅ Artist enriched: 'Compton Av' → 'Compton Av, Steelz, Blueface, Lola Brooke, Natalie Nunn, India Love'
+2026-04-19 09:24:14 - SEARCH RESULTS:
+2026-04-19 09:24:14 -   Title: YAYA
+2026-04-19 09:24:14 -   Artist: Compton Av, Steelz, Blueface, Lola Brooke, Natalie Nunn, India Love
+2026-04-19 09:24:14 -   Album: YAYA
+2026-04-19 09:24:14 -   Year: 2025
+2026-04-19 09:24:14 -   Genre: Hip-Hop
+2026-04-19 09:24:14 -   Rating: 128
+2026-04-19 09:24:14 - ---

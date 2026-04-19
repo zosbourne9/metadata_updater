@@ -127,6 +127,60 @@ class TitleNormalizer:
         normalized = ' '.join(normalized.split())
         return normalized
 
+    def remove_version_qualifiers(self, title: str) -> str:
+        """
+        Remove version qualifiers from song titles for better matching.
+
+        Removes version markers like (Clean), (Dirty), (Explicit), (Radio Edit),
+        (Album Version), (Intro Clean), etc. that indicate the VERSION of the song.
+
+        KEEPS remix versions like (SheMix), (Remix), (Artist Remix) because these
+        represent substantively different recordings with potentially different
+        featured artists.
+
+        Args:
+            title: Original song title with potential version qualifiers
+
+        Returns:
+            Title with version qualifiers removed, but remixes preserved
+
+        Examples:
+            "YAYA (SheMix) (Dirty)" → "YAYA (SheMix)"
+            "Song (Clean)" → "Song"
+            "Track [Radio Edit]" → "Track"
+            "Song (Artist Remix)" → "Song (Artist Remix)"
+        """
+        if not title:
+            return title
+
+        # Only remove version markers, NOT remix designations
+        # Version markers we remove: Clean, Dirty, Explicit, Radio Edit, Album Version, etc.
+        version_markers = [
+            r'\s*\(\s*clean\s*\)',
+            r'\s*\(\s*dirty\s*\)',
+            r'\s*\(\s*explicit\s*\)',
+            r'\s*\(\s*radio\s+edit\s*\)',
+            r'\s*\(\s*album\s+version\s*\)',
+            r'\s*\(\s*extended\s+mix\s*\)',
+            r'\s*\(\s*intro\s+clean\s*\)',
+            r'\s*\(\s*intro\s+dirty\s*\)',
+            r'\s*\(\s*version\s*\)',
+            r'\s*\[\s*clean\s*\]',
+            r'\s*\[\s*dirty\s*\]',
+            r'\s*\[\s*explicit\s*\]',
+            r'\s*\[\s*radio\s+edit\s*\]',
+            r'\s*\[\s*album\s+version\s*\]',
+        ]
+
+        normalized = title
+        for pattern in version_markers:
+            normalized = re.sub(pattern, '', normalized, flags=re.IGNORECASE)
+
+        # Clean up extra whitespace
+        normalized = ' '.join(normalized.split())
+
+        return normalized.strip()
+
 
 # Singleton instance
 _normalizer = None

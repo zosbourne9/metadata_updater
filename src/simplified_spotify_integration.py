@@ -13,19 +13,22 @@ class SimplifiedSpotifyIntegration:
     - No audio features, recommendations, or algorithmic playlists
     """
     
-    def __init__(self, client_id=None, client_secret=None, cache_manager=None, status_update_callback=None):
+    def __init__(self, client_id=None, client_secret=None, cache_manager=None, status_update_callback=None, debug_logger=None):
         self.client_id = client_id
         self.client_secret = client_secret
         self.cache_manager = cache_manager
         self.access_token = None
         self.token_expires_at = 0
-        
+
         # Store callback for status updates
         self.status_update_callback = status_update_callback
-        
+
+        # Logger for detailed search debugging
+        self.debug_logger = debug_logger
+
         # Load credentials
         self._load_credentials()
-        
+
         print("Simplified Spotify integration initialized")
 
     def emit_status(self, message):
@@ -234,10 +237,10 @@ class SimplifiedSpotifyIntegration:
                 for idx, track in enumerate(tracks[:5]):  # Only check top 5
                     track_artists_str = ', '.join([a['name'] for a in track.get('artists', [])])
                     track_title_str = track.get('name', '')
+                    album_name = track['album']['name']
                     if is_title_only_search:
-                        print(f"  Track {idx+1}: '{track_title_str}' by {track_artists_str}")
+                        print(f"  Track {idx+1}: '{track_title_str}' by {track_artists_str} | Album: {album_name}")
                     if self._is_fuzzy_match(track, artist_name, track_title, is_title_only_search):
-                        album_name = track['album']['name']
                         # Reject if album looks like a compilation
                         if self._is_likely_compilation(album_name):
                             print(f"  Skipping compilation album: {album_name}")
@@ -294,6 +297,11 @@ class SimplifiedSpotifyIntegration:
         try:
             import re
 
+            # Get track details for logging
+            track_title_str = track.get('name', '')
+            track_artists_str = ', '.join([a['name'] for a in track.get('artists', [])])
+            album_name = track.get('album', {}).get('name', '')
+
             # Title similarity
             track_title = track['name'].lower().strip()
             target_title_clean = target_title.lower().strip()
@@ -329,16 +337,24 @@ class SimplifiedSpotifyIntegration:
 
             if title_similarity < 0.75:
                 if is_title_only_search:
-                    print(f"      Rejected: title similarity {title_similarity:.2f} < 0.75")
+                    rejection_msg = f"      Rejected: title similarity {title_similarity:.2f} < 0.75 | Title: '{track_title_str}' | Artist: '{track_artists_str}' | Album: '{album_name}'"
+                    print(rejection_msg)
+                    if self.debug_logger:
+                        self.debug_logger.info(rejection_msg)
                 return False
 
             # Artist similarity
             track_artists = [artist['name'].lower().strip() for artist in track['artists']]
             target_artist_clean = target_artist.lower().strip()
 
-            # For title-only searches, be more lenient with artist matching (0.70 threshold instead of 0.85)
-            # since the title match is our primary filter
-            artist_threshold = 0.70 if is_title_only_search else 0.85
+            # For title-only searches, be more lenient with artist matching
+            # If title is a perfect match (1.00), lower the threshold further since title is the primary signal
+            if is_title_only_search and title_similarity >= 0.99:
+                artist_threshold = 0.40  # Very lenient for perfect title matches (collaborative tracks)
+            elif is_title_only_search:
+                artist_threshold = 0.70  # Lenient for title-only searches
+            else:
+                artist_threshold = 0.85  # Strict for artist+title searches
 
             # Check similarity with any of the track artists
             best_artist_similarity = 0
@@ -347,11 +363,20 @@ class SimplifiedSpotifyIntegration:
                 best_artist_similarity = max(best_artist_similarity, artist_similarity)
                 if artist_similarity > artist_threshold:
                     if is_title_only_search:
-                        print(f"      ✓ Title-only match: title sim {title_similarity:.2f}, artist '{artist}' sim {artist_similarity:.2f} > {artist_threshold}")
+                        threshold_reason = ""
+                        if title_similarity >= 0.99:
+                            threshold_reason = " (perfect title → relaxed threshold)"
+                        print(f"      ✓ Title-only match: title sim {title_similarity:.2f}, artist '{artist}' sim {artist_similarity:.2f} > {artist_threshold}{threshold_reason}")
                     return True
 
             if is_title_only_search:
-                print(f"      Rejected: title sim {title_similarity:.2f}, best artist sim {best_artist_similarity:.2f} <= {artist_threshold}")
+                threshold_reason = ""
+                if title_similarity >= 0.99:
+                    threshold_reason = " (perfect title match → relaxed threshold)"
+                rejection_msg = f"      Rejected: title sim {title_similarity:.2f}, best artist sim {best_artist_similarity:.2f} <= {artist_threshold}{threshold_reason} | Title: '{track_title_str}' | Artist: '{track_artists_str}' | Album: '{album_name}'"
+                print(rejection_msg)
+                if self.debug_logger:
+                    self.debug_logger.info(rejection_msg)
             return False
 
         except Exception as e:

@@ -2,7 +2,7 @@ import time
 import json
 import logging
 from openai import OpenAI
-from constants import OPENROUTER_API_KEY
+from constants import OPENROUTER_API_KEY, AI_MODEL
 from typing import Dict, List
 from enhanced_genre_detector import EnhancedGenreDetector
 
@@ -172,12 +172,12 @@ The confidence should be 70-95 based on how certain you are about the classifica
 
             print("Making AI API call...")
             response = self.client.chat.completions.create(
-                model="google/gemini-2.5-flash",
+                model=AI_MODEL,
                 messages=[
                     {"role": "system", "content": "You are a professional music curator and genre expert. Always respond with valid JSON only."},
                     {"role": "user", "content": prompt}
                 ],
-                temperature=0.1,
+                temperature=0,
                 max_tokens=300
             )
 

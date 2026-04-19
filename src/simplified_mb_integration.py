@@ -23,10 +23,11 @@ class SimplifiedMusicBrainzIntegration:
     4. Fallback to fuzzy search only if needed
     """
     
-    def __init__(self, parent=None, status_update_callback=None, cache_manager=None):
+    def __init__(self, parent=None, status_update_callback=None, cache_manager=None, debug_logger=None):
         self.parent = parent
         self.cache_manager = cache_manager
         self.status_update_callback = status_update_callback
+        self.debug_logger = debug_logger  # Logger for detailed search debugging
 
         musicbrainzngs.set_useragent("MetadataUpdaterApp", "1.0", "info@djzrex.com")
 
@@ -346,8 +347,29 @@ class SimplifiedMusicBrainzIntegration:
                                     print(f"Found acceptable metadata with title variation: {metadata.get('album')}")
                                     return metadata
 
+            # Fallback: try with just the first/primary artist if we have multiple artists
+            # Extract the first artist name (before comma or &)
+            primary_artist = artist.split(',')[0].split('&')[0].strip()
+
+            if primary_artist != artist and len(primary_artist) > 2:
+                print(f"Multi-artist query failed. Trying primary artist only: {primary_artist}")
+                primary_query = f'artist:{primary_artist} AND recording:{title}'
+                primary_response = self._api_call('search_recordings', query=primary_query, limit=25)
+                if primary_response and 'recording-list' in primary_response:
+                    primary_recordings = primary_response['recording-list']
+                    print(f"Found {len(primary_recordings)} recordings by primary artist '{primary_artist}'")
+
+                    for recording in primary_recordings:
+                        if self._is_fuzzy_match(recording, primary_artist, title):
+                            score = self._score_recording(recording, primary_artist)
+                            if score > 100:
+                                metadata = self._extract_metadata(recording)
+                                if metadata:
+                                    print(f"Found acceptable release via primary artist search: {metadata.get('album')}")
+                                    return metadata
+
             # Fallback: search by artist only, but FILTER for recordings that share words with the original title
-            print(f"Falling back to artist-only search with title filtering: {artist}")
+            print(f"Falling back to full artist-only search with title filtering: {artist}")
             artist_query = f'artist:{artist}'
             artist_response = self._api_call('search_recordings', query=artist_query, limit=100)
             if artist_response and 'recording-list' in artist_response:
@@ -459,18 +481,37 @@ class SimplifiedMusicBrainzIntegration:
             recording_title = recording.get('title', '').lower().strip()
             target_title_clean = target_title.lower().strip()
 
+            # Get recording artists for logging
+            recording_artists = []
+            for credit in recording.get('artist-credit', []):
+                if isinstance(credit, dict) and 'artist' in credit:
+                    recording_artists.append(credit['artist']['name'].lower().strip())
+
+            recording_artists_str = ', '.join(recording_artists) if recording_artists else 'N/A'
+
+            # Get album info if available (from first release)
+            album_name = 'N/A'
+            if recording.get('release-list'):
+                album_name = recording['release-list'][0].get('title', 'N/A')
+
             title_similarity = self._string_similarity(recording_title, target_title_clean)
             print(f"  Checking recording: '{recording_title}' vs target: '{target_title_clean}' (similarity: {title_similarity:.2f})")
 
             # Improved threshold: be more lenient with title matches
             # since fuzzy matching already means exact didn't work
             if not title_similarity > 0.75:  # Relaxed from 0.8 to 0.75
-                print(f"    REJECTED: Title similarity {title_similarity:.2f} < 0.75")
+                rejection_msg = f"    REJECTED: Title similarity {title_similarity:.2f} < 0.75 | Title: '{recording_title}' | Artist: '{recording_artists_str}' | Album: '{album_name}'"
+                print(rejection_msg)
+                if self.debug_logger:
+                    self.debug_logger.info(rejection_msg)
                 return False
 
             # Artist fuzzy match
             if 'artist-credit' not in recording:
-                print("    REJECTED: No artist-credit")
+                rejection_msg = f"    REJECTED: No artist-credit | Title: '{recording_title}' | Album: '{album_name}'"
+                print(rejection_msg)
+                if self.debug_logger:
+                    self.debug_logger.info(rejection_msg)
                 return False
 
             recording_artists = []
@@ -497,9 +538,13 @@ class SimplifiedMusicBrainzIntegration:
                         print(f"    ACCEPTED: Exact word match for short artist name")
                         return True
 
-            print(f"    REJECTED: No artist similarity above threshold")
+            recording_artists_str = ', '.join(recording_artists) if recording_artists else 'N/A'
+            rejection_msg = f"    REJECTED: No artist similarity above threshold | Title: '{recording_title}' | Artist: '{recording_artists_str}' | Album: '{album_name}'"
+            print(rejection_msg)
+            if self.debug_logger:
+                self.debug_logger.info(rejection_msg)
             return False
-            
+
         except Exception as e:
             print(f"Error in fuzzy match check: {e}")
             return False
@@ -1112,30 +1157,45 @@ class SimplifiedMusicBrainzIntegration:
             return artist_name
 
     def _clean_title(self, title: str) -> str:
-        """Remove parenthetical content and other title modifiers."""
+        """
+        Remove version qualifiers from title for better search matching.
+
+        Removes markers like (Clean), (Dirty), (Explicit), (Radio Edit) but
+        KEEPS remix versions like (SheMix), (Artist Remix) because these
+        represent substantively different recordings.
+        """
         try:
             import re
 
-            # Remove common parenthetical content that prevents matches
-            patterns = [
-                r'\s*\([^)]*(?:remix|mix|edit|version|ver\.?|radio|clean|explicit|intro|outro|extended|dj|remaster|remastered)[^)]*\)',
-                r'\s*\[[^\]]*(?:remix|mix|edit|version|ver\.?|radio|clean|explicit|intro|outro|extended|dj|remaster|remastered)[^\]]*\]',
-                r'\s*-\s*(?:remix|mix|edit|version|ver\.?|radio|clean|explicit|intro|outro|extended|dj|remaster|remastered).*$',
-                # Generic year pattern for remasters
-                r'\s*\(\d{4}\s*remaster(?:ed)?\)',
-                # General fallback for any parenthetical content as last resort
-                r'\s*\([^)]+\)$',
+            # Only remove version markers, NOT remix designations
+            # Version markers to remove: Clean, Dirty, Explicit, Radio Edit, Album Version, etc.
+            version_markers = [
+                r'\s*\(\s*clean\s*\)',
+                r'\s*\(\s*dirty\s*\)',
+                r'\s*\(\s*explicit\s*\)',
+                r'\s*\(\s*radio\s+edit\s*\)',
+                r'\s*\(\s*album\s+version\s*\)',
+                r'\s*\(\s*extended\s+mix\s*\)',
+                r'\s*\(\s*intro\s+clean\s*\)',
+                r'\s*\(\s*intro\s+dirty\s*\)',
+                r'\s*\(\s*version\s*\)',
+                r'\s*\(\s*remaster(?:ed)?\s*\)',
+                r'\s*\[\s*clean\s*\]',
+                r'\s*\[\s*dirty\s*\]',
+                r'\s*\[\s*explicit\s*\]',
+                r'\s*\[\s*radio\s+edit\s*\]',
+                r'\s*\[\s*album\s+version\s*\]',
+                # Only remove "-remix", "-remaster" style suffixes at end of title
+                r'\s*-\s*(?:remaster(?:ed)?|dub).*$',
             ]
 
             cleaned = title
-            for pattern in patterns:
-                temp_cleaned = re.sub(pattern, '', cleaned, flags=re.IGNORECASE).strip()
-                # If this pattern made a change, use it and stop (don't keep applying more aggressive patterns)
-                if temp_cleaned != cleaned.strip():
-                    cleaned = temp_cleaned
-                    break
+            for pattern in version_markers:
+                cleaned = re.sub(pattern, '', cleaned, flags=re.IGNORECASE)
 
-            return cleaned
+            # Clean up extra whitespace
+            cleaned = ' '.join(cleaned.split())
+            return cleaned.strip()
 
         except Exception as e:
             print(f"Error cleaning title: {e}")
