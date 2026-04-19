@@ -276,6 +276,8 @@ class SimplifiedMetadataSearcher:
                 # Check for album discrepancy between sources
                 mb_album = result.get('album', '').lower().strip()
                 sp_album = spotify_data.get('album', '').lower().strip()
+                spotify_album_chosen = False  # Track which source we chose for the album
+
                 if mb_album and sp_album and mb_album != sp_album:
                     # Only flag if they're genuinely different (not just case differences)
                     # and both are not empty/placeholder values
@@ -286,6 +288,7 @@ class SimplifiedMetadataSearcher:
                         if should_prefer_spotify:
                             # Spotify album is more canonical, use it instead of MB
                             result['album'] = spotify_data['album']
+                            spotify_album_chosen = True  # Mark that we chose Spotify
                             print(f"✅ Album intelligent match: using Spotify '{spotify_data.get('album')}' over MB '{result.get('album')}'")
                             SEARCH_LOGGER.info(f"  ✅ Album intelligent match: using Spotify '{spotify_data.get('album')}' (MB was '{mb_album}')")
                         else:
@@ -308,11 +311,16 @@ class SimplifiedMetadataSearcher:
                     result['artist'] = sp_artist
                     print(f"Filled artist from Spotify: {sp_artist}")
 
-                # Special handling for year: prefer the EARLIER year (more likely the original)
+                # Special handling for year: consistency with album choice
                 if spotify_data.get('year'):
                     mb_year = result.get('year')
                     sp_year = spotify_data.get('year')
-                    if mb_year and sp_year:
+
+                    # If we chose Spotify's album, also use Spotify's year for consistency
+                    if spotify_album_chosen and sp_year:
+                        result['year'] = sp_year
+                        print(f"Using Spotify year {sp_year} (consistent with Spotify album choice)")
+                    elif mb_year and sp_year:
                         try:
                             mb_year_int = int(mb_year)
                             sp_year_int = int(sp_year)
@@ -324,6 +332,7 @@ class SimplifiedMetadataSearcher:
                                 SEARCH_LOGGER.info(f"  ⚠️  Year mismatch: MB={mb_year} vs Spotify={sp_year} ({year_diff} year gap) - flagging for review")
                                 result['needs_review'] = True
 
+                            # Prefer the earlier year (more likely the original)
                             if sp_year_int < mb_year_int:
                                 result['year'] = sp_year
                                 print(f"Using Spotify year {sp_year} (earlier than MB year {mb_year})")
