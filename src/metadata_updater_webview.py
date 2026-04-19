@@ -129,6 +129,8 @@ class ProcessingThread(Thread):
         self.selected_fields = selected_fields or {}
         self.riddim_mode = riddim_mode or {'isDancehall': False, 'isReggae': False}
         self.cancel_requested = False
+        self.review_pending = False  # Flag to pause processing for review
+        self.selected_candidate_metadata = None  # Store user's selected metadata
         # Callback functions
         self.on_progress = None
         self.on_status = None
@@ -136,6 +138,8 @@ class ProcessingThread(Thread):
         self.on_file_completed = None
         self.on_error = None
         self.on_finished = None
+        self.on_review_needed = None  # New callback for manual review
+        self.on_review_completed = None  # New callback when review is done
     
     def _emit(self, callback, *args):
         """Helper to safely emit callbacks"""
@@ -188,6 +192,60 @@ class ProcessingThread(Thread):
 
                     # Process the file
                     success, metadata = self.metadata_updater.update_metadata(file_path, self.selected_fields, self.riddim_mode)
+
+                    # Check if review is needed (album or year discrepancy)
+                    if success and metadata and metadata.get('needs_review'):
+                        print(f"Review needed for: {file_path}")
+                        # Pause processing and get candidates
+                        self.review_pending = True
+                        self.selected_candidate_metadata = None
+
+                        # Emit callback to show review modal
+                        candidates = self.metadata_updater.get_candidates()
+                        best_match = metadata
+                        print(f"DEBUG ProcessingThread: About to emit review_needed with {len(candidates)} candidates")
+                        print(f"DEBUG ProcessingThread: candidates = {candidates}")
+                        print(f"DEBUG ProcessingThread: best_match = {best_match}")
+                        self._emit(self.on_review_needed, file_path, candidates, best_match)
+
+                        # Wait for user selection (blocking until set_selected_candidate is called)
+                        import time as time_module
+                        timeout = 0
+                        while self.review_pending and timeout < 600:  # 10 minute timeout
+                            time_module.sleep(0.1)
+                            timeout += 1
+
+                        print(f"DEBUG: review_pending={self.review_pending}, selected_candidate_metadata={self.selected_candidate_metadata}")
+
+                        # Use user's selected metadata if available
+                        if self.selected_candidate_metadata:
+                            metadata = self.selected_candidate_metadata
+                            print(f"✅ Using user-selected metadata for: {file_path}")
+                            print(f"DEBUG: Selected metadata = {metadata}")
+
+                            # Now write the metadata with the user's selection
+                            audio = self.metadata_updater.utility_tools.load_audio_file(file_path)
+                            if audio:
+                                # Filter metadata based on selected fields
+                                filtered_metadata = {}
+                                if self.selected_fields.get('artist') and 'artist' in metadata:
+                                    filtered_metadata['artist'] = metadata['artist']
+                                if self.selected_fields.get('album') and 'album' in metadata:
+                                    filtered_metadata['album'] = metadata['album']
+                                if self.selected_fields.get('year') and 'year' in metadata:
+                                    filtered_metadata['year'] = metadata['year']
+                                if self.selected_fields.get('genre') and 'genre' in metadata:
+                                    filtered_metadata['genre'] = metadata['genre']
+                                if self.selected_fields.get('subgenres') and 'subgenres' in metadata:
+                                    filtered_metadata['comments'] = metadata['subgenres']
+                                if self.selected_fields.get('rating') and 'rating' in metadata and metadata['rating'] != '':
+                                    filtered_metadata['rating'] = metadata['rating']
+
+                                print(f"📝 Writing user-selected metadata to file: {filtered_metadata}")
+                                self.metadata_updater.utility_tools.set_metadata(audio, filtered_metadata, file_path)
+                                print(f"✅ File updated with user-selected metadata: {file_path}")
+                        else:
+                            print(f"❌ No user selection, using best match for: {file_path}")
 
                     # Update counters
                     if success:
@@ -281,7 +339,8 @@ class MetadataUpdater:
             self.spotify = self.simplified_integration
             self.musicbrainz = self.simplified_integration
             
-            print("Simplified integration initialized")
+            print(f"Simplified integration initialized - ID: {id(self.simplified_integration)}")
+            print(f"Searcher instance - ID: {id(self.simplified_integration.searcher)}")
 
             self.genre_finder = GenreFinder(
                 self.spotify,
@@ -304,6 +363,8 @@ class MetadataUpdater:
             self.processed_files_count = 0
             self.hour_start_time = time.time()
             self.processing_thread = None
+            self.last_search_candidates = []  # Store top candidates for review
+            self.last_search_best = None  # Store the best match for review
             print("State variables initialized")
             
             print("MetadataUpdater initialization complete!")
@@ -319,6 +380,70 @@ class MetadataUpdater:
     def _update_status(self, status):
         """Callback for status updates"""
         print(f"Status: {status}")
+
+    def get_candidates(self):
+        """Get the last search candidates for review modal.
+
+        Returns a list of candidate metadata dicts with source information.
+        """
+        candidates = []
+
+        print(f"DEBUG get_candidates(): Starting...")
+        print(f"DEBUG: self.simplified_integration = {self.simplified_integration}")
+        print(f"DEBUG: hasattr(self.simplified_integration, 'searcher') = {hasattr(self.simplified_integration, 'searcher')}")
+
+        try:
+            # Access the searcher through simplified_integration
+            if hasattr(self.simplified_integration, 'searcher'):
+                searcher = self.simplified_integration.searcher
+                print(f"DEBUG: Got searcher = {searcher}")
+                print(f"DEBUG: searcher.last_mb_result = {searcher.last_mb_result}")
+                print(f"DEBUG: searcher.last_spotify_result = {searcher.last_spotify_result}")
+
+                # Add MusicBrainz candidate if available
+                if hasattr(searcher, 'last_mb_result') and searcher.last_mb_result:
+                    print(f"DEBUG: Adding MB candidate")
+                    mb_candidate = searcher.last_mb_result.copy()
+                    mb_candidate['source'] = 'MusicBrainz'
+                    candidates.append(mb_candidate)
+                else:
+                    print(f"DEBUG: MB candidate not available - hasattr={hasattr(searcher, 'last_mb_result')}, value={searcher.last_mb_result if hasattr(searcher, 'last_mb_result') else 'N/A'}")
+
+                # Add Spotify candidate if available
+                if hasattr(searcher, 'last_spotify_result') and searcher.last_spotify_result:
+                    print(f"DEBUG: Adding Spotify candidate")
+                    sp_candidate = searcher.last_spotify_result.copy()
+                    sp_candidate['source'] = 'Spotify'
+                    candidates.append(sp_candidate)
+                else:
+                    print(f"DEBUG: Spotify candidate not available - hasattr={hasattr(searcher, 'last_spotify_result')}, value={searcher.last_spotify_result if hasattr(searcher, 'last_spotify_result') else 'N/A'}")
+            else:
+                print(f"DEBUG: simplified_integration doesn't have searcher attribute")
+
+            # Add the merged result as the final candidate
+            print(f"DEBUG: self.last_search_best = {self.last_search_best}")
+            if self.last_search_best:
+                merged_candidate = self.last_search_best.copy()
+                merged_candidate['source'] = 'Merged (Best Match)'
+                candidates.append(merged_candidate)
+                print(f"DEBUG: Added merged candidate")
+
+            # Return at least one candidate (the best match)
+            if not candidates and self.last_search_best:
+                print(f"DEBUG: No candidates yet but have best match, adding as 'Best Match'")
+                best = self.last_search_best.copy()
+                best['source'] = 'Best Match'
+                return [best]
+
+            print(f"DEBUG: Returning {len(candidates)} candidates")
+
+        except Exception as e:
+            print(f"Error getting candidates: {e}")
+            import traceback
+            traceback.print_exc()
+
+        return candidates
+
     
     def update_metadata(self, file_path, selected_fields, riddim_mode=None):
         """Update metadata for a file
@@ -366,6 +491,8 @@ class MetadataUpdater:
             SEARCH_LOGGER.info(f"Filename Artist (for reference): '{filename_artist}' → '{enriched_artist}'")
 
             # Search for metadata with riddim mode flag (using primary artist only)
+            print(f"DEBUG update_metadata: simplified_integration ID: {id(self.simplified_integration)}")
+            print(f"DEBUG update_metadata: searcher ID: {id(self.simplified_integration.searcher)}")
             metadata = self.simplified_integration.search_track_metadata(
                 search_artist, title,
                 riddim_mode=riddim_mode
@@ -375,6 +502,11 @@ class MetadataUpdater:
                 SEARCH_LOGGER.info(f"❌ NO METADATA FOUND")
                 print(f"No metadata found for: {search_artist} - {title}")
                 return False, None
+
+            # DEBUG: Check if candidates were set
+            print(f"DEBUG: After search_track_metadata:")
+            print(f"  searcher.last_mb_result: {self.simplified_integration.searcher.last_mb_result}")
+            print(f"  searcher.last_spotify_result: {self.simplified_integration.searcher.last_spotify_result}")
 
             # Log search results
             SEARCH_LOGGER.info(f"SEARCH RESULTS:")
@@ -421,12 +553,22 @@ class MetadataUpdater:
             else:
                 print(f"❌ NOT including rating - selected_fields.get('rating')={selected_fields.get('rating')}, 'rating' in metadata={'rating' in metadata}, rating value='{metadata.get('rating')}'")
 
-            # Set metadata using the proper interface (with file path for proper saving)
-            print(f"Filtered metadata to write: {filtered_metadata}")
-            self.utility_tools.set_metadata(audio, filtered_metadata, file_path)
+            # Store the best match for candidate review
+            self.last_search_best = metadata
 
-            print(f"Successfully updated: {file_path}")
-            return True, metadata  # Return success and full metadata
+            # Check if review is needed BEFORE writing
+            needs_review = metadata.get('needs_review', False)
+
+            if not needs_review:
+                # No review needed, write the metadata immediately
+                print(f"Filtered metadata to write: {filtered_metadata}")
+                self.utility_tools.set_metadata(audio, filtered_metadata, file_path)
+                print(f"Successfully updated: {file_path}")
+            else:
+                # Review is needed, don't write yet - ProcessingThread will handle it
+                print(f"⏸️  Review needed - deferring metadata write until user confirms")
+
+            return True, metadata  # Return success and full metadata (with needs_review flag for ProcessingThread)
 
         except Exception as e:
             print(f"Error updating metadata for {file_path}: {e}")

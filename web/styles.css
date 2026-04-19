@@ -795,6 +795,52 @@ button:disabled {
     flex: 1;
 }
 
+/* Candidate Review Modal Styling */
+#candidateReviewModal .modal-content {
+    max-width: 850px !important;
+    max-height: 85vh !important;
+}
+
+#candidateReviewModal table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+    margin-bottom: 16px;
+}
+
+#candidateReviewModal table thead tr {
+    border-bottom: 2px solid var(--border-color);
+    background-color: rgba(30, 41, 59, 0.3);
+}
+
+#candidateReviewModal table th,
+#candidateReviewModal table td {
+    text-align: left;
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+#candidateReviewModal table th {
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+#candidateReviewModal table tbody tr {
+    transition: var(--transition);
+}
+
+#candidateReviewModal table tbody tr:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+#candidateReviewModal table input[type="radio"] {
+    cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+}
+
 /* ============================================
    FORM ELEMENTS
    ============================================ */

@@ -225,6 +225,7 @@ class MetadataUpdaterAPI:
             self.processing_thread.on_file_completed = self._on_file_completed  # type: ignore
             self.processing_thread.on_error = self._on_error  # type: ignore
             self.processing_thread.on_finished = self._on_finished  # type: ignore
+            self.processing_thread.on_review_needed = self._on_review_needed  # type: ignore
             
             self.processing_thread.start()
             
@@ -254,6 +255,34 @@ class MetadataUpdaterAPI:
             return {
                 'success': False,
                 'message': f'Error cancelling processing: {str(e)}'
+            }
+
+    def set_selected_candidate(self, file_path: str, selected_metadata: Dict[str, Any]) -> Dict[str, Any]:
+        """Handle user selection from the review modal.
+
+        Called by frontend when user selects a candidate or submits manual edits.
+
+        Args:
+            file_path: Path to the file being reviewed
+            selected_metadata: The metadata dict user selected or edited
+        """
+        try:
+            if not self.processing_thread:
+                return {'success': False, 'message': 'No processing in progress'}
+
+            # Directly set the metadata and flag on the processing thread
+            print(f"API: Setting selected candidate metadata: {selected_metadata}")
+            self.processing_thread.selected_candidate_metadata = selected_metadata
+            self.processing_thread.review_pending = False
+
+            return {
+                'success': True,
+                'message': 'Metadata selected, resuming processing'
+            }
+        except Exception as e:
+            return {
+                'success': False,
+                'message': f'Error setting selected candidate: {str(e)}'
             }
     
     def get_processing_status(self) -> Dict[str, Any]:
@@ -699,6 +728,32 @@ class MetadataUpdaterAPI:
         escaped_error = error.replace("'", "\\'") if error is not None else ''
         self._safe_eval(f"window.onProcessingError('{escaped_error}')")
     
+    def _on_review_needed(self, file_path: str, candidates: List[Dict[str, Any]], best_match: Dict[str, Any]):
+        """Handle manual review request when metadata sources differ"""
+        try:
+            import json
+            print(f"DEBUG _on_review_needed: file_path={file_path}")
+            print(f"DEBUG _on_review_needed: candidates={candidates}")
+            print(f"DEBUG _on_review_needed: best_match={best_match}")
+
+            # Prepare candidates for JSON serialization
+            candidates_json = json.dumps(candidates)
+            best_match_json = json.dumps(best_match)
+
+            print(f"DEBUG _on_review_needed: candidates_json={candidates_json}")
+            print(f"DEBUG _on_review_needed: best_match_json={best_match_json[:200]}...")
+
+            # Escape file path for JavaScript
+            escaped_path = file_path.replace("'", "\\'")
+
+            # Call frontend to show review modal
+            print(f"DEBUG _on_review_needed: Calling window.onReviewNeeded with {len(candidates)} candidates")
+            self._safe_eval(f"window.onReviewNeeded('{escaped_path}', {candidates_json}, {best_match_json})")
+        except Exception as e:
+            print(f"Error handling review needed: {e}")
+            import traceback
+            traceback.print_exc()
+
     def _on_finished(self):
         """Handle processing finished"""
         self.processing_active = False

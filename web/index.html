@@ -400,6 +400,97 @@
         </div>
     </div>
 
+    <!-- Candidate Review Modal (for metadata conflicts) -->
+    <div class="modal" id="candidateReviewModal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2>⚠️ Review Metadata</h2>
+                <button class="modal-close" id="closeCandidateReviewModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 16px; color: #999;">Spotify and MusicBrainz returned different information. Please select the correct version:</p>
+
+                <!-- Candidates Table -->
+                <div style="overflow-x: auto; margin-bottom: 20px;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid #444;">
+                                <th style="text-align: left; padding: 8px; width: 50px;">Select</th>
+                                <th style="text-align: left; padding: 8px;">Title</th>
+                                <th style="text-align: left; padding: 8px;">Artist</th>
+                                <th style="text-align: left; padding: 8px;">Album</th>
+                                <th style="text-align: left; padding: 8px;">Year</th>
+                                <th style="text-align: left; padding: 8px;">Source</th>
+                            </tr>
+                        </thead>
+                        <tbody id="candidatesBody">
+                            <!-- Rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Manual Edit Fields (shown when candidate is selected) -->
+                <div id="editFields" class="hidden" style="background-color: #2a2a2a; padding: 16px; border-radius: 6px; margin-bottom: 16px;">
+                    <h3 style="margin-top: 0; margin-bottom: 12px;">Edit Selected Metadata</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 4px; font-size: 0.9em;">Title</label>
+                            <input type="text" id="editTitle" placeholder="Title" style="width: 100%; padding: 8px; background-color: #1a1a1a; border: 1px solid #444; border-radius: 4px; color: #fff;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 4px; font-size: 0.9em;">Artist</label>
+                            <input type="text" id="editArtist" placeholder="Artist" style="width: 100%; padding: 8px; background-color: #1a1a1a; border: 1px solid #444; border-radius: 4px; color: #fff;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 4px; font-size: 0.9em;">Album</label>
+                            <input type="text" id="editAlbum" placeholder="Album" style="width: 100%; padding: 8px; background-color: #1a1a1a; border: 1px solid #444; border-radius: 4px; color: #fff;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 4px; font-size: 0.9em;">Year</label>
+                            <input type="text" id="editYear" placeholder="Year" style="width: 100%; padding: 8px; background-color: #1a1a1a; border: 1px solid #444; border-radius: 4px; color: #fff;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual Metadata Form (for manually adding metadata) -->
+                <div id="manualMetadataForm" class="hidden" style="background-color: #2a2a2a; padding: 16px; border-radius: 6px; margin-bottom: 16px;">
+                    <h3 style="margin-top: 0; margin-bottom: 12px;">📝 Manually Add Metadata</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 4px; font-size: 0.9em;">Title <span style="color: #999;">(read-only)</span></label>
+                            <input type="text" id="manualTitle" placeholder="Title" readonly style="width: 100%; padding: 8px; background-color: #1a1a1a; border: 1px solid #444; border-radius: 4px; color: #888; cursor: not-allowed;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 4px; font-size: 0.9em;">Artist <span style="color: #999;">(read-only)</span></label>
+                            <input type="text" id="manualArtist" placeholder="Artist" readonly style="width: 100%; padding: 8px; background-color: #1a1a1a; border: 1px solid #444; border-radius: 4px; color: #888; cursor: not-allowed;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 4px; font-size: 0.9em;">Album</label>
+                            <input type="text" id="manualAlbum" placeholder="Album" style="width: 100%; padding: 8px; background-color: #1a1a1a; border: 1px solid #444; border-radius: 4px; color: #fff;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 4px; font-size: 0.9em;">Year</label>
+                            <input type="text" id="manualYear" placeholder="Year" style="width: 100%; padding: 8px; background-color: #1a1a1a; border: 1px solid #444; border-radius: 4px; color: #fff;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 4px; font-size: 0.9em;">Genre</label>
+                            <input type="text" id="manualGenre" placeholder="Genre" style="width: 100%; padding: 8px; background-color: #1a1a1a; border: 1px solid #444; border-radius: 4px; color: #fff;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 4px; font-size: 0.9em;">Subgenres (Comments)</label>
+                            <input type="text" id="manualSubgenres" placeholder="Subgenres" style="width: 100%; padding: 8px; background-color: #1a1a1a; border: 1px solid #444; border-radius: 4px; color: #fff;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="skipFileBtn">Skip File</button>
+                <button class="btn-secondary" onclick="toggleManualMetadataForm()">📝 Manually Add</button>
+                <button class="btn-primary" onclick="submitCandidateSelection()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Overlay -->
     <div class="modal-overlay" id="modalOverlay"></div>
 

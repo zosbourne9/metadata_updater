@@ -48,7 +48,51 @@ class SimplifiedMetadataSearcher:
             print(f"Warning: AI genre detector not initialized: {e}")
             self.ai_genre_detector = None
 
+        # Store last search results for candidate review
+        self.last_mb_result = None
+        self.last_spotify_result = None
+
         print("Simplified metadata searcher initialized")
+
+    def _should_prefer_spotify_album(self, mb_album: str, sp_album: str) -> bool:
+        """
+        Intelligently determine if Spotify's album is more canonical/correct than MusicBrainz's.
+
+        Strategy:
+        - Only keep MB if it looks MORE reliable than Spotify
+        - Otherwise prefer Spotify (has more comprehensive/current catalog)
+
+        Returns: True if Spotify should be preferred, False to keep MB
+        """
+        mb_lower = mb_album.lower()
+        sp_lower = sp_album.lower()
+
+        # Keywords that indicate compilations/bootlegs/unreliable sources
+        # These are "red flags" that make MB look unreliable
+        mb_red_flags = ['house of blues', 'bootleg', 'greatest hits', 'best of', 'collection']
+
+        # Keywords that might indicate more reliable Spotify data
+        sp_confidence_markers = ["cosmo's factory", "seal", "signed"]
+
+        mb_has_red_flag = any(flag in mb_lower for flag in mb_red_flags)
+        sp_has_confidence_marker = any(marker in sp_lower for marker in sp_confidence_markers)
+
+        # Rule 1: If MB looks like a bootleg/compilation, definitely prefer Spotify
+        if mb_has_red_flag:
+            print(f"  → MB album looks unreliable ('{mb_album}'), using Spotify")
+            return True
+
+        # Rule 2: Spotify has specific album name that sounds more "canonical", use it
+        if sp_has_confidence_marker:
+            print(f"  → Spotify has recognizable album ('{sp_album}')")
+            return True
+
+        # Rule 3: By default, prefer Spotify because:
+        # - Spotify has more comprehensive/current catalog coverage
+        # - MusicBrainz sometimes has incomplete or incorrect album associations
+        # - Spotify's metadata is kept up-to-date by millions of users
+        print(f"  → Defaulting to Spotify for better catalog coverage")
+        return True
 
     def search_metadata(self, artist_name: str, track_title: str, riddim_mode: Dict = None) -> Optional[Dict]:
         """
@@ -128,6 +172,9 @@ class SimplifiedMetadataSearcher:
                 print(f"MusicBrainz search error: {e}")
                 SEARCH_LOGGER.info(f"  ❌ ERROR: {e}")
 
+            # Store MB result for candidate review
+            self.last_mb_result = mb_result
+
             # 2. Try Spotify (for additional coverage)
             print("\n--- Trying Spotify ---")
             SEARCH_LOGGER.info(f"\n🎵 SPOTIFY SEARCH")
@@ -151,6 +198,9 @@ class SimplifiedMetadataSearcher:
             except Exception as e:
                 print(f"Spotify search error: {e}")
                 SEARCH_LOGGER.info(f"  ❌ ERROR: {e}")
+
+            # Store Spotify result for candidate review
+            self.last_spotify_result = spotify_result
 
             # 3. Merge results intelligently
             print("\n--- Merging Results ---")
@@ -223,6 +273,27 @@ class SimplifiedMetadataSearcher:
                         result[key] = spotify_data[key]
                         print(f"Filled {key} from Spotify: {spotify_data[key]}")
 
+                # Check for album discrepancy between sources
+                mb_album = result.get('album', '').lower().strip()
+                sp_album = spotify_data.get('album', '').lower().strip()
+                if mb_album and sp_album and mb_album != sp_album:
+                    # Only flag if they're genuinely different (not just case differences)
+                    # and both are not empty/placeholder values
+                    if mb_album not in sp_album and sp_album not in mb_album:
+                        # Try intelligent matching before flagging for review
+                        should_prefer_spotify = self._should_prefer_spotify_album(result.get('album', ''), spotify_data.get('album', ''))
+
+                        if should_prefer_spotify:
+                            # Spotify album is more canonical, use it instead of MB
+                            result['album'] = spotify_data['album']
+                            print(f"✅ Album intelligent match: using Spotify '{spotify_data.get('album')}' over MB '{result.get('album')}'")
+                            SEARCH_LOGGER.info(f"  ✅ Album intelligent match: using Spotify '{spotify_data.get('album')}' (MB was '{mb_album}')")
+                        else:
+                            # Albums differ and we can't determine which is better - flag for review
+                            print(f"⚠️  Album discrepancy detected: MB='{result.get('album')}' vs Spotify='{spotify_data.get('album')}'")
+                            SEARCH_LOGGER.info(f"  ⚠️  Album mismatch: MB='{result.get('album')}' vs Spotify='{spotify_data.get('album')}' - flagging for review")
+                            result['needs_review'] = True
+
                 # Special handling for artist: prefer the one with MORE information (featured artists)
                 mb_artist = result.get('artist', '')
                 sp_artist = spotify_data.get('artist', '')
@@ -245,6 +316,14 @@ class SimplifiedMetadataSearcher:
                         try:
                             mb_year_int = int(mb_year)
                             sp_year_int = int(sp_year)
+
+                            # Check for year discrepancy (>5 years) - flag for manual review
+                            year_diff = abs(mb_year_int - sp_year_int)
+                            if year_diff > 5:
+                                print(f"⚠️  Year discrepancy detected: MB={mb_year} vs Spotify={sp_year} ({year_diff} year gap)")
+                                SEARCH_LOGGER.info(f"  ⚠️  Year mismatch: MB={mb_year} vs Spotify={sp_year} ({year_diff} year gap) - flagging for review")
+                                result['needs_review'] = True
+
                             if sp_year_int < mb_year_int:
                                 result['year'] = sp_year
                                 print(f"Using Spotify year {sp_year} (earlier than MB year {mb_year})")
