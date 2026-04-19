@@ -58,11 +58,10 @@ class SimplifiedMetadataSearcher:
         """
         Intelligently determine if Spotify's album is more canonical/correct than MusicBrainz's.
 
-        Strategy:
-        - Only keep MB if it looks MORE reliable than Spotify
-        - Otherwise prefer Spotify (has more comprehensive/current catalog)
+        Only returns True for specific, obvious cases where Spotify is clearly better.
+        Otherwise returns False to prompt user for review.
 
-        Returns: True if Spotify should be preferred, False to keep MB
+        Returns: True if Spotify should be preferred, False to keep MB (or prompt for review)
         """
         mb_lower = mb_album.lower()
         sp_lower = sp_album.lower()
@@ -71,28 +70,16 @@ class SimplifiedMetadataSearcher:
         # These are "red flags" that make MB look unreliable
         mb_red_flags = ['house of blues', 'bootleg', 'greatest hits', 'best of', 'collection', 'the essential']
 
-        # Keywords that might indicate more reliable Spotify data
-        sp_confidence_markers = ["cosmo's factory", "seal", "signed"]
-
         mb_has_red_flag = any(flag in mb_lower for flag in mb_red_flags)
-        sp_has_confidence_marker = any(marker in sp_lower for marker in sp_confidence_markers)
 
         # Rule 1: If MB looks like a bootleg/compilation, definitely prefer Spotify
         if mb_has_red_flag:
             print(f"  → MB album looks unreliable ('{mb_album}'), using Spotify")
             return True
 
-        # Rule 2: Spotify has specific album name that sounds more "canonical", use it
-        if sp_has_confidence_marker:
-            print(f"  → Spotify has recognizable album ('{sp_album}')")
-            return True
-
-        # Rule 3: By default, prefer Spotify because:
-        # - Spotify has more comprehensive/current catalog coverage
-        # - MusicBrainz sometimes has incomplete or incorrect album associations
-        # - Spotify's metadata is kept up-to-date by millions of users
-        print(f"  → Defaulting to Spotify for better catalog coverage")
-        return True
+        # Otherwise, don't assume - let user decide
+        # Many cases are genuinely ambiguous (like Denise LaSalle)
+        return False
 
     def search_metadata(self, artist_name: str, track_title: str, riddim_mode: Dict = None) -> Optional[Dict]:
         """
@@ -286,7 +273,7 @@ class SimplifiedMetadataSearcher:
                         should_prefer_spotify = self._should_prefer_spotify_album(result.get('album', ''), spotify_data.get('album', ''))
 
                         if should_prefer_spotify:
-                            # Spotify album is more canonical, use it instead of MB
+                            # Spotify album is definitely more canonical, use it instead of MB
                             result['album'] = spotify_data['album']
                             spotify_album_chosen = True  # Mark that we chose Spotify
                             print(f"✅ Album intelligent match: using Spotify '{spotify_data.get('album')}' over MB '{result.get('album')}'")
