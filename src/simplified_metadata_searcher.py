@@ -215,13 +215,27 @@ class SimplifiedMetadataSearcher:
             
             # Fill in missing fields with Spotify data
             if spotify_data:
-                for key in ['artist', 'album', 'title']:
+                for key in ['album', 'title']:
                     # Skip album if preserve_album is True (riddim fallback mode)
                     if preserve_album and key == 'album':
                         continue
                     if not result.get(key) and spotify_data.get(key):
                         result[key] = spotify_data[key]
                         print(f"Filled {key} from Spotify: {spotify_data[key]}")
+
+                # Special handling for artist: prefer the one with MORE information (featured artists)
+                mb_artist = result.get('artist', '')
+                sp_artist = spotify_data.get('artist', '')
+                if mb_artist and sp_artist:
+                    # Count commas to determine artist completeness (more artists = more commas)
+                    mb_count = mb_artist.count(',') + 1  # +1 because "artist1, artist2" has 1 comma but 2 artists
+                    sp_count = sp_artist.count(',') + 1
+                    if sp_count > mb_count:
+                        result['artist'] = sp_artist
+                        print(f"Using Spotify artist (more complete with {sp_count} artists): {sp_artist}")
+                elif not mb_artist and sp_artist:
+                    result['artist'] = sp_artist
+                    print(f"Filled artist from Spotify: {sp_artist}")
 
                 # Special handling for year: prefer the EARLIER year (more likely the original)
                 if spotify_data.get('year'):
