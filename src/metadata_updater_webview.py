@@ -211,19 +211,28 @@ class ProcessingThread(Thread):
                         # Wait for user selection (blocking until set_selected_candidate is called)
                         # This pauses processing until the user responds to the review modal
                         import time as time_module
-                        timeout = 0
-                        max_timeout_seconds = 600  # 10 minutes
                         start_time = time_module.time()
+                        max_timeout_seconds = 600  # 10 minutes - user must respond within this time
 
-                        print(f"⏸️  PAUSING processing - waiting for user to respond to review modal for: {os.path.basename(file_path)}")
-                        while self.review_pending and timeout < max_timeout_seconds:
+                        print(f"⏸️  PAUSING processing - waiting for user to respond to review modal")
+                        print(f"📋 File: {os.path.basename(file_path)}")
+                        print(f"⏰ Timeout in {max_timeout_seconds} seconds")
+
+                        while self.review_pending:
+                            elapsed = time_module.time() - start_time
+                            if elapsed > max_timeout_seconds:
+                                print(f"⚠️  TIMEOUT: User did not respond within {max_timeout_seconds}s")
+                                print(f"⛔ Skipping file due to timeout: {os.path.basename(file_path)}")
+                                # Don't write metadata - skip this file
+                                self.review_pending = False
+                                self.selected_candidate_metadata = None
+                                return True, metadata  # Return as processed but no metadata written
                             time_module.sleep(0.1)
-                            timeout = time_module.time() - start_time
 
-                        if self.review_pending:
-                            print(f"⚠️  Review timeout after {max_timeout_seconds}s - moving to next file")
-
-                        print(f"✅ Resuming processing - review_pending={self.review_pending}, selected_candidate_metadata={self.selected_candidate_metadata is not None}")
+                        if self.selected_candidate_metadata:
+                            print(f"✅ User responded - processing metadata for: {os.path.basename(file_path)}")
+                        else:
+                            print(f"⏭️  User skipped file: {os.path.basename(file_path)}")
 
                         # Use user's selected metadata if available
                         if self.selected_candidate_metadata:

@@ -1,46 +1,47 @@
-2026-04-19 11:19:57 - SEARCH QUERY: Artist='Denise LaSalle' | Title='Trapped By A Thing Called Love'
-2026-04-19 11:19:57 - Filename: Denise Lasalle - Trapped By A Thing Called Love_1.mp3
-2026-04-19 11:19:57 - Filename Artist (for reference): 'Denise Lasalle' → 'Denise Lasalle'
-2026-04-19 11:19:57 - 
+2026-04-19 11:22:16 - SEARCH QUERY: Artist='Denise LaSalle' | Title='Trapped By A Thing Called Love'
+2026-04-19 11:22:16 - Filename: Denise Lasalle - Trapped By A Thing Called Love_1.mp3
+2026-04-19 11:22:16 - Filename Artist (for reference): 'Denise Lasalle' → 'Denise Lasalle'
+2026-04-19 11:22:16 - 
 🎵 MUSICBRAINZ SEARCH
-2026-04-19 11:19:57 -   Query: Artist='denise lasalle' | Title='Trapped By A Thing Called Love'
-2026-04-19 11:20:05 -   ✅ FOUND:
-2026-04-19 11:20:05 -     Title: Trapped by a Thing Called Love
-2026-04-19 11:20:05 -     Artist: Denise LaSalle
-2026-04-19 11:20:05 -     Album: Trapped by a Thing Called Love
-2026-04-19 11:20:05 -     Year: 1972
-2026-04-19 11:20:05 -     Genre: 
-2026-04-19 11:20:05 - 
+2026-04-19 11:22:16 -   Query: Artist='denise lasalle' | Title='Trapped By A Thing Called Love'
+2026-04-19 11:22:25 -   ✅ FOUND:
+2026-04-19 11:22:25 -     Title: Trapped by a Thing Called Love
+2026-04-19 11:22:25 -     Artist: Denise LaSalle
+2026-04-19 11:22:25 -     Album: Trapped by a Thing Called Love
+2026-04-19 11:22:25 -     Year: 1972
+2026-04-19 11:22:25 -     Genre: 
+2026-04-19 11:22:25 - 
 🎵 SPOTIFY SEARCH
-2026-04-19 11:20:05 -   Query: Artist='denise lasalle' | Title='Trapped By A Thing Called Love'
-2026-04-19 11:20:06 -   ✅ FOUND:
-2026-04-19 11:20:06 -     Title: Trapped By a Thing Called Love
-2026-04-19 11:20:06 -     Artist: Denise LaSalle
-2026-04-19 11:20:06 -     Album: This Real Woman
-2026-04-19 11:20:06 -     Year: 2000
-2026-04-19 11:20:06 -     Genre: 
-2026-04-19 11:20:06 -     Spotify ID: 6T3TfV8M5drXuQ35TgdGVL
-2026-04-19 11:20:06 -     Rating: 64
-2026-04-19 11:20:06 - 
+2026-04-19 11:22:25 -   Query: Artist='denise lasalle' | Title='Trapped By A Thing Called Love'
+2026-04-19 11:22:25 -   ✅ FOUND:
+2026-04-19 11:22:25 -     Title: Trapped By a Thing Called Love
+2026-04-19 11:22:25 -     Artist: Denise LaSalle
+2026-04-19 11:22:25 -     Album: This Real Woman
+2026-04-19 11:22:25 -     Year: 2000
+2026-04-19 11:22:25 -     Genre: 
+2026-04-19 11:22:25 -     Spotify ID: 6T3TfV8M5drXuQ35TgdGVL
+2026-04-19 11:22:25 -     Rating: 64
+2026-04-19 11:22:25 - 
 📊 MERGE RESULTS
-2026-04-19 11:20:06 -   MusicBrainz result: ✅ FOUND
-2026-04-19 11:20:06 -   Spotify result: ✅ FOUND
-2026-04-19 11:20:06 -   ✅ Album intelligent match: using Spotify 'This Real Woman' (MB was 'trapped by a thing called love')
-2026-04-19 11:20:13 - 
+2026-04-19 11:22:25 -   MusicBrainz result: ✅ FOUND
+2026-04-19 11:22:25 -   Spotify result: ✅ FOUND
+2026-04-19 11:22:25 -   ⚠️  Album mismatch: MB='Trapped by a Thing Called Love' vs Spotify='This Real Woman' - flagging for review
+2026-04-19 11:22:25 -   ⚠️  Year mismatch: MB=1972 vs Spotify=2000 (28 year gap) - flagging for review
+2026-04-19 11:22:33 - 
 ✅ FINAL MERGED RESULT:
-2026-04-19 11:20:13 -   Title: Trapped by a Thing Called Love
-2026-04-19 11:20:13 -   Artist: Denise LaSalle
-2026-04-19 11:20:13 -   Album: This Real Woman
-2026-04-19 11:20:13 -   Year: 2000
-2026-04-19 11:20:13 -   Genre: Blues
-2026-04-19 11:20:13 -   Rating: 64
-2026-04-19 11:20:14 - SEARCH RESULTS:
-2026-04-19 11:20:14 -   Title: Trapped by a Thing Called Love
-2026-04-19 11:20:14 -   Artist: Denise LaSalle
-2026-04-19 11:20:14 -   Album: This Real Woman
-2026-04-19 11:20:14 -   Year: 2000
-2026-04-19 11:20:14 -   Genre: Blues
-2026-04-19 11:20:14 -   Rating: 64
-2026-04-19 11:20:14 - ✅ Using API artist: 'Denise LaSalle'
-2026-04-19 11:20:14 -    (Filename enrichment was: 'Denise Lasalle')
-2026-04-19 11:20:14 - ---
+2026-04-19 11:22:33 -   Title: Trapped by a Thing Called Love
+2026-04-19 11:22:33 -   Artist: Denise LaSalle
+2026-04-19 11:22:33 -   Album: Trapped by a Thing Called Love
+2026-04-19 11:22:33 -   Year: 1972
+2026-04-19 11:22:33 -   Genre: Blues
+2026-04-19 11:22:33 -   Rating: 64
+2026-04-19 11:22:34 - SEARCH RESULTS:
+2026-04-19 11:22:34 -   Title: Trapped by a Thing Called Love
+2026-04-19 11:22:34 -   Artist: Denise LaSalle
+2026-04-19 11:22:34 -   Album: Trapped by a Thing Called Love
+2026-04-19 11:22:34 -   Year: 1972
+2026-04-19 11:22:34 -   Genre: Blues
+2026-04-19 11:22:34 -   Rating: 64
+2026-04-19 11:22:34 - ✅ Using API artist: 'Denise LaSalle'
+2026-04-19 11:22:34 -    (Filename enrichment was: 'Denise Lasalle')
+2026-04-19 11:22:34 - ---

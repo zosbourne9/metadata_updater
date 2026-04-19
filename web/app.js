@@ -74,6 +74,16 @@ function showModal(modalId) {
         modal.classList.add('active');
         overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
+
+        // For review modal, bring it to front and add visual attention
+        if (modalId === 'candidateReviewModal') {
+            modal.style.zIndex = '10000';
+            overlay.style.zIndex = '9999';
+            // Add pulse animation to draw attention
+            modal.classList.add('pulse-attention');
+            // Show notification
+            showNotification('Action Required: Please review metadata candidates', 'info');
+        }
     }
 }
 
@@ -92,6 +102,46 @@ function hideModal(modalId) {
         overlay.classList.remove('active');
         document.body.style.overflow = 'auto';
     }
+}
+
+/**
+ * Show notification to user
+ */
+function showNotification(message, type = 'info') {
+    // Create notification element if it doesn't exist
+    let notificationContainer = document.getElementById('notificationContainer');
+    if (!notificationContainer) {
+        notificationContainer = document.createElement('div');
+        notificationContainer.id = 'notificationContainer';
+        notificationContainer.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 99999;
+            max-width: 400px;
+        `;
+        document.body.appendChild(notificationContainer);
+    }
+
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        background: ${type === 'error' ? '#ff6b6b' : type === 'success' ? '#51cf66' : '#4dabf7'};
+        color: white;
+        padding: 16px 20px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        font-size: 14px;
+        animation: slideIn 0.3s ease-out;
+    `;
+    notification.textContent = message;
+    notificationContainer.appendChild(notification);
+
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => notification.remove(), 300);
+    }, 5000);
 }
 
 /**
