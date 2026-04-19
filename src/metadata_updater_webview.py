@@ -9,6 +9,7 @@ import threading
 import platform
 import certifi
 import urllib3
+import logging
 from threading import Thread
 from integration_helper import SimplifiedMetadataIntegration
 from artist_normalizer import ArtistNormalizer
@@ -19,7 +20,104 @@ from genre_finder import GenreFinder
 from genre_patterns import update_genre_patterns
 from unified_cache_manager import UnifiedCacheManager
 
+# Setup search debug logger
+def setup_search_logger():
+    """Setup a dedicated logger for search debugging."""
+    docs_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'docs')
+    os.makedirs(docs_dir, exist_ok=True)
+    log_file = os.path.join(docs_dir, 'search_debug.log')
+
+    search_logger = logging.getLogger('search_debug')
+    search_logger.setLevel(logging.DEBUG)
+
+    # Clear existing handlers
+    search_logger.handlers = []
+
+    # Create file handler
+    handler = logging.FileHandler(log_file, mode='w')
+    handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    handler.setFormatter(formatter)
+    search_logger.addHandler(handler)
+
+    return search_logger
+
+SEARCH_LOGGER = setup_search_logger()
+
 VERSION = "2.0"
+
+def extract_featured_artists(filename: str, artist_from_file: str = None) -> str:
+    """
+    Extract featured artists from filename and merge with primary artists.
+
+    Parses artist string to extract featured artists (after 'ft', 'feat', etc.)
+    and enriches the artist list with them.
+
+    Example:
+        "Compton Av, Steelz, Blueface & Lola Brooke ft Natalie Nunn & India Love"
+        → Extracts: "Natalie Nunn & India Love"
+        → Returns enriched list
+
+    Args:
+        filename: The audio filename
+        artist_from_file: The artist string extracted from the file/metadata
+
+    Returns:
+        Enriched artist string with featured artists included
+    """
+    import re
+
+    if not artist_from_file:
+        return artist_from_file
+
+    # Extract featured artist section after ft/feat/featuring
+    featured_pattern = r'(?:ft\.?|feat\.?|featuring)\s+(.+?)(?:\s*[\(\[]|$)'
+    featured_match = re.search(featured_pattern, artist_from_file, re.IGNORECASE)
+
+    if not featured_match:
+        return artist_from_file
+
+    featured_str = featured_match.group(1).strip()
+
+    # Remove featured artist indicator from primary artist string
+    primary_artist = re.sub(
+        r'\s*(?:ft\.?|feat\.?|featuring)\s+.+$',
+        '',
+        artist_from_file,
+        flags=re.IGNORECASE
+    ).strip()
+
+    if not featured_str:
+        return primary_artist
+
+    # Parse featured artists: split by '&' and commas to get individual artists
+    featured_artists = [
+        artist.strip()
+        for artist in re.split(r'[&,]', featured_str)
+        if artist.strip()
+    ]
+
+    if not featured_artists:
+        return primary_artist
+
+    # Parse primary artists
+    primary_artists = [
+        artist.strip()
+        for artist in re.split(r'[&,]', primary_artist)
+        if artist.strip()
+    ]
+
+    # Merge and deduplicate: add featured artists that aren't already in primary
+    enriched = primary_artists.copy()
+    for featured in featured_artists:
+        # Case-insensitive deduplication
+        if not any(featured.lower() == p.lower() for p in enriched):
+            enriched.append(featured)
+
+    # Reconstruct artist string with proper separators
+    # Use comma for separation but preserve ampersand pattern where it makes sense
+    return ', '.join(enriched)
+
 
 class ProcessingThread(Thread):
     """Worker thread for file processing with smooth progress updates."""
@@ -237,22 +335,62 @@ class MetadataUpdater:
                 print(f"Could not load file: {file_path}")
                 return False, None
 
-            # Get artist and title
+            # Get artist and title from file tags/metadata
             artist_name, title = self.utility_tools.get_artist_and_title(audio, file_path)
+
+            # Extract primary artist for searching (only use first artist)
+            # This is important because Spotify/MusicBrainz searches work with primary artist only
+            import re
+            # First, try to remove "feat" markers
+            primary = re.sub(
+                r'\s*(?:ft\.?|feat\.?|featuring)\s+.+$',
+                '',
+                artist_name,
+                flags=re.IGNORECASE
+            ).strip()
+            # Then extract just the first artist from comma/ampersand separated list
+            search_artist = re.split(r'[,&]', primary)[0].strip()
+
+            # Extract featured artists from filename for later enrichment
+            filename = os.path.basename(file_path)
+            filename_artist, filename_title = self.utility_tools._parse_filename(filename)
+            enriched_artist = extract_featured_artists(filename, filename_artist)
 
             # Normalize riddim_mode parameter
             if riddim_mode is None:
                 riddim_mode = {'isDancehall': False, 'isReggae': False}
 
-            # Search for metadata with riddim mode flag
+            # Log search query
+            SEARCH_LOGGER.info(f"SEARCH QUERY: Artist='{search_artist}' | Title='{title}'")
+            SEARCH_LOGGER.info(f"Filename: {filename}")
+            SEARCH_LOGGER.info(f"Filename Artist (for enrichment): '{filename_artist}' → '{enriched_artist}'")
+
+            # Search for metadata with riddim mode flag (using primary artist only)
             metadata = self.simplified_integration.search_track_metadata(
-                artist_name, title,
+                search_artist, title,
                 riddim_mode=riddim_mode
             )
 
             if not metadata:
-                print(f"No metadata found for: {artist_name} - {title}")
+                SEARCH_LOGGER.info(f"❌ NO METADATA FOUND")
+                print(f"No metadata found for: {search_artist} - {title}")
                 return False, None
+
+            # Enrich artist metadata with featured artists from filename
+            if enriched_artist and enriched_artist != search_artist:
+                metadata['artist'] = enriched_artist
+                SEARCH_LOGGER.info(f"✅ Artist enriched: '{search_artist}' → '{enriched_artist}'")
+                print(f"Enriched metadata artist: {enriched_artist}")
+
+            # Log search results
+            SEARCH_LOGGER.info(f"SEARCH RESULTS:")
+            SEARCH_LOGGER.info(f"  Title: {metadata.get('title', 'N/A')}")
+            SEARCH_LOGGER.info(f"  Artist: {metadata.get('artist', 'N/A')}")
+            SEARCH_LOGGER.info(f"  Album: {metadata.get('album', 'N/A')}")
+            SEARCH_LOGGER.info(f"  Year: {metadata.get('year', 'N/A')}")
+            SEARCH_LOGGER.info(f"  Genre: {metadata.get('genre', 'N/A')}")
+            SEARCH_LOGGER.info(f"  Rating: {metadata.get('rating', 'N/A')}")
+            SEARCH_LOGGER.info(f"---")
 
             print(f"DEBUG: Raw metadata from search: {metadata}")
             print(f"DEBUG: Selected fields: {selected_fields}")
