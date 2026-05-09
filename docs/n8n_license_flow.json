@@ -1,186 +1,138 @@
 {
   "name": "Metadata Updater - License Token Generator + Mailchimp",
+  "description": "Generate JWT-based license tokens and prepare Mailchimp payloads for license distribution",
+  "version": 1,
+  "active": false,
   "nodes": [
     {
       "parameters": {},
       "id": "e5fdc1dd-be92-4b47-926d-ff2d857c48d5",
-      "name": "Manual Trigger",
-      "type": "n8n-nodes-base.manualTrigger",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
       "typeVersion": 1,
-      "position": [100, 300],
-      "notes": "Click 'execute workflow' to start license generation"
+      "position": [50, 300]
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "email",
-              "value": "={{ $json.email || 'test@example.com' }}"
-            },
-            {
-              "name": "isValid",
-              "value": "={{ /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test($json.email || 'test@example.com') }}"
-            },
-            {
-              "name": "now",
-              "value": "={{ new Date().toISOString() }}"
-            },
-            {
-              "name": "expires",
-              "value": "={{ new Date(Date.now() + 365*24*60*60*1000).toISOString() }}"
-            }
-          ]
-        }
+        "mode": "raw",
+        "jsonOutput": "={\n  \"email\": $json.email || \"test@example.com\",\n  \"isValid\": /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test($json.email || \"test@example.com\"),\n  \"now\": new Date().toISOString(),\n  \"expires\": new Date(Date.now() + 365*24*60*60*1000).toISOString()\n}"
       },
       "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
       "name": "Validate & Prepare",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [300, 300]
+      "position": [250, 300]
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "={{ $json.isValid }}",
-            "operator": {
-              "name": "filter.operator.equals",
-              "type": "boolean",
-              "operation": "equals"
-            },
-            "rightValue": true
-          }
-        }
+        "mode": "expression",
+        "expression": "={{ $json.isValid === true }}"
       },
       "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
       "name": "Email Valid?",
-      "type": "n8n-nodes-base.filter",
+      "type": "n8n-nodes-base.switch",
       "typeVersion": 1,
-      "position": [500, 300],
-      "notes": "Only proceed if email is valid"
+      "position": [450, 300]
     },
     {
       "parameters": {
-        "functionCode": "const jwt = require('jsonwebtoken');\n\nconst privateKey = process.env.LICENSE_PRIVATE_KEY;\nif (!privateKey) {\n  throw new Error('LICENSE_PRIVATE_KEY environment variable not set in n8n');\n}\n\nconst payload = {\n  user_email: $json.email,\n  issued: $json.now,\n  expires: $json.expires,\n  app_version: '1.0',\n  features: ['metadata_update', 'genre_detection']\n};\n\nconst token = jwt.sign(payload, privateKey, {\n  algorithm: 'RS256',\n  expiresIn: '365d'\n});\n\nconst licenseKey = `MDUX_${token}`;\n\nreturn {\n  license_key: licenseKey,\n  user_email: payload.user_email,\n  issued: payload.issued,\n  expires: payload.expires,\n  features: payload.features,\n  success: true,\n  token_type: 'JWT'\n};"
+        "jsCode": "const jwt = require('jsonwebtoken');\nconst privateKey = process.env.LICENSE_PRIVATE_KEY;\nif (!privateKey) {\n  throw new Error('LICENSE_PRIVATE_KEY environment variable not set in n8n');\n}\nconst payload = {\n  user_email: $json.email,\n  issued: $json.now,\n  expires: $json.expires,\n  app_version: '1.0',\n  features: ['metadata_update', 'genre_detection']\n};\nconst token = jwt.sign(payload, privateKey, {\n  algorithm: 'RS256',\n  expiresIn: '365d'\n});\nreturn [{\n  license_key: `MDUX_${token}`,\n  user_email: payload.user_email,\n  issued: payload.issued,\n  expires: payload.expires,\n  features: payload.features,\n  success: true,\n  token_type: 'JWT'\n}];"
       },
       "id": "d4e5f6a7-b8c9-0123-def1-234567890123",
       "name": "Generate JWT Token",
       "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [700, 300],
-      "notes": "Generates signed JWT token with embedded email and expiration"
+      "typeVersion": 1,
+      "position": [650, 300]
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "email_address",
-              "value": "={{ $json.user_email }}"
-            },
-            {
-              "name": "status",
-              "value": "subscribed"
-            },
-            {
-              "name": "merge_fields",
-              "value": "={\n  LICENSE_KEY: $json.license_key,\n  LICENSE_EXPIRES: $json.expires.split('T')[0],\n  DAYS_VALID: '365',\n  FEATURES: 'Metadata Update, Genre Detection',\n  ACTIVATION_DATE: $json.issued,\n  DOWNLOAD_LINK: 'https://your-domain.com/download',\n  SUPPORT_EMAIL: 'support@your-domain.com'\n}"
-            },
-            {
-              "name": "tags",
-              "value": "={{ ['license_active', new Date().getFullYear().toString()] }}"
-            }
-          ]
-        }
+        "mode": "raw",
+        "jsonOutput": "={\n  \"email_address\": $json.user_email,\n  \"status\": \"subscribed\",\n  \"merge_fields\": {\n    \"LICENSE_KEY\": $json.license_key,\n    \"LICENSE_EXPIRES\": $json.expires.split('T')[0],\n    \"DAYS_VALID\": \"365\",\n    \"FEATURES\": \"Metadata Update, Genre Detection\",\n    \"ACTIVATION_DATE\": $json.issued,\n    \"DOWNLOAD_LINK\": \"https://your-domain.com/download\",\n    \"SUPPORT_EMAIL\": \"support@your-domain.com\"\n  },\n  \"tags\": [\"license_active\", new Date().getFullYear().toString()],\n  \"license_key\": $json.license_key,\n  \"expires\": $json.expires\n}"
       },
       "id": "e5f6a7b8-c9d0-1234-ef12-345678901234",
       "name": "Build Mailchimp JSON",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [900, 300],
-      "notes": "Transforms license data into Mailchimp format with merge fields"
+      "position": [850, 300]
     },
     {
       "parameters": {
-        "content": "={{ {email_address: $json.email_address, status: $json.status, merge_fields: $json.merge_fields, tags: $json.tags, license_key: $json.license_key, expires: $json.expires} }}"
+        "jsCode": "return [$json];"
       },
       "id": "a7b8c9d0-e1f2-3456-0123-567890123456",
-      "name": "Output Mailchimp JSON",
-      "type": "n8n-nodes-base.respondToWebhook",
+      "name": "Output Success",
+      "type": "n8n-nodes-base.code",
       "typeVersion": 1,
-      "position": [1100, 300],
-      "notes": "Final output - ready to send to Mailchimp or use elsewhere"
+      "position": [1050, 300]
     },
     {
       "parameters": {
-        "content": "={{ {success: false, error: 'Invalid email format'} }}"
+        "jsCode": "return [{\"success\": false, \"error\": \"Invalid email format\"}];"
       },
       "id": "b8c9d0e1-f2a3-4567-1234-678901234567",
-      "name": "Invalid Email Error",
-      "type": "n8n-nodes-base.respondToWebhook",
+      "name": "Output Error",
+      "type": "n8n-nodes-base.code",
       "typeVersion": 1,
-      "position": [500, 500]
+      "position": [450, 500]
     }
   ],
   "connections": {
-    "Manual Trigger": {
+    "e5fdc1dd-be92-4b47-926d-ff2d857c48d5": {
       "main": [
         [
           {
-            "node": "Validate & Prepare",
+            "node": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Validate & Prepare": {
+    "b2c3d4e5-f6a7-8901-bcde-f12345678901": {
       "main": [
         [
           {
-            "node": "Email Valid?",
+            "node": "c3d4e5f6-a7b8-9012-cdef-123456789012",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Email Valid?": {
+    "c3d4e5f6-a7b8-9012-cdef-123456789012": {
       "main": [
         [
           {
-            "node": "Generate JWT Token",
+            "node": "d4e5f6a7-b8c9-0123-def1-234567890123",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Invalid Email Error",
+            "node": "b8c9d0e1-f2a3-4567-1234-678901234567",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Generate JWT Token": {
+    "d4e5f6a7-b8c9-0123-def1-234567890123": {
       "main": [
         [
           {
-            "node": "Build Mailchimp JSON",
+            "node": "e5f6a7b8-c9d0-1234-ef12-345678901234",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Build Mailchimp JSON": {
+    "e5f6a7b8-c9d0-1234-ef12-345678901234": {
       "main": [
         [
           {
-            "node": "Output Mailchimp JSON",
+            "node": "a7b8c9d0-e1f2-3456-0123-567890123456",
             "type": "main",
             "index": 0
           }
@@ -188,7 +140,6 @@
       ]
     }
   },
-  "active": false,
   "settings": {
     "executionOrder": "v1"
   },

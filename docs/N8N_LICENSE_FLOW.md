@@ -45,7 +45,12 @@ Output JSON
   isValid: '{{ /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($json.email) }}'
 }
 ```
-- **If Invalid**: Send error response, stop workflow
+
+### Step 3b: Email Valid? (Switch Node)
+- **Type**: Switch node (conditional branching)
+- **Condition**: `{{ $json.isValid === true }}`
+- **Branch 1 (True)**: Route to JWT generation
+- **Branch 2 (False)**: Route to error output
 
 ### Step 4: Generate Timestamps
 - **Type**: Set node
@@ -322,6 +327,27 @@ Accept array of emails and generate multiple licenses:
 // Loop node over emails, generate token for each
 ```
 
+## Workflow Import Troubleshooting
+
+### Common Import Errors
+
+**"Could not find property option"** or **"f[m] is not iterable"**
+- ✓ These errors indicate JSON structure issues
+- ✓ Use the corrected `n8n_license_flow.json` file from docs/
+- ✓ Ensure you're importing the full file, not a partial copy
+- ✓ Verify the JSON is valid (no syntax errors)
+
+**"Property 'x' is not recognized"**
+- ✓ Clear your browser cache and reload n8n
+- ✓ Verify you're using a compatible n8n version (1.0+)
+- ✓ Check that all node types exist in your n8n instance
+
+**Import succeeds but workflow won't execute**
+- ✓ Check that `LICENSE_PRIVATE_KEY` environment variable is set
+- ✓ Verify the private key format has `BEGIN RSA PRIVATE KEY` markers
+- ✓ Test by running: `echo $LICENSE_PRIVATE_KEY` in n8n shell
+- ✓ Ensure no extra whitespace or line breaks in the key
+
 ## Error Handling
 
 ### Common Issues
@@ -367,32 +393,32 @@ Accept array of emails and generate multiple licenses:
 
 ## Example n8n JSON Export
 
-Here's a minimal n8n workflow JSON you can import:
+**Complete, production-ready workflow JSON:**
 
-```json
-{
-  "name": "License Generator - Phase 2",
-  "nodes": [
-    {
-      "parameters": {},
-      "name": "Start",
-      "type": "n8n-nodes-base.start",
-      "typeVersion": 1,
-      "position": [250, 300]
-    },
-    {
-      "parameters": {
-        "functionCode": "const jwt = require('jsonwebtoken');\nconst pk = process.env.LICENSE_PRIVATE_KEY;\nif (!pk) throw new Error('KEY_NOT_SET');\nconst token = jwt.sign({user_email: $json.email, issued: $json.now, expires: $json.expires, app_version: '1.0', features: ['metadata_update', 'genre_detection']}, pk, {algorithm: 'RS256'});\nreturn {license_key: `MDUX_${token}`, user_email: $json.email, issued: $json.now, expires: $json.expires, features: $json.features, success: true};"
-      },
-      "name": "Generate JWT",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 1,
-      "position": [450, 300]
-    }
-  ],
-  "connections": {}
-}
-```
+The full workflow is available in [`docs/n8n_license_flow.json`](n8n_license_flow.json) — this file can be imported directly into n8n:
+
+**To import:**
+1. In n8n, go to **Workflows** → Click menu (⋮) → **Import from file**
+2. Select `n8n_license_flow.json`
+3. Review the workflow structure
+4. Set the `LICENSE_PRIVATE_KEY` environment variable (see Configuration section)
+5. Test with sample email
+
+**Workflow includes:**
+- ✅ Email validation with Switch node for conditional routing
+- ✅ JWT token generation with RS256 algorithm
+- ✅ Mailchimp payload formatting
+- ✅ Error handling for invalid emails
+- ✅ Success and error output branches
+
+**Key nodes in the workflow:**
+1. **Start** - Manual trigger
+2. **Validate & Prepare** - Email validation + timestamp generation
+3. **Email Valid?** - Switch node for true/false branches
+4. **Generate JWT Token** - Sign payload with private key
+5. **Build Mailchimp JSON** - Format data for Mailchimp
+6. **Output Success** - Return completed payload
+7. **Output Error** - Return validation error
 
 ## Next Steps
 
