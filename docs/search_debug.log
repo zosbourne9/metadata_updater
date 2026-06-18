@@ -1,0 +1,614 @@
+2026-05-09 12:04:58 - SEARCH QUERY: Artist='T.I.' | Title='Mr. Him (Clean)'
+2026-05-09 12:04:58 - Filename: T.I. - Mr. Him (Clean).mp3
+2026-05-09 12:04:58 - SEARCH QUERY: Artist='T.I.' | Title='Mr. Him (Instrumental)'
+2026-05-09 12:04:58 - Filename: T.I. - Mr. Him (Instrumental).mp3
+2026-05-09 12:04:58 - Filename Artist (for reference): 'T.I.' → 'T.I.'
+2026-05-09 12:04:58 - SEARCH QUERY: Artist='T.I.' | Title='Mr. Him (Dirty)'
+2026-05-09 12:04:58 - Filename Artist (for reference): 'T.I.' → 'T.I.'
+2026-05-09 12:04:58 - SEARCH QUERY: Artist='T.I.' | Title='Mr. Him (8-Bar Intro Dirty)'
+2026-05-09 12:04:58 - 
+🎵 MUSICBRAINZ SEARCH
+2026-05-09 12:04:58 - Filename: T.I. - Mr. Him (Dirty).mp3
+2026-05-09 12:04:58 - Filename: T.I. - Mr. Him (8-Bar Intro Dirty).mp3
+2026-05-09 12:04:58 - Filename Artist (for reference): 'T.I.' → 'T.I.'
+2026-05-09 12:04:58 - 
+🎵 MUSICBRAINZ SEARCH
+2026-05-09 12:04:58 -   Query: Artist='t.i.' | Title='Mr. Him'
+2026-05-09 12:04:58 -   Query: Artist='t.i.' | Title='Mr. Him (Instrumental)'
+2026-05-09 12:04:58 - Filename Artist (for reference): 'T.I.' → 'T.I.'
+2026-05-09 12:04:58 - 
+🎵 MUSICBRAINZ SEARCH
+2026-05-09 12:04:58 -   Query: Artist='t.i.' | Title='Mr. Him (B-Bar Intro Dirty)'
+2026-05-09 12:04:58 - 
+🎵 MUSICBRAINZ SEARCH
+2026-05-09 12:04:58 -   Query: Artist='t.i.' | Title='Mr. Him'
+2026-05-09 12:05:03 -     REJECTED: Title similarity 0.32 < 0.75 | Title: 'mr. kodak' | Artist: 't.i.' | Album: 'Crime Pays'
+2026-05-09 12:05:03 -     REJECTED: Title similarity 0.22 < 0.75 | Title: 'the amazing mr. fuck up' | Artist: 't.i., victoria monét' | Album: 'DIME TRAP'
+2026-05-09 12:05:04 -     REJECTED: Title similarity 0.50 < 0.75 | Title: 'mr. kodak' | Artist: 't.i.' | Album: 'Crime Pays'
+2026-05-09 12:05:04 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'the amazing mr. fuck up' | Artist: 't.i., victoria monét' | Album: 'DIME TRAP'
+2026-05-09 12:05:05 -     REJECTED: Title similarity 0.33 < 0.75 | Title: 'mr. kodak' | Artist: 't.i.' | Album: 'Crime Pays'
+2026-05-09 12:05:05 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'the amazing mr. fuck up' | Artist: 't.i., victoria monét' | Album: 'DIME TRAP'
+2026-05-09 12:05:06 -     REJECTED: Title similarity 0.50 < 0.75 | Title: 'mr. kodak' | Artist: 't.i.' | Album: 'Crime Pays'
+2026-05-09 12:05:06 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'the amazing mr. fuck up' | Artist: 't.i., victoria monét' | Album: 'DIME TRAP'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.45 < 0.75 | Title: 'why i’m serious (interlude)' | Artist: 't.i.' | Album: 'I’m Serious'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.15 < 0.75 | Title: 'magic' | Artist: 't.i.' | Album: 'The Pursuit of Freedom'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: 'What You Know'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 'drug related' | Artist: 't.i.' | Album: 'Urban Legend'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.16 < 0.75 | Title: 'you don't know me (produced by dj toomp)' | Artist: 't.i.' | Album: 'Down With the King (Gangsta Grillz)'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.34 < 0.75 | Title: 'no problems (remix)' | Artist: 't.i.' | Album: 'Down With the King (Gangsta Grillz)'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.33 < 0.75 | Title: 'big things poppin’ (do it)' | Artist: 't.i.' | Album: 'RnB Superclub, Volume 8.0'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.30 < 0.75 | Title: 'hotel' | Artist: 't.i.' | Album: 'The Throne Is Mine'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'freestyle (produced by dj don cannon)' | Artist: 't.i.' | Album: 'Down With the King (Gangsta Grillz)'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.22 < 0.75 | Title: 'rubber band man' | Artist: 't.i.' | Album: 'Totally Hits 2004'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.07 < 0.75 | Title: 'like so' | Artist: 't.i.' | Album: 'Fuck a Mixtape'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'top back' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'all nite' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'make you sweat' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.26 < 0.75 | Title: 'right now' | Artist: 't.i.' | Album: 'Southern Smoke, Volume 25: The Welcome Home Party'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.33 < 0.75 | Title: 'big things poppin’ (do it)' | Artist: 't.i.' | Album: 'The Best Hip Hop Party Hits! 40 Massive Club Anthems'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.36 < 0.75 | Title: 'big picture' | Artist: 't.i.' | Album: 'No Mercy'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.15 < 0.75 | Title: 'king' | Artist: 't.i.' | Album: 'Paperwork'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.06 < 0.75 | Title: 'koliko dana' | Artist: 'ti' | Album: 'Koliko dana'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'bez razloga' | Artist: 'ti' | Album: 'Vidimo se!'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.29 < 0.75 | Title: 'samokontrola' | Artist: 'ti' | Album: 'Vidimo se!'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'kocka je bačena' | Artist: 'ti' | Album: 'Vidimo se!'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.29 < 0.75 | Title: 'i don’t know' | Artist: 't.i.' | Album: 'Paperwork'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'doing my job' | Artist: 't.i.' | Album: 'Your Mom's Favorite Mixtape, Volume One'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'yeah you know (takers)' | Artist: 't.i.' | Album: 'Fuck a Mixtape'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.32 < 0.75 | Title: 'big shit poppin' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.09 < 0.75 | Title: 'that’s what i thought' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'no matter what' | Artist: 't.i.' | Album: 'Paper Trail'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'ain't gonna see it coming' | Artist: 't.i.' | Album: 'Da' Nic'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.38 < 0.75 | Title: 'hello (dj hi volume blend)' | Artist: 't.i.' | Album: 'Blend Season Vol.1'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'take da wheel' | Artist: 't.i.' | Album: 'Us or Else: Letter to the System'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: 'Def Jam Icon'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.29 < 0.75 | Title: 'you ain't fly' | Artist: 't.i.' | Album: 'T.I. vs T.I.P.'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.29 < 0.75 | Title: 'tell 'em i said that' | Artist: 't.i.' | Album: 'T.I. vs T.I.P.'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.16 < 0.75 | Title: 'raw' | Artist: 't.i.' | Album: 'T.I. vs T.I.P.'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.06 < 0.75 | Title: 'da dopeman' | Artist: 't.i.' | Album: 'T.I. vs T.I.P.'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.29 < 0.75 | Title: 'top back (juke jams remix)' | Artist: 't.i.' | Album: 'Juke Jams'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.22 < 0.75 | Title: 'rubber band man (remix)' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: '100 Greatest 00s Hip-Hop'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'my air forces' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'jackin' fo beats' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 'fo my luxury' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.15 < 0.75 | Title: 'outro' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.00 < 0.75 | Title: '1,2,3' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.05 < 0.75 | Title: 'look what i got' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.08 < 0.75 | Title: '24’s' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.22 < 0.75 | Title: 't.i. vs. t.i.p.' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.06 < 0.75 | Title: 'let’s get away' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.26 < 0.75 | Title: 'chillin with my bitch (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.31 < 0.75 | Title: 'what they do (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.31 < 0.75 | Title: 'the greatest (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.36 < 0.75 | Title: 'motivation (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:09 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'stand up (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'why i’m serious (interlude)' | Artist: 't.i.' | Album: 'I’m Serious'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.33 < 0.75 | Title: 'magic' | Artist: 't.i.' | Album: 'The Pursuit of Freedom'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: 'What You Know'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'drug related' | Artist: 't.i.' | Album: 'Urban Legend'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.09 < 0.75 | Title: 'you don't know me (produced by dj toomp)' | Artist: 't.i.' | Album: 'Down With the King (Gangsta Grillz)'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.15 < 0.75 | Title: 'no problems (remix)' | Artist: 't.i.' | Album: 'Down With the King (Gangsta Grillz)'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'big things poppin’ (do it)' | Artist: 't.i.' | Album: 'RnB Superclub, Volume 8.0'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'hotel' | Artist: 't.i.' | Album: 'The Throne Is Mine'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.09 < 0.75 | Title: 'freestyle (produced by dj don cannon)' | Artist: 't.i.' | Album: 'Down With the King (Gangsta Grillz)'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'rubber band man' | Artist: 't.i.' | Album: 'Totally Hits 2004'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.14 < 0.75 | Title: 'like so' | Artist: 't.i.' | Album: 'Fuck a Mixtape'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'top back' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'all nite' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'make you sweat' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'right now' | Artist: 't.i.' | Album: 'Southern Smoke, Volume 25: The Welcome Home Party'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'big things poppin’ (do it)' | Artist: 't.i.' | Album: 'The Best Hip Hop Party Hits! 40 Massive Club Anthems'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'big picture' | Artist: 't.i.' | Album: 'No Mercy'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'king' | Artist: 't.i.' | Album: 'Paperwork'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'koliko dana' | Artist: 'ti' | Album: 'Koliko dana'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'bez razloga' | Artist: 'ti' | Album: 'Vidimo se!'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'samokontrola' | Artist: 'ti' | Album: 'Vidimo se!'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.09 < 0.75 | Title: 'kocka je bačena' | Artist: 'ti' | Album: 'Vidimo se!'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'i don’t know' | Artist: 't.i.' | Album: 'Paperwork'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'doing my job' | Artist: 't.i.' | Album: 'Your Mom's Favorite Mixtape, Volume One'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.07 < 0.75 | Title: 'yeah you know (takers)' | Artist: 't.i.' | Album: 'Fuck a Mixtape'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'big shit poppin' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.14 < 0.75 | Title: 'that’s what i thought' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'no matter what' | Artist: 't.i.' | Album: 'Paper Trail'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'ain't gonna see it coming' | Artist: 't.i.' | Album: 'Da' Nic'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 'hello (dj hi volume blend)' | Artist: 't.i.' | Album: 'Blend Season Vol.1'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'take da wheel' | Artist: 't.i.' | Album: 'Us or Else: Letter to the System'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: 'Def Jam Icon'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'you ain't fly' | Artist: 't.i.' | Album: 'T.I. vs T.I.P.'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.15 < 0.75 | Title: 'tell 'em i said that' | Artist: 't.i.' | Album: 'T.I. vs T.I.P.'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'raw' | Artist: 't.i.' | Album: 'T.I. vs T.I.P.'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 'da dopeman' | Artist: 't.i.' | Album: 'T.I. vs T.I.P.'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'top back (juke jams remix)' | Artist: 't.i.' | Album: 'Juke Jams'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'rubber band man (remix)' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: '100 Greatest 00s Hip-Hop'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.30 < 0.75 | Title: 'my air forces' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.09 < 0.75 | Title: 'jackin' fo beats' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'fo my luxury' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'outro' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.00 < 0.75 | Title: '1,2,3' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'look what i got' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.00 < 0.75 | Title: '24’s' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 't.i. vs. t.i.p.' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'let’s get away' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'chillin with my bitch (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'what they do (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'the greatest (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'motivation (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'stand up (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'why you wanna (instrumental)' | Artist: 't.i.' | Album: 'Why You Wanna'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.09 < 0.75 | Title: 'what you know (promo only clean edit)' | Artist: 't.i.' | Album: 'Promo Only: Urban Radio, April 2006'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'let's get away' | Artist: 't.i.' | Album: 'Promo Only: Urban Radio, August 2004'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: 'X-Mix Urban 91'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'where they at (dissin’ t.i.)' | Artist: 't.i.' | Album: 'Grand Hustle Presents: In Da Streetz, Volume 4'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'why u wanna' | Artist: 't.i.' | Album: 'Massive R&B: Winter Collection 2006'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.23 < 0.75 | Title: 'you know what it is' | Artist: 't.i.' | Album: 'Entourage'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'rubber band man' | Artist: 't.i.' | Album: 'Crunk Hits'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'my life (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.00 < 0.75 | Title: 'asap' | Artist: 't.i.' | Album: 'Urban Legend'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'hell of a life (explicit album version)' | Artist: 't.i.' | Album: 'Hell of a Life'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'rubber band man' | Artist: 't.i.' | Album: 'Southern Smoke Pt 7 (Hosted by Chamillionare)'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'u don't know me' | Artist: 't.i.' | Album: 'N/A'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.00 < 0.75 | Title: 'topless' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'if i' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.22 < 0.75 | Title: 'it ain't me' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.35 < 0.75 | Title: 'better than this' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'big money' | Artist: 't.i.' | Album: 'Thaembacy Instrumentals 11'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.16 < 0.75 | Title: 'let em talk (hook)' | Artist: 't.i.' | Album: 'Thaembacy Instrumentals 11'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.29 < 0.75 | Title: 'rubberband man' | Artist: 't.i.' | Album: 'A King Of Oneself'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'you don't know me' | Artist: 't.i.' | Album: 'Southern Smoke Instrumentals 2'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.14 < 0.75 | Title: 'whatever you like (stereobit remix)' | Artist: 't.i.' | Album: 'N/A'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'we rollin' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 'turn me on (remix)' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.15 < 0.75 | Title: 'coming back (outro)' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.22 < 0.75 | Title: 'no mediocre' | Artist: 't.i.' | Album: 'Planète Rap 2014 Vol. 3'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'u don’t know me' | Artist: 't.i.' | Album: 'Midnight Club 3: DUB Edition: Original Soundtrack'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'tell ’em i said that (instrumental)' | Artist: 't.i.' | Album: 'T.I. vs. T.I.P. (instrumental)'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.35 < 0.75 | Title: 'everything on me' | Artist: 't.i.' | Album: 'No Mercy'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'we do this (instrumental)' | Artist: 't.i.' | Album: 'T.I. vs. T.I.P. (instrumental)'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.31 < 0.75 | Title: 'breaking old habits' | Artist: 't.i.' | Album: 'Dirty Work 4 (More Hustle, More Snow)'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'you ain’t missin’ nothing' | Artist: 't.i.' | Album: 'Paper Trail'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.18 < 0.75 | Title: '56 bars (intro)' | Artist: 't.i.' | Album: 'Paper Trail'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.22 < 0.75 | Title: 'we will not' | Artist: 't.i.' | Album: 'Us or Else: Letter to the System'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'back of the club' | Artist: 't.i.' | Album: 'When the North & South Collide Pt. 3'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.00 < 0.75 | Title: 'gangstas' | Artist: 't.i.' | Album: 'When the North & South Collide Pt. 3'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'here we go' | Artist: 't.i.' | Album: 'When the North & South Collide Pt. 3'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'make em say ooh' | Artist: 't.i.' | Album: 'When the North & South Collide Pt. 3'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'hit the block' | Artist: 't.i.' | Album: 'When the North & South Collide Pt. 3'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.06 < 0.75 | Title: 'what you know (a cappella)' | Artist: 't.i.' | Album: 'What You Know'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'what you know (explicit version)' | Artist: 't.i.' | Album: 'What You Know'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.43 < 0.75 | Title: 'turn it' | Artist: 't.i.' | Album: 'Paperwork'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'trap back' | Artist: 't.i.' | Album: 'Certified Trap, Vol. 1'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'at it all night' | Artist: 't.i.' | Album: 'A Year and a Day'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'make you sweat' | Artist: 't.i.' | Album: 'A Year and a Day'
+2026-05-09 12:05:11 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'all g' | Artist: 't.i.' | Album: 'A Year and a Day'
+2026-05-09 12:05:11 -   ❌ NO RESULTS
+2026-05-09 12:05:11 - 
+🎵 SPOTIFY SEARCH
+2026-05-09 12:05:11 -   Query: Artist='t.i.' | Title='Mr. Him'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.44 < 0.75 | Title: 'why i’m serious (interlude)' | Artist: 't.i.' | Album: 'I’m Serious'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'magic' | Artist: 't.i.' | Album: 'The Pursuit of Freedom'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: 'What You Know'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.15 < 0.75 | Title: 'drug related' | Artist: 't.i.' | Album: 'Urban Legend'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'you don't know me (produced by dj toomp)' | Artist: 't.i.' | Album: 'Down With the King (Gangsta Grillz)'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.22 < 0.75 | Title: 'no problems (remix)' | Artist: 't.i.' | Album: 'Down With the King (Gangsta Grillz)'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.42 < 0.75 | Title: 'big things poppin’ (do it)' | Artist: 't.i.' | Album: 'RnB Superclub, Volume 8.0'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'hotel' | Artist: 't.i.' | Album: 'The Throne Is Mine'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'freestyle (produced by dj don cannon)' | Artist: 't.i.' | Album: 'Down With the King (Gangsta Grillz)'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.33 < 0.75 | Title: 'rubber band man' | Artist: 't.i.' | Album: 'Totally Hits 2004'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'like so' | Artist: 't.i.' | Album: 'Fuck a Mixtape'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'top back' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.29 < 0.75 | Title: 'all nite' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'make you sweat' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.22 < 0.75 | Title: 'right now' | Artist: 't.i.' | Album: 'Southern Smoke, Volume 25: The Welcome Home Party'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.42 < 0.75 | Title: 'big things poppin’ (do it)' | Artist: 't.i.' | Album: 'The Best Hip Hop Party Hits! 40 Massive Club Anthems'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.26 < 0.75 | Title: 'big picture' | Artist: 't.i.' | Album: 'No Mercy'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'king' | Artist: 't.i.' | Album: 'Paperwork'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'koliko dana' | Artist: 'ti' | Album: 'Koliko dana'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'bez razloga' | Artist: 'ti' | Album: 'Vidimo se!'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.26 < 0.75 | Title: 'samokontrola' | Artist: 'ti' | Album: 'Vidimo se!'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 'kocka je bačena' | Artist: 'ti' | Album: 'Vidimo se!'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'i don’t know' | Artist: 't.i.' | Album: 'Paperwork'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'doing my job' | Artist: 't.i.' | Album: 'Your Mom's Favorite Mixtape, Volume One'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 'yeah you know (takers)' | Artist: 't.i.' | Album: 'Fuck a Mixtape'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.29 < 0.75 | Title: 'big shit poppin' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'that’s what i thought' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'no matter what' | Artist: 't.i.' | Album: 'Paper Trail'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'ain't gonna see it coming' | Artist: 't.i.' | Album: 'Da' Nic'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.30 < 0.75 | Title: 'hello (dj hi volume blend)' | Artist: 't.i.' | Album: 'Blend Season Vol.1'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.15 < 0.75 | Title: 'take da wheel' | Artist: 't.i.' | Album: 'Us or Else: Letter to the System'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: 'Def Jam Icon'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.35 < 0.75 | Title: 'you ain't fly' | Artist: 't.i.' | Album: 'T.I. vs T.I.P.'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.30 < 0.75 | Title: 'tell 'em i said that' | Artist: 't.i.' | Album: 'T.I. vs T.I.P.'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'raw' | Artist: 't.i.' | Album: 'T.I. vs T.I.P.'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.16 < 0.75 | Title: 'da dopeman' | Artist: 't.i.' | Album: 'T.I. vs T.I.P.'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.26 < 0.75 | Title: 'top back (juke jams remix)' | Artist: 't.i.' | Album: 'Juke Jams'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.36 < 0.75 | Title: 'rubber band man (remix)' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: '100 Greatest 00s Hip-Hop'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'my air forces' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.28 < 0.75 | Title: 'jackin' fo beats' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.15 < 0.75 | Title: 'fo my luxury' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'outro' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.00 < 0.75 | Title: '1,2,3' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.33 < 0.75 | Title: 'look what i got' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.00 < 0.75 | Title: '24’s' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 't.i. vs. t.i.p.' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'let’s get away' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'chillin with my bitch (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'what they do (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'the greatest (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.29 < 0.75 | Title: 'motivation (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.26 < 0.75 | Title: 'stand up (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.33 < 0.75 | Title: 'why you wanna (instrumental)' | Artist: 't.i.' | Album: 'Why You Wanna'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.31 < 0.75 | Title: 'what you know (promo only clean edit)' | Artist: 't.i.' | Album: 'Promo Only: Urban Radio, April 2006'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'let's get away' | Artist: 't.i.' | Album: 'Promo Only: Urban Radio, August 2004'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: 'X-Mix Urban 91'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'where they at (dissin’ t.i.)' | Artist: 't.i.' | Album: 'Grand Hustle Presents: In Da Streetz, Volume 4'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'why u wanna' | Artist: 't.i.' | Album: 'Massive R&B: Winter Collection 2006'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.35 < 0.75 | Title: 'you know what it is' | Artist: 't.i.' | Album: 'Entourage'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.33 < 0.75 | Title: 'rubber band man' | Artist: 't.i.' | Album: 'Crunk Hits'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.35 < 0.75 | Title: 'my life (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.06 < 0.75 | Title: 'asap' | Artist: 't.i.' | Album: 'Urban Legend'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 'hell of a life (explicit album version)' | Artist: 't.i.' | Album: 'Hell of a Life'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.33 < 0.75 | Title: 'rubber band man' | Artist: 't.i.' | Album: 'Southern Smoke Pt 7 (Hosted by Chamillionare)'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.14 < 0.75 | Title: 'u don't know me' | Artist: 't.i.' | Album: 'N/A'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'topless' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'if i' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.37 < 0.75 | Title: 'it ain't me' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.28 < 0.75 | Title: 'better than this' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.22 < 0.75 | Title: 'big money' | Artist: 't.i.' | Album: 'Thaembacy Instrumentals 11'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'let em talk (hook)' | Artist: 't.i.' | Album: 'Thaembacy Instrumentals 11'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.29 < 0.75 | Title: 'rubberband man' | Artist: 't.i.' | Album: 'A King Of Oneself'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'you don't know me' | Artist: 't.i.' | Album: 'Southern Smoke Instrumentals 2'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'whatever you like (stereobit remix)' | Artist: 't.i.' | Album: 'N/A'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.22 < 0.75 | Title: 'we rollin' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.36 < 0.75 | Title: 'turn me on (remix)' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.30 < 0.75 | Title: 'coming back (outro)' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.32 < 0.75 | Title: 'no mediocre' | Artist: 't.i.' | Album: 'Planète Rap 2014 Vol. 3'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.14 < 0.75 | Title: 'u don’t know me' | Artist: 't.i.' | Album: 'Midnight Club 3: DUB Edition: Original Soundtrack'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.32 < 0.75 | Title: 'tell ’em i said that (instrumental)' | Artist: 't.i.' | Album: 'T.I. vs. T.I.P. (instrumental)'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.23 < 0.75 | Title: 'everything on me' | Artist: 't.i.' | Album: 'No Mercy'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.15 < 0.75 | Title: 'we do this (instrumental)' | Artist: 't.i.' | Album: 'T.I. vs. T.I.P. (instrumental)'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.35 < 0.75 | Title: 'breaking old habits' | Artist: 't.i.' | Album: 'Dirty Work 4 (More Hustle, More Snow)'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.31 < 0.75 | Title: 'you ain’t missin’ nothing' | Artist: 't.i.' | Album: 'Paper Trail'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.52 < 0.75 | Title: '56 bars (intro)' | Artist: 't.i.' | Album: 'Paper Trail'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.32 < 0.75 | Title: 'we will not' | Artist: 't.i.' | Album: 'Us or Else: Letter to the System'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.28 < 0.75 | Title: 'back of the club' | Artist: 't.i.' | Album: 'When the North & South Collide Pt. 3'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'gangstas' | Artist: 't.i.' | Album: 'When the North & South Collide Pt. 3'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.22 < 0.75 | Title: 'here we go' | Artist: 't.i.' | Album: 'When the North & South Collide Pt. 3'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.29 < 0.75 | Title: 'make em say ooh' | Artist: 't.i.' | Album: 'When the North & South Collide Pt. 3'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'hit the block' | Artist: 't.i.' | Album: 'When the North & South Collide Pt. 3'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.23 < 0.75 | Title: 'what you know (a cappella)' | Artist: 't.i.' | Album: 'What You Know'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 'what you know (explicit version)' | Artist: 't.i.' | Album: 'What You Know'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 'turn it' | Artist: 't.i.' | Album: 'Paperwork'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'trap back' | Artist: 't.i.' | Album: 'Certified Trap, Vol. 1'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.33 < 0.75 | Title: 'at it all night' | Artist: 't.i.' | Album: 'A Year and a Day'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'make you sweat' | Artist: 't.i.' | Album: 'A Year and a Day'
+2026-05-09 12:05:13 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'all g' | Artist: 't.i.' | Album: 'A Year and a Day'
+2026-05-09 12:05:13 -   ❌ NO RESULTS
+2026-05-09 12:05:13 - 
+🎵 SPOTIFY SEARCH
+2026-05-09 12:05:13 -   Query: Artist='t.i.' | Title='Mr. Him (B-Bar Intro Dirty)'
+2026-05-09 12:05:13 -   ✅ FOUND:
+2026-05-09 12:05:13 -     Title: MR HIM
+2026-05-09 12:05:13 -     Artist: T.I.
+2026-05-09 12:05:13 -     Album: MR HIM
+2026-05-09 12:05:13 -     Year: 2026
+2026-05-09 12:05:13 -     Genre: 
+2026-05-09 12:05:13 -     Spotify ID: 16Mf6HZmzltnfzPEDEVRo4
+2026-05-09 12:05:13 -     Rating: 0
+2026-05-09 12:05:13 - 
+📊 MERGE RESULTS
+2026-05-09 12:05:13 -   MusicBrainz result: ❌ NOT FOUND
+2026-05-09 12:05:13 -   Spotify result: ✅ FOUND
+2026-05-09 12:05:14 -   ✅ FOUND:
+2026-05-09 12:05:14 -     Title: MR HIM
+2026-05-09 12:05:14 -     Artist: T.I.
+2026-05-09 12:05:14 -     Album: MR HIM
+2026-05-09 12:05:14 -     Year: 2026
+2026-05-09 12:05:14 -     Genre: 
+2026-05-09 12:05:14 -     Spotify ID: 16Mf6HZmzltnfzPEDEVRo4
+2026-05-09 12:05:14 -     Rating: 0
+2026-05-09 12:05:14 - 
+📊 MERGE RESULTS
+2026-05-09 12:05:14 -   MusicBrainz result: ❌ NOT FOUND
+2026-05-09 12:05:14 -   Spotify result: ✅ FOUND
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'why i’m serious (interlude)' | Artist: 't.i.' | Album: 'I’m Serious'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.33 < 0.75 | Title: 'magic' | Artist: 't.i.' | Album: 'The Pursuit of Freedom'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: 'What You Know'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'drug related' | Artist: 't.i.' | Album: 'Urban Legend'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.09 < 0.75 | Title: 'you don't know me (produced by dj toomp)' | Artist: 't.i.' | Album: 'Down With the King (Gangsta Grillz)'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.15 < 0.75 | Title: 'no problems (remix)' | Artist: 't.i.' | Album: 'Down With the King (Gangsta Grillz)'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'big things poppin’ (do it)' | Artist: 't.i.' | Album: 'RnB Superclub, Volume 8.0'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'hotel' | Artist: 't.i.' | Album: 'The Throne Is Mine'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.09 < 0.75 | Title: 'freestyle (produced by dj don cannon)' | Artist: 't.i.' | Album: 'Down With the King (Gangsta Grillz)'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'rubber band man' | Artist: 't.i.' | Album: 'Totally Hits 2004'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.14 < 0.75 | Title: 'like so' | Artist: 't.i.' | Album: 'Fuck a Mixtape'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'top back' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'all nite' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'make you sweat' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'right now' | Artist: 't.i.' | Album: 'Southern Smoke, Volume 25: The Welcome Home Party'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'big things poppin’ (do it)' | Artist: 't.i.' | Album: 'The Best Hip Hop Party Hits! 40 Massive Club Anthems'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'big picture' | Artist: 't.i.' | Album: 'No Mercy'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'king' | Artist: 't.i.' | Album: 'Paperwork'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'koliko dana' | Artist: 'ti' | Album: 'Koliko dana'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'bez razloga' | Artist: 'ti' | Album: 'Vidimo se!'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'samokontrola' | Artist: 'ti' | Album: 'Vidimo se!'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.09 < 0.75 | Title: 'kocka je bačena' | Artist: 'ti' | Album: 'Vidimo se!'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'i don’t know' | Artist: 't.i.' | Album: 'Paperwork'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'doing my job' | Artist: 't.i.' | Album: 'Your Mom's Favorite Mixtape, Volume One'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.07 < 0.75 | Title: 'yeah you know (takers)' | Artist: 't.i.' | Album: 'Fuck a Mixtape'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'big shit poppin' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.14 < 0.75 | Title: 'that’s what i thought' | Artist: 't.i.' | Album: 'T.I.P. Drill'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'no matter what' | Artist: 't.i.' | Album: 'Paper Trail'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'ain't gonna see it coming' | Artist: 't.i.' | Album: 'Da' Nic'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 'hello (dj hi volume blend)' | Artist: 't.i.' | Album: 'Blend Season Vol.1'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'take da wheel' | Artist: 't.i.' | Album: 'Us or Else: Letter to the System'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: 'Def Jam Icon'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'you ain't fly' | Artist: 't.i.' | Album: 'T.I. vs T.I.P.'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.15 < 0.75 | Title: 'tell 'em i said that' | Artist: 't.i.' | Album: 'T.I. vs T.I.P.'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'raw' | Artist: 't.i.' | Album: 'T.I. vs T.I.P.'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 'da dopeman' | Artist: 't.i.' | Album: 'T.I. vs T.I.P.'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'top back (juke jams remix)' | Artist: 't.i.' | Album: 'Juke Jams'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'rubber band man (remix)' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: '100 Greatest 00s Hip-Hop'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.30 < 0.75 | Title: 'my air forces' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.09 < 0.75 | Title: 'jackin' fo beats' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.21 < 0.75 | Title: 'fo my luxury' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'outro' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.00 < 0.75 | Title: '1,2,3' | Artist: 't.i.' | Album: 'PSC: In Da Streetz Part 2'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'look what i got' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.00 < 0.75 | Title: '24’s' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 't.i. vs. t.i.p.' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'let’s get away' | Artist: 't.i.' | Album: 'Trap Muzik'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'chillin with my bitch (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'what they do (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'the greatest (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'motivation (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'stand up (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'why you wanna (instrumental)' | Artist: 't.i.' | Album: 'Why You Wanna'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.09 < 0.75 | Title: 'what you know (promo only clean edit)' | Artist: 't.i.' | Album: 'Promo Only: Urban Radio, April 2006'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'let's get away' | Artist: 't.i.' | Album: 'Promo Only: Urban Radio, August 2004'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'what you know' | Artist: 't.i.' | Album: 'X-Mix Urban 91'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'where they at (dissin’ t.i.)' | Artist: 't.i.' | Album: 'Grand Hustle Presents: In Da Streetz, Volume 4'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.11 < 0.75 | Title: 'why u wanna' | Artist: 't.i.' | Album: 'Massive R&B: Winter Collection 2006'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.23 < 0.75 | Title: 'you know what it is' | Artist: 't.i.' | Album: 'Entourage'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'rubber band man' | Artist: 't.i.' | Album: 'Crunk Hits'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'my life (screwed version)' | Artist: 't.i.' | Album: 'Urban Legend (Chopped & Screwed)'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.00 < 0.75 | Title: 'asap' | Artist: 't.i.' | Album: 'Urban Legend'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.13 < 0.75 | Title: 'hell of a life (explicit album version)' | Artist: 't.i.' | Album: 'Hell of a Life'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'rubber band man' | Artist: 't.i.' | Album: 'Southern Smoke Pt 7 (Hosted by Chamillionare)'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'u don't know me' | Artist: 't.i.' | Album: 'N/A'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.00 < 0.75 | Title: 'topless' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'if i' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.22 < 0.75 | Title: 'it ain't me' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.35 < 0.75 | Title: 'better than this' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'big money' | Artist: 't.i.' | Album: 'Thaembacy Instrumentals 11'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.16 < 0.75 | Title: 'let em talk (hook)' | Artist: 't.i.' | Album: 'Thaembacy Instrumentals 11'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.29 < 0.75 | Title: 'rubberband man' | Artist: 't.i.' | Album: 'A King Of Oneself'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'you don't know me' | Artist: 't.i.' | Album: 'Southern Smoke Instrumentals 2'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.14 < 0.75 | Title: 'whatever you like (stereobit remix)' | Artist: 't.i.' | Album: 'N/A'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'we rollin' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.24 < 0.75 | Title: 'turn me on (remix)' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.15 < 0.75 | Title: 'coming back (outro)' | Artist: 't.i.' | Album: 'The Redemption Is Over'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.22 < 0.75 | Title: 'no mediocre' | Artist: 't.i.' | Album: 'Planète Rap 2014 Vol. 3'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'u don’t know me' | Artist: 't.i.' | Album: 'Midnight Club 3: DUB Edition: Original Soundtrack'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'tell ’em i said that (instrumental)' | Artist: 't.i.' | Album: 'T.I. vs. T.I.P. (instrumental)'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.35 < 0.75 | Title: 'everything on me' | Artist: 't.i.' | Album: 'No Mercy'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'we do this (instrumental)' | Artist: 't.i.' | Album: 'T.I. vs. T.I.P. (instrumental)'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.31 < 0.75 | Title: 'breaking old habits' | Artist: 't.i.' | Album: 'Dirty Work 4 (More Hustle, More Snow)'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'you ain’t missin’ nothing' | Artist: 't.i.' | Album: 'Paper Trail'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.18 < 0.75 | Title: '56 bars (intro)' | Artist: 't.i.' | Album: 'Paper Trail'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.22 < 0.75 | Title: 'we will not' | Artist: 't.i.' | Album: 'Us or Else: Letter to the System'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'back of the club' | Artist: 't.i.' | Album: 'When the North & South Collide Pt. 3'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.00 < 0.75 | Title: 'gangstas' | Artist: 't.i.' | Album: 'When the North & South Collide Pt. 3'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.12 < 0.75 | Title: 'here we go' | Artist: 't.i.' | Album: 'When the North & South Collide Pt. 3'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.27 < 0.75 | Title: 'make em say ooh' | Artist: 't.i.' | Album: 'When the North & South Collide Pt. 3'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.20 < 0.75 | Title: 'hit the block' | Artist: 't.i.' | Album: 'When the North & South Collide Pt. 3'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.06 < 0.75 | Title: 'what you know (a cappella)' | Artist: 't.i.' | Album: 'What You Know'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.10 < 0.75 | Title: 'what you know (explicit version)' | Artist: 't.i.' | Album: 'What You Know'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.43 < 0.75 | Title: 'turn it' | Artist: 't.i.' | Album: 'Paperwork'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.25 < 0.75 | Title: 'trap back' | Artist: 't.i.' | Album: 'Certified Trap, Vol. 1'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.18 < 0.75 | Title: 'at it all night' | Artist: 't.i.' | Album: 'A Year and a Day'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.19 < 0.75 | Title: 'make you sweat' | Artist: 't.i.' | Album: 'A Year and a Day'
+2026-05-09 12:05:14 -     REJECTED: Title similarity 0.17 < 0.75 | Title: 'all g' | Artist: 't.i.' | Album: 'A Year and a Day'
+2026-05-09 12:05:14 -   ❌ NO RESULTS
+2026-05-09 12:05:14 - 
+🎵 SPOTIFY SEARCH
+2026-05-09 12:05:14 -   Query: Artist='t.i.' | Title='Mr. Him'
+2026-05-09 12:05:16 -   ✅ FOUND:
+2026-05-09 12:05:16 -     Title: MR HIM
+2026-05-09 12:05:16 -     Artist: T.I.
+2026-05-09 12:05:16 -     Album: MR HIM
+2026-05-09 12:05:16 -     Year: 2026
+2026-05-09 12:05:16 -     Genre: 
+2026-05-09 12:05:16 -     Spotify ID: 16Mf6HZmzltnfzPEDEVRo4
+2026-05-09 12:05:16 -     Rating: 0
+2026-05-09 12:05:16 - 
+📊 MERGE RESULTS
+2026-05-09 12:05:16 -   MusicBrainz result: ❌ NOT FOUND
+2026-05-09 12:05:16 -   Spotify result: ✅ FOUND
+2026-05-09 12:05:18 -   ✅ FOUND:
+2026-05-09 12:05:18 -     Title: Why You Wanna (instrumental)
+2026-05-09 12:05:18 -     Artist: T.I.
+2026-05-09 12:05:18 -     Album: Why You Wanna
+2026-05-09 12:05:18 -     Year: 2006
+2026-05-09 12:05:18 -     Genre: 
+2026-05-09 12:05:18 - 
+🎵 SPOTIFY SEARCH
+2026-05-09 12:05:18 -   Query: Artist='t.i.' | Title='Mr. Him (Instrumental)'
+2026-05-09 12:05:19 -   ✅ FOUND:
+2026-05-09 12:05:19 -     Title: MR HIM
+2026-05-09 12:05:19 -     Artist: T.I.
+2026-05-09 12:05:19 -     Album: MR HIM
+2026-05-09 12:05:19 -     Year: 2026
+2026-05-09 12:05:19 -     Genre: 
+2026-05-09 12:05:19 -     Spotify ID: 16Mf6HZmzltnfzPEDEVRo4
+2026-05-09 12:05:19 -     Rating: 0
+2026-05-09 12:05:19 - 
+📊 MERGE RESULTS
+2026-05-09 12:05:19 -   MusicBrainz result: ✅ FOUND
+2026-05-09 12:05:19 -   Spotify result: ✅ FOUND
+2026-05-09 12:05:19 -   ⚠️  Album mismatch: MB='Why You Wanna' vs Spotify='MR HIM' - flagging for review
+2026-05-09 12:05:19 -   ⚠️  Year mismatch: MB=2006 vs Spotify=2026 (20 year gap) - flagging for review
+2026-05-09 12:05:21 - 
+✅ FINAL MERGED RESULT:
+2026-05-09 12:05:21 -   Title: MR HIM
+2026-05-09 12:05:21 -   Artist: T.I.
+2026-05-09 12:05:21 -   Album: MR HIM
+2026-05-09 12:05:21 -   Year: 2026
+2026-05-09 12:05:21 -   Genre: Hip-Hop
+2026-05-09 12:05:21 -   Rating: 0
+2026-05-09 12:05:22 - SEARCH RESULTS:
+2026-05-09 12:05:22 -   Title: MR HIM
+2026-05-09 12:05:22 -   Artist: T.I.
+2026-05-09 12:05:22 -   Album: MR HIM
+2026-05-09 12:05:22 -   Year: 2026
+2026-05-09 12:05:22 -   Genre: Hip-Hop
+2026-05-09 12:05:22 -   Rating: 0
+2026-05-09 12:05:22 - ✅ Using API artist: 'T.I.'
+2026-05-09 12:05:22 - ---
+2026-05-09 12:05:22 - SEARCH QUERY: Artist='T.I.' | Title='Mr. Him (8-Bar Intro Clean)'
+2026-05-09 12:05:22 - Filename: T.I. - Mr. Him (8-Bar Intro Clean).mp3
+2026-05-09 12:05:22 - Filename Artist (for reference): 'T.I.' → 'T.I.'
+2026-05-09 12:05:22 - 
+🎵 MUSICBRAINZ SEARCH
+2026-05-09 12:05:22 -   Query: Artist='t.i.' | Title='Mr. Him (B-Bar Intro Clean)'
+2026-05-09 12:05:23 -   ✅ FOUND:
+2026-05-09 12:05:23 -     Title: MR HIM
+2026-05-09 12:05:23 -     Artist: T.I.
+2026-05-09 12:05:23 -     Album: MR HIM
+2026-05-09 12:05:23 -     Year: 2026
+2026-05-09 12:05:23 -     Genre: Hip-Hop
+2026-05-09 12:05:23 - 
+🎵 SPOTIFY SEARCH
+2026-05-09 12:05:23 -   Query: Artist='t.i.' | Title='Mr. Him (B-Bar Intro Clean)'
+2026-05-09 12:05:24 -   ✅ FOUND:
+2026-05-09 12:05:24 -     Title: MR HIM
+2026-05-09 12:05:24 -     Artist: T.I.
+2026-05-09 12:05:24 -     Album: MR HIM
+2026-05-09 12:05:24 -     Year: 2026
+2026-05-09 12:05:24 -     Genre: Hip-Hop
+2026-05-09 12:05:24 -     Spotify ID: 16Mf6HZmzltnfzPEDEVRo4
+2026-05-09 12:05:24 -     Rating: 0
+2026-05-09 12:05:24 - 
+📊 MERGE RESULTS
+2026-05-09 12:05:24 -   MusicBrainz result: ✅ FOUND
+2026-05-09 12:05:24 -   Spotify result: ✅ FOUND
+2026-05-09 12:05:24 - 
+✅ FINAL MERGED RESULT:
+2026-05-09 12:05:24 -   Title: MR HIM
+2026-05-09 12:05:24 -   Artist: T.I.
+2026-05-09 12:05:24 -   Album: MR HIM
+2026-05-09 12:05:24 -   Year: 2026
+2026-05-09 12:05:24 -   Genre: Hip-Hop
+2026-05-09 12:05:24 -   Rating: 0
+2026-05-09 12:05:25 - SEARCH RESULTS:
+2026-05-09 12:05:25 -   Title: MR HIM
+2026-05-09 12:05:25 -   Artist: T.I.
+2026-05-09 12:05:25 -   Album: MR HIM
+2026-05-09 12:05:25 -   Year: 2026
+2026-05-09 12:05:25 -   Genre: Hip-Hop
+2026-05-09 12:05:25 -   Rating: 0
+2026-05-09 12:05:25 - ✅ Using API artist: 'T.I.'
+2026-05-09 12:05:25 - ---
+2026-05-09 12:05:28 - 
+✅ FINAL MERGED RESULT:
+2026-05-09 12:05:28 -   Title: MR HIM
+2026-05-09 12:05:28 -   Artist: T.I.
+2026-05-09 12:05:28 -   Album: MR HIM
+2026-05-09 12:05:28 -   Year: 2026
+2026-05-09 12:05:28 -   Genre: Hip-Hop
+2026-05-09 12:05:28 -   Rating: 0
+2026-05-09 12:05:29 - SEARCH RESULTS:
+2026-05-09 12:05:29 -   Title: MR HIM
+2026-05-09 12:05:29 -   Artist: T.I.
+2026-05-09 12:05:29 -   Album: MR HIM
+2026-05-09 12:05:29 -   Year: 2026
+2026-05-09 12:05:29 -   Genre: Hip-Hop
+2026-05-09 12:05:29 -   Rating: 0
+2026-05-09 12:05:29 - ✅ Using API artist: 'T.I.'
+2026-05-09 12:05:29 - ---
+2026-05-09 12:05:29 - 
+✅ FINAL MERGED RESULT:
+2026-05-09 12:05:29 -   Title: MR HIM
+2026-05-09 12:05:29 -   Artist: T.I.
+2026-05-09 12:05:29 -   Album: MR HIM
+2026-05-09 12:05:29 -   Year: 2026
+2026-05-09 12:05:29 -   Genre: Hip-Hop
+2026-05-09 12:05:29 -   Rating: 0
+2026-05-09 12:05:30 - SEARCH RESULTS:
+2026-05-09 12:05:30 -   Title: MR HIM
+2026-05-09 12:05:30 -   Artist: T.I.
+2026-05-09 12:05:30 -   Album: MR HIM
+2026-05-09 12:05:30 -   Year: 2026
+2026-05-09 12:05:30 -   Genre: Hip-Hop
+2026-05-09 12:05:30 -   Rating: 0
+2026-05-09 12:05:30 - ✅ Using API artist: 'T.I.'
+2026-05-09 12:05:30 - ---
+2026-05-09 12:05:31 - 
+✅ FINAL MERGED RESULT:
+2026-05-09 12:05:31 -   Title: Why You Wanna (instrumental)
+2026-05-09 12:05:31 -   Artist: T.I.
+2026-05-09 12:05:31 -   Album: Why You Wanna
+2026-05-09 12:05:31 -   Year: 2006
+2026-05-09 12:05:31 -   Genre: Hip-Hop
+2026-05-09 12:05:31 -   Rating: 0
+2026-05-09 12:05:32 - SEARCH RESULTS:
+2026-05-09 12:05:32 -   Title: Why You Wanna (instrumental)
+2026-05-09 12:05:32 -   Artist: T.I.
+2026-05-09 12:05:32 -   Album: Why You Wanna
+2026-05-09 12:05:32 -   Year: 2006
+2026-05-09 12:05:32 -   Genre: Hip-Hop
+2026-05-09 12:05:32 -   Rating: 0
+2026-05-09 12:05:32 - ✅ Using API artist: 'T.I.'
+2026-05-09 12:05:32 - ---
+2026-05-09 12:05:56 - WRITING PRE-SELECTED METADATA: /Volumes/Main/Music/T.I. - Mr. Him (Instrumental).mp3
+2026-05-09 12:15:42 - SEARCH QUERY: Artist='Baby Keem' | Title='House Money (Dirty)'
+2026-05-09 12:15:42 - Filename: Baby Keem - House Money (Dirty).mp3
+2026-05-09 12:15:42 - Filename Artist (for reference): 'Baby Keem' → 'Baby Keem'
+2026-05-09 12:15:42 - 
+🎵 MUSICBRAINZ SEARCH
+2026-05-09 12:15:42 -   Query: Artist='baby keem' | Title='House Money'
+2026-05-09 12:15:54 -   ✅ FOUND:
+2026-05-09 12:15:54 -     Title: House Money
+2026-05-09 12:15:54 -     Artist: Baby Keem
+2026-05-09 12:15:54 -     Album: Ca$ino
+2026-05-09 12:15:54 -     Year: 2026
+2026-05-09 12:15:54 -     Genre: 
+2026-05-09 12:15:54 - 
+🎵 SPOTIFY SEARCH
+2026-05-09 12:15:54 -   Query: Artist='baby keem' | Title='House Money'
+2026-05-09 12:15:56 -   ✅ FOUND:
+2026-05-09 12:15:56 -     Title: House Money
+2026-05-09 12:15:56 -     Artist: Baby Keem
+2026-05-09 12:15:56 -     Album: Ca$ino
+2026-05-09 12:15:56 -     Year: 2026
+2026-05-09 12:15:56 -     Genre: 
+2026-05-09 12:15:56 -     Spotify ID: 5Th1SPySWgYlkXXC6wLMwL
+2026-05-09 12:15:56 -     Rating: 196
+2026-05-09 12:15:56 - 
+📊 MERGE RESULTS
+2026-05-09 12:15:56 -   MusicBrainz result: ✅ FOUND
+2026-05-09 12:15:56 -   Spotify result: ✅ FOUND
+2026-05-09 12:16:01 - 
+✅ FINAL MERGED RESULT:
+2026-05-09 12:16:01 -   Title: House Money
+2026-05-09 12:16:01 -   Artist: Baby Keem
+2026-05-09 12:16:01 -   Album: Ca$ino
+2026-05-09 12:16:01 -   Year: 2026
+2026-05-09 12:16:01 -   Genre: Hip-Hop
+2026-05-09 12:16:01 -   Rating: 196
+2026-05-09 12:16:02 - SEARCH RESULTS:
+2026-05-09 12:16:02 -   Title: House Money
+2026-05-09 12:16:02 -   Artist: Baby Keem
+2026-05-09 12:16:02 -   Album: Ca$ino
+2026-05-09 12:16:02 -   Year: 2026
+2026-05-09 12:16:02 -   Genre: Hip-Hop
+2026-05-09 12:16:02 -   Rating: 196
+2026-05-09 12:16:02 - ✅ Using API artist: 'Baby Keem'
+2026-05-09 12:16:02 - ---
