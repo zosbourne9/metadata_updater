@@ -16,6 +16,8 @@ a = Analysis(
         # Configuration and data files
         ('config/categorized_genres.json', 'config'),
         ('config/genre_characteristics.json', 'config'),
+        # License public key (required for JWT license verification)
+        ('config/license_public.pem', 'config'),
         # Web UI files for pywebview
         ('web/index.html', 'web'),
         ('web/styles.css', 'web'),
