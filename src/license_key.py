@@ -15,7 +15,14 @@ class LicenseManager:
         self._home_dir = Path.home()
         self._license_file = self._home_dir / '.metadata_updater_license'
         self._project_root = Path(__file__).parent.parent
-        self._public_key_path = self._project_root / 'config' / 'license_public.pem'
+
+        # Resolve the public key via the shared resource helper so it works
+        # both in development and inside the PyInstaller bundle (sys._MEIPASS).
+        try:
+            from resource_path import get_resource_path
+            self._public_key_path = Path(get_resource_path('config/license_public.pem'))
+        except Exception:
+            self._public_key_path = self._project_root / 'config' / 'license_public.pem'
         
         self.max_free_files = 10  # Free version limited to 10 files
         self.processed_files_count = 0

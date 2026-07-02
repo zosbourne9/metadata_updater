@@ -343,18 +343,19 @@ class MetadataUpdaterAPI:
                 return {'success': False, 'message': 'App not initialized'}
             
             license_manager = self.metadata_updater.license_manager
-            
-            # Validate and save the license
-            if license_manager.validate_key(license_key):
-                license_manager.save_license(license_key)
+
+            # validate_key returns a (is_valid, message) tuple and, on success,
+            # already persists the license with the decoded JWT payload.
+            is_valid, message = license_manager.validate_key(license_key)
+            if is_valid:
                 return {
                     'success': True,
-                    'message': 'License activated successfully'
+                    'message': message
                 }
             else:
                 return {
                     'success': False,
-                    'message': 'Invalid license key'
+                    'message': message
                 }
         except Exception as e:
             return {
