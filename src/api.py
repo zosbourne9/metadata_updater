@@ -216,6 +216,7 @@ class MetadataUpdaterAPI:
                 'year': selected_fields.get('year', False),
                 'subgenres': selected_fields.get('subgenres', False),
                 'rating': selected_fields.get('rating', False),
+                'rename': selected_fields.get('rename', False),
             }
 
             self.processing_active = True

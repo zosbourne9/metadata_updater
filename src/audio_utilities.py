@@ -308,6 +308,102 @@ class AudioUtilities:
         sanitized_name = "".join(c for c in name if c in valid_chars)
         return sanitized_name.strip()
     
+    def extract_version_marker(self, original_filename: str) -> str:
+        """Extract a version marker like (Clean), (Dirty), (Remix) from the original filename.
+
+        Returns the marker wrapped in parentheses (e.g. "(Radio Edit)") or "" if none found.
+        """
+        import re
+        try:
+            base = os.path.splitext(os.path.basename(original_filename))[0]
+            version_keywords = (
+                r'clean|dirty|explicit|radio\s*edit|radio|edit|extended|intro|outro|'
+                r'acapella|instrumental|dub|bonus|remaster(?:ed)?|live|version|remix|'
+                r'vip|bootleg|flip|refix|blend|transition|quick(?:ie)?|short|snippet|'
+                r'club\s*mix|club|original|album\s*version'
+            )
+            matches = re.findall(
+                r'[\(\[]([^\(\)\[\]]*(?:' + version_keywords + r')[^\(\)\[\]]*)[\)\]]',
+                base,
+                flags=re.IGNORECASE,
+            )
+            if matches:
+                return f"({matches[-1].strip()})"
+            return ""
+        except Exception as e:
+            print(f"Error extracting version marker: {e}")
+            return ""
+
+    def _sanitize_for_rename(self, name: str) -> str:
+        """Remove only filesystem-illegal characters, preserving apostrophes, ampersands, etc."""
+        import re
+        invalid = '<>:"/\\|?*'
+        cleaned = "".join("" if c in invalid else c for c in name)
+        # Collapse whitespace and strip trailing dots/spaces (illegal on Windows)
+        cleaned = re.sub(r'\s+', ' ', cleaned).strip().strip('.')
+        return cleaned
+
+    def rename_file(self, file_path: str, artist: str, title: str) -> Optional[str]:
+        """Rename a file to 'Main Artist - Title (Version).ext'.
+
+        Uses only the primary artist. Preserves a version marker (e.g. "(Clean)")
+        from the original filename if the title doesn't already contain it.
+        Returns the new path on success, the unchanged path if no rename was needed,
+        or None on failure.
+        """
+        import re
+        try:
+            if not artist or not title:
+                return None
+
+            directory = os.path.dirname(file_path)
+            ext = os.path.splitext(file_path)[1]
+            original_name = os.path.basename(file_path)
+
+            # Primary artist only: drop "feat" markers, then take first of comma/&-separated list
+            primary = re.sub(
+                r'\s*(?:ft\.?|feat\.?|featuring)\s+.+$',
+                '',
+                artist,
+                flags=re.IGNORECASE,
+            ).strip()
+            main_artist = re.split(r'[,&]', primary)[0].strip()
+
+            clean_title = title.strip()
+
+            # Preserve version marker from the original filename if not already in the title
+            version = self.extract_version_marker(original_name)
+            if version and version.lower() not in clean_title.lower():
+                new_base = f"{main_artist} - {clean_title} {version}"
+            else:
+                new_base = f"{main_artist} - {clean_title}"
+
+            new_base = self._sanitize_for_rename(new_base)
+            if not new_base:
+                return None
+
+            new_path = os.path.join(directory, new_base + ext)
+
+            # Nothing to do if the name is already correct
+            if os.path.normpath(new_path) == os.path.normpath(file_path):
+                return file_path
+
+            # Avoid clobbering a different existing file
+            candidate = new_path
+            counter = 1
+            while os.path.exists(candidate) and os.path.normpath(candidate) != os.path.normpath(file_path):
+                candidate = os.path.join(directory, f"{new_base} ({counter}){ext}")
+                counter += 1
+            new_path = candidate
+
+            os.rename(file_path, new_path)
+            self.emit_status(f"Renamed to: {os.path.basename(new_path)}")
+            return new_path
+
+        except Exception as e:
+            self.emit_status(f"Error renaming file: {e}")
+            return None
+
     def format_genre(self, genre: str) -> str:
         """Format genre with proper capitalization."""
         if not genre:

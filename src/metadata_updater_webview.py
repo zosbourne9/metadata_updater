@@ -497,6 +497,28 @@ class MetadataUpdater:
                 print(f"Could not load file: {file_path}")
                 return False, None
 
+            # Rename-only mode: if the only selected action is "rename" (no metadata
+            # fields and no riddim mode), skip the network search entirely and just
+            # rename the file using its existing tags.
+            riddim_active = bool(riddim_mode) and (
+                riddim_mode.get('isDancehall') or riddim_mode.get('isReggae')
+            )
+            search_field_keys = ('artist', 'album', 'year', 'genre', 'subgenres', 'rating')
+            needs_search = riddim_active or any(selected_fields.get(k) for k in search_field_keys)
+
+            if not pre_selected_metadata and not needs_search:
+                if selected_fields.get('rename'):
+                    artist_name, title = self.utility_tools.get_artist_and_title(audio, file_path)
+                    SEARCH_LOGGER.info(f"RENAME-ONLY (no search): Artist='{artist_name}' | Title='{title}'")
+                    new_path = self.utility_tools.rename_file(file_path, artist_name, title)
+                    result = {'artist': artist_name, 'title': title}
+                    if new_path and new_path != file_path:
+                        result['renamed_to'] = os.path.basename(new_path)
+                    return True, result
+                # Nothing selected at all
+                print(f"No fields selected for: {file_path}")
+                return False, None
+
             if pre_selected_metadata:
                 metadata = pre_selected_metadata
                 SEARCH_LOGGER.info(f"WRITING PRE-SELECTED METADATA: {file_path}")
@@ -591,6 +613,15 @@ class MetadataUpdater:
                 print(f"Filtered metadata to write for {os.path.basename(file_path)}: {filtered_metadata}")
                 self.utility_tools.set_metadata(audio, filtered_metadata, file_path)
                 print(f"Successfully updated: {file_path}")
+
+                # Rename the file to "Main Artist - Title (Version)" if requested
+                if selected_fields.get('rename'):
+                    rename_artist = metadata.get('artist', '')
+                    rename_title = metadata.get('title', '')
+                    new_path = self.utility_tools.rename_file(file_path, rename_artist, rename_title)
+                    if new_path and new_path != file_path:
+                        metadata['renamed_to'] = os.path.basename(new_path)
+                        file_path = new_path
             else:
                 # Review is needed, don't write yet - ProcessingPool will handle it
                 print(f"⏸️  Review needed - deferring metadata write until user confirms")
