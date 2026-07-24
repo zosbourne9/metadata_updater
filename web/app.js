@@ -23,7 +23,8 @@ const appState = {
         genre: false,
         year: false,
         subgenres: false,
-        rating: false
+        rating: false,
+        rename: false
     },
     riddimMode: {
         isDancehall: false,
@@ -488,7 +489,8 @@ function updateSelectedFields() {
         genre: document.getElementById('genreCheckbox')?.checked || false,
         year: document.getElementById('yearCheckbox')?.checked || false,
         subgenres: document.getElementById('subgenreCheckbox')?.checked || false,
-        rating: document.getElementById('ratingCheckbox')?.checked || false
+        rating: document.getElementById('ratingCheckbox')?.checked || false,
+        rename: document.getElementById('renameCheckbox')?.checked || false
     };
     updateStartButton();
 }
@@ -1344,6 +1346,14 @@ function setupCheckboxes() {
             });
         }
     });
+
+    // Rename toggle is an action (not a metadata field), so it has its own listener
+    const renameCheckbox = document.getElementById('renameCheckbox');
+    if (renameCheckbox) {
+        renameCheckbox.addEventListener('change', () => {
+            updateSelectedFields();
+        });
+    }
 
     // Setup Riddim Mode toggles
     const isDancehallCheckbox = document.getElementById('isDancehallCheckbox');
