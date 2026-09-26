@@ -21,6 +21,8 @@ from genre_finder import GenreFinder
 from genre_patterns import update_genre_patterns
 from unified_cache_manager import UnifiedCacheManager
 
+logger = logging.getLogger(__name__)
+
 # Setup search debug logger
 def setup_search_logger():
     """Setup a dedicated logger for search debugging."""
