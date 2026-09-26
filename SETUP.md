@@ -138,8 +138,7 @@ cat .env
 
 ## Next Steps
 
-- Read the main [README.md](docs/README.md) for feature documentation
-- Check [CLAUDE.md](CLAUDE.md) for technical architecture details
+- Read the main [README.md](README.md) for feature documentation
 - Review common commands in the troubleshooting section
 
 ## Support
