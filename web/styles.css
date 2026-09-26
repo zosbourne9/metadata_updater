@@ -123,27 +123,6 @@ body {
     background-color: rgba(59, 130, 246, 0.1);
 }
 
-/* License Banner */
-.license-banner {
-    background-color: rgba(239, 68, 68, 0.1);
-    border-bottom: 1px solid var(--error);
-    padding: var(--spacing-sm) var(--spacing-md);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.license-banner.hidden {
-    display: none;
-}
-
-#licenseMessage {
-    color: var(--error);
-    font-weight: 500;
-    flex: 1;
-}
-
 /* Main Content Layout */
 .main-layout {
     display: flex;
@@ -920,22 +899,6 @@ button:disabled {
     color: var(--text-secondary);
 }
 
-.license-info {
-    background-color: rgba(30, 41, 59, 0.5);
-    border-radius: 6px;
-    padding: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
-}
-
-.license-info p {
-    margin-bottom: var(--spacing-sm);
-    font-size: 0.9rem;
-}
-
-.license-info strong {
-    color: var(--accent-blue);
-}
-
 .help-body {
     max-height: 500px;
     overflow-y: auto;
@@ -956,130 +919,6 @@ button:disabled {
     margin-bottom: var(--spacing-xs);
     font-size: 0.9rem;
     line-height: 1.5;
-}
-
-/* ============================================
-   LICENSE MODAL
-   ============================================ */
-
-.license-status-card {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.05));
-    border: 1px solid rgba(59, 130, 246, 0.2);
-    border-radius: 8px;
-    padding: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
-}
-
-.license-status-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-sm);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.license-status-header h3 {
-    margin: 0;
-    color: var(--text-primary);
-    font-size: 1rem;
-}
-
-.status-badge {
-    padding: var(--spacing-xs) var(--spacing-md);
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.status-badge.active {
-    background-color: rgba(16, 185, 129, 0.2);
-    color: var(--success);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-}
-
-.status-badge.trial {
-    background-color: rgba(245, 158, 11, 0.2);
-    color: var(--warning);
-    border: 1px solid rgba(245, 158, 11, 0.3);
-}
-
-.license-details {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-}
-
-.license-detail-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--spacing-xs) 0;
-}
-
-.detail-label {
-    color: var(--text-secondary);
-    font-size: 0.85rem;
-    font-weight: 500;
-}
-
-.detail-value {
-    color: var(--text-primary);
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.license-activation-section {
-    background-color: rgba(30, 41, 59, 0.4);
-    border-radius: 8px;
-    padding: var(--spacing-md);
-}
-
-.license-activation-section h3 {
-    margin: 0 0 var(--spacing-xs) 0;
-    color: var(--text-primary);
-    font-size: 1rem;
-}
-
-.help-text {
-    color: var(--text-secondary);
-    font-size: 0.85rem;
-    margin-bottom: var(--spacing-md);
-    line-height: 1.5;
-}
-
-.license-benefits {
-    margin-top: var(--spacing-md);
-    padding: var(--spacing-md);
-    background-color: rgba(59, 130, 246, 0.05);
-    border-left: 3px solid var(--accent-blue);
-    border-radius: 4px;
-}
-
-.license-benefits p {
-    margin: 0 0 var(--spacing-sm) 0;
-    color: var(--text-primary);
-    font-weight: 600;
-}
-
-.license-benefits ul {
-    margin: 0;
-    padding-left: var(--spacing-lg);
-    list-style: none;
-}
-
-.license-benefits li {
-    color: var(--text-secondary);
-    margin-bottom: var(--spacing-xs);
-    font-size: 0.85rem;
-    position: relative;
-}
-
-.license-benefits li:before {
-    position: absolute;
-    left: -1.5rem;
 }
 
 /* ============================================

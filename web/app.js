@@ -30,11 +30,6 @@ const appState = {
         isDancehall: false,
         isReggae: false
     },
-    licenseStatus: {
-        isActive: false,
-        filesProcessed: 0,
-        licenseType: 'trial'
-    },
     reviewMode: {
         active: false,
         currentFile: null,
@@ -860,138 +855,6 @@ async function initSettingsModal() {
 }
 
 // ============================================
-// MODALS - LICENSE
-// ============================================
-
-/**
- * Initialize license modal
- */
-async function initLicenseModal() {
-    const licenseBtn = document.getElementById('licenseBtn');
-    const licenseBtnAction = document.getElementById('licenseBtnAction');
-    const licenseModal = document.getElementById('licenseModal');
-    const closeLicenseBtn = document.getElementById('closeLicenseModal');
-    const activateLicenseBtn = document.getElementById('activateLicenseBtn');
-    const removeLicenseBtn = document.getElementById('removeLicenseBtn');
-    
-    // Update license status
-    async function updateLicenseDisplay() {
-        const status = await callAPI('get_license_status');
-        if (status.success) {
-            appState.licenseStatus = status;
-
-            // Update status badge
-            const statusBadge = document.getElementById('licenseStatusBadge');
-            if (statusBadge) {
-                if (status.is_active) {
-                    statusBadge.textContent = 'Active';
-                    statusBadge.className = 'status-badge active';
-                } else {
-                    statusBadge.textContent = 'Trial';
-                    statusBadge.className = 'status-badge trial';
-                }
-            }
-
-            // Update license type
-            const typeInfo = document.getElementById('licenseTypeInfo');
-            if (typeInfo) {
-                typeInfo.textContent = status.is_active ? 'Full License' : 'Free Trial';
-            }
-
-            // Update license limit display
-            const limitInfo = document.getElementById('licenseLimitInfo');
-            if (limitInfo) {
-                if (status.is_active) {
-                    limitInfo.textContent = 'Unlimited';
-                } else {
-                    limitInfo.textContent = status.daily_limit ? `${status.daily_limit} files` : '10 files';
-                }
-            }
-
-            // Update remaining files
-            const remainingInfo = document.getElementById('remainingFilesInfo');
-            const remainingRow = document.getElementById('remainingFilesRow');
-            if (remainingInfo && remainingRow) {
-                if (status.is_active) {
-                    remainingRow.style.display = 'none';
-                } else {
-                    remainingRow.style.display = 'flex';
-                    const limit = status.daily_limit || 10;
-                    const remaining = Math.max(0, limit - (status.files_processed || 0));
-                    remainingInfo.textContent = `${remaining} files`;
-                }
-            }
-
-            // Update banner
-            const banner = document.getElementById('licenseBanner');
-            if (!status.is_active) {
-                banner.classList.remove('hidden');
-                const limit = status.daily_limit || 10;
-                const remaining = Math.max(0, limit - (status.files_processed || 0));
-                document.getElementById('licenseMessage').textContent =
-                    `Free trial - ${remaining} of ${limit} files remaining today. Activate a license for unlimited access.`;
-            } else {
-                banner.classList.add('hidden');
-            }
-        }
-    }
-    
-    // Header license button
-    if (licenseBtn) {
-        licenseBtn.addEventListener('click', () => {
-            showModal('licenseModal');
-            updateLicenseDisplay();
-        });
-    }
-
-    // Banner license button
-    if (licenseBtnAction) {
-        licenseBtnAction.addEventListener('click', () => {
-            showModal('licenseModal');
-            updateLicenseDisplay();
-        });
-    }
-
-    closeLicenseBtn.addEventListener('click', () => hideModal('licenseModal'));
-    
-    activateLicenseBtn.addEventListener('click', async () => {
-        const key = document.getElementById('licenseKeyInput').value.trim();
-        if (!key) {
-            showError('Please enter a license key');
-            return;
-        }
-        
-        const result = await callAPI('activate_license', key);
-        if (result.success) {
-            showSuccess('License activated successfully');
-            document.getElementById('licenseKeyInput').value = '';
-            updateLicenseDisplay();
-        } else {
-            showError(result.message || 'Failed to activate license');
-        }
-    });
-    
-    removeLicenseBtn.addEventListener('click', async () => {
-        const confirmed = await showConfirmation(
-            'Remove License',
-            'Are you sure you want to remove the license?'
-        );
-        if (confirmed) {
-            const result = await callAPI('remove_license');
-            if (result.success) {
-                showSuccess('License removed');
-                updateLicenseDisplay();
-            } else {
-                showError('Failed to remove license');
-            }
-        }
-    });
-    
-    // Initial display
-    updateLicenseDisplay();
-}
-
-// ============================================
 // MODALS - HELP
 // ============================================
 
@@ -1501,7 +1364,6 @@ async function initializeApp() {
         initHelpModal();
         initCandidateReviewModal();
         await initSettingsModal();
-        await initLicenseModal();
         
         // Initial display update
         updateFileDisplay();

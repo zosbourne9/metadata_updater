@@ -10,7 +10,6 @@ import time
 from pathlib import Path
 from typing import List, Dict, Any, Callable, Optional
 from metadata_updater_webview import MetadataUpdater, ProcessingThread
-from license_key import LicenseManager
 from settings_manager import SettingsManager
 
 class MetadataUpdaterAPI:
@@ -192,17 +191,6 @@ class MetadataUpdaterAPI:
 
             if self.processing_active:
                 return {'success': False, 'message': 'Processing already in progress'}
-            
-            # NEW: Validate license BEFORE processing
-            license_manager = self.metadata_updater.license_manager
-            can_process, message = license_manager.can_process_files(len(self.metadata_updater.selected_files))
-            
-            if not can_process:
-                return {
-                    'success': False,
-                    'message': message,
-                    'require_license': True
-                }
 
             # Normalize riddim_mode parameter
             if riddim_mode is None:
@@ -313,80 +301,6 @@ class MetadataUpdaterAPI:
             return {
                 'success': False,
                 'message': f'Error getting status: {str(e)}'
-            }
-    
-    def get_license_status(self) -> Dict[str, Any]:
-        """Get the current license status"""
-        try:
-            if not self.metadata_updater:
-                return {'success': False, 'message': 'App not initialized'}
-            
-            license_manager = self.metadata_updater.license_manager
-            is_licensed = license_manager.is_licensed()
-
-            return {
-                'success': True,
-                'is_active': is_licensed,
-                'files_processed': license_manager.processed_files_count,
-                'daily_limit': license_manager.max_free_files if not is_licensed else None,
-                'license_type': 'full' if is_licensed else 'trial'
-            }
-        except Exception as e:
-            return {
-                'success': False,
-                'message': f'Error getting license status: {str(e)}'
-            }
-    
-    def activate_license(self, license_key: str) -> Dict[str, Any]:
-        """Activate a license with the provided key"""
-        try:
-            if not self.metadata_updater:
-                return {'success': False, 'message': 'App not initialized'}
-            
-            license_manager = self.metadata_updater.license_manager
-
-            # validate_key returns a (is_valid, message) tuple and, on success,
-            # already persists the license with the decoded JWT payload.
-            is_valid, message = license_manager.validate_key(license_key)
-            if is_valid:
-                return {
-                    'success': True,
-                    'message': message
-                }
-            else:
-                return {
-                    'success': False,
-                    'message': message
-                }
-        except Exception as e:
-            return {
-                'success': False,
-                'message': f'Error activating license: {str(e)}'
-            }
-    
-    def remove_license(self) -> Dict[str, Any]:
-        """Remove the current license"""
-        try:
-            if not self.metadata_updater:
-                return {'success': False, 'message': 'App not initialized'}
-            
-            license_manager = self.metadata_updater.license_manager
-            # Clear the license by removing the saved key file
-            license_file_path = Path(license_manager.license_file)
-            if license_file_path.exists():
-                license_file_path.unlink()
-            
-            license_manager.current_license = None
-            license_manager.processed_files_count = 0
-            
-            return {
-                'success': True,
-                'message': 'License removed'
-            }
-        except Exception as e:
-            return {
-                'success': False,
-                'message': f'Error removing license: {str(e)}'
             }
     
     def get_settings(self) -> Dict[str, Any]:

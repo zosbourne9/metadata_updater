@@ -16,8 +16,6 @@ a = Analysis(
         # Configuration and data files
         ('config/categorized_genres.json', 'config'),
         ('config/genre_characteristics.json', 'config'),
-        # License public key (required for JWT license verification)
-        ('config/license_public.pem', 'config'),
         # Web UI files for pywebview
         ('web/index.html', 'web'),
         ('web/styles.css', 'web'),
@@ -36,14 +34,11 @@ a = Analysis(
         'requests',
         'requests.auth',
         'requests.exceptions',
-        'spotipy',
         'musicbrainzngs',
         'openai',
         # Web scraping (Riddim scraper)
         'httpx',
         'bs4',
-        # Caching
-        'requests_cache',
         # Core modules
         'metadata_updater_webview',
         'api',
@@ -53,7 +48,6 @@ a = Analysis(
         'simplified_spotify_integration',
         'artist_normalizer',
         'title_normalizer',
-        'license_key',
         'settings_manager',
         'rate_limiter',
         'unified_cache_manager',

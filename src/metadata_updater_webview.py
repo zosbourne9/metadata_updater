@@ -16,7 +16,6 @@ from threading import Thread
 from integration_helper import SimplifiedMetadataIntegration
 from artist_normalizer import ArtistNormalizer
 from audio_utilities import AudioUtilities
-from license_key import LicenseManager
 from constants import OPENROUTER_API_KEY, MAX_FILENAME_LENGTH
 from genre_finder import GenreFinder
 from genre_patterns import update_genre_patterns
@@ -320,7 +319,6 @@ class ProcessingPool(Thread):
                 self.processed_count += 1
                 if success:
                     self.successful_files += 1
-                    self.metadata_updater.license_manager.increment_processed_files()
                 else:
                     self.error_files += 1
                     self.metadata_updater.unfound_files.append(file_path)
@@ -395,10 +393,6 @@ class MetadataUpdater:
                 cache_manager=self.cache_manager
             )
             print("Genre finder initialized")
-
-            # Initialize license management
-            print("Setting up license manager...")
-            self.license_manager = LicenseManager()
 
             # Initialize state variables
             print("Initializing state variables...")
