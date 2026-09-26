@@ -421,8 +421,8 @@
             </div>
             <div class="modal-footer">
                 <button class="btn-secondary" id="skipFileBtn">Skip File</button>
-                <button class="btn-secondary" onclick="toggleManualMetadataForm()">📝 Manually Add</button>
-                <button class="btn-primary" onclick="submitCandidateSelection()">Confirm</button>
+                <button class="btn-secondary" onclick="window.toggleManualMetadataForm()">📝 Manually Add</button>
+                <button class="btn-primary" onclick="window.submitCandidateSelection()">Confirm</button>
             </div>
         </div>
     </div>
@@ -430,6 +430,6 @@
     <!-- Modal Overlay -->
     <div class="modal-overlay" id="modalOverlay"></div>
 
-    <script src="app.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>

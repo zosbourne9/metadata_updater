@@ -19,7 +19,17 @@ a = Analysis(
         # Web UI files for pywebview
         ('web/index.html', 'web'),
         ('web/styles.css', 'web'),
-        ('web/app.js', 'web'),
+        ('web/js/main.js', 'web/js'),
+        ('web/js/state.js', 'web/js'),
+        ('web/js/api.js', 'web/js'),
+        ('web/js/utils.js', 'web/js'),
+        ('web/js/modals.js', 'web/js'),
+        ('web/js/fields.js', 'web/js'),
+        ('web/js/files.js', 'web/js'),
+        ('web/js/processing.js', 'web/js'),
+        ('web/js/review.js', 'web/js'),
+        ('web/js/settings.js', 'web/js'),
+        ('web/js/buttons.js', 'web/js'),
     ],
     hiddenimports=[
         # PyWebView dependencies
