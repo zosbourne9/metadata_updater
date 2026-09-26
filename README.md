@@ -72,7 +72,7 @@ Output lands in `dist/` (`Metadata Updater.exe` / `.app` / binary depending on p
 
 - All `src/` modules use flat imports (`from api import ...`) — run Python from the `src/` directory, not as a package.
 - Access `config/`, `web/`, `assets/` through `src/resource_path.get_resource_path()` so paths work in both dev and PyInstaller bundles.
-- Python ↔ JS bridge: `src/api.py` exposes `MetadataUpdaterAPI` to the frontend; `web/app.js` calls methods via `pywebview.api.*`.
+- Python ↔ JS bridge: `src/api.py` exposes `MetadataUpdaterAPI` to the frontend; the ES modules in `web/js/` call methods via `pywebview.api.*`.
 - New data files must be added to the `datas` list in `build_pywebview.spec` or they won't ship in the bundle.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) and [SETUP.md](SETUP.md) for more detail.

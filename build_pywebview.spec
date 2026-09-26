@@ -7,6 +7,13 @@ import os
 
 block_cipher = None
 
+# Platform-appropriate icon: .ico for Windows EXE, .icns for macOS bundles
+import sys
+if sys.platform == 'win32':
+    APP_ICON = 'assets/icon.ico'
+else:
+    APP_ICON = 'assets/icon.icns'
+
 # Analysis: define what gets bundled into the application
 a = Analysis(
     ['src/main.py'],  # Entry point
@@ -119,7 +126,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['assets/icon.icns'],
+    icon=[APP_ICON],
 )
 
 # BUNDLE: create macOS app bundle

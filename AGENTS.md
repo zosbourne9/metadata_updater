@@ -11,7 +11,8 @@ Desktop app (Python 3.12+, pywebview) that auto-updates audio metadata (MP3/M4A)
 
 ## Architecture
 
-- `src/main.py` creates the pywebview window loading `web/index.html`; Python↔JS bridge is `src/api.py` (`MetadataUpdaterAPI`, exposed as `js_api`; frontend calls `pywebview.api.*` from `web/app.js`).
+- `src/main.py` creates the pywebview window loading `web/index.html`; Python↔JS bridge is `src/api.py` (`MetadataUpdaterAPI`, exposed as `js_api`; frontend calls `pywebview.api.*` from ES modules in `web/js/`).
+- Frontend is ES modules (`web/js/main.js` entry). Inline HTML handlers reference `window.*` globals — cross-module functions used by inline handlers must be assigned to `window` (see files.js, processing.js, review.js). Python→JS callbacks (`window.onProgressUpdate`, etc.) must stay on `window`.
 - Core business logic (search pipeline, review flow, processing threads) lives in `src/metadata_updater_webview.py`; `integration_helper.py` wires the Spotify/MusicBrainz/AI integrations.
 - All `src/` modules use flat imports (`from api import ...`) — run from `src/` context, not as a package.
 - Access `config/`, `web/`, `assets/` via `src/resource_path.get_resource_path()` — it resolves dev vs PyInstaller (`_MEIPASS`) paths. Don't hardcode relative paths.
@@ -28,5 +29,5 @@ Desktop app (Python 3.12+, pywebview) that auto-updates audio metadata (MP3/M4A)
 
 - `SETUP.md` may lag the code — trust the code and CONTRIBUTING.md.
 - Debug logging: set `ENABLE_DEBUG_LOGGING = True` in `src/main.py`; logs write to `docs/metadata_updater_debug.txt` and `docs/search_debug.log` (both gitignored).
-- App version string (`"2.0"`) is duplicated in `src/metadata_updater_webview.py` and `src/api.py` — update both if bumping.
+- App version string (`"2.1"`) is duplicated in `src/metadata_updater_webview.py` and `src/api.py` — update both if bumping.
 - Cache location: `~/.metadata_updater` (Windows) / `~/Library/Application Support/Metadata Updater` (macOS), set as `CACHE_DIR` in `main.py`.

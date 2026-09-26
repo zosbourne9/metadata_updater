@@ -26,13 +26,13 @@ python main.py
 There is no test suite, linter, or type checker configured. To verify changes:
 
 1. Launch the app and smoke test the flow: select files → process → review modal → verify tags written (e.g. with `mutagen` or any tag viewer).
-2. For build changes, run `bash build.sh` and launch the resulting executable from `dist/`.
+2. For build changes, run `bash build.sh` and launch the resulting executable from `dist/`. Requires `pip install pyinstaller`.
 
 ## Gotchas
 
 - **Resource paths**: never hardcode paths to `config/`, `web/`, or `assets/`. Use `src/resource_path.get_resource_path()` — it resolves correctly in dev and inside PyInstaller bundles (`sys._MEIPASS`).
 - **New data files** must be added to the `datas` list in `build_pywebview.spec` or they will be missing from builds.
-- **App version** string (`"2.0"`) is duplicated in `src/metadata_updater_webview.py` and `src/api.py` — update both.
+- **App version** string (`"2.1"`) is duplicated in `src/metadata_updater_webview.py` and `src/api.py` — update both.
 - **Secrets**: `.env`, `config/spotify_credentials.json`, `*.pem`, `*.key` are gitignored. Never commit credentials. See [SECURITY.md](SECURITY.md).
 
 ## Style
