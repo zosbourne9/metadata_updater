@@ -7,14 +7,6 @@ from datetime import datetime
 from openai import OpenAI
 from constants import AI_MODEL
 
-# Import RAG knowledge base
-try:
-    from genre_knowledge_base import get_knowledge_base
-    RAG_AVAILABLE = True
-except ImportError:
-    RAG_AVAILABLE = False
-    get_knowledge_base = None
-
 logger = logging.getLogger(__name__)
 
 
@@ -22,8 +14,6 @@ class EnhancedGenreDetector:
     def __init__(self, api_key: Optional[str] = None):
         """
         Initialize EnhancedGenreDetector with OpenRouter Gemini 2.5 Flash.
-
-        Includes RAG (Retrieval-Augmented Generation) for enhanced genre knowledge.
 
         Args:
             api_key: OpenRouter API key
@@ -53,10 +43,6 @@ class EnhancedGenreDetector:
         except Exception as e:
             print(f"Error loading genre characteristics: {e}")
             self.genre_characteristics = {}
-
-        # Initialize RAG knowledge base for lazy loading (will be loaded only when needed)
-        self.knowledge_base = None
-        self._knowledge_base_loaded = False
 
         # Enhanced patterns that strongly indicate genres
         self.genre_patterns = {
@@ -286,29 +272,6 @@ class EnhancedGenreDetector:
             }
         }
 
-    def _ensure_knowledge_base_loaded(self):
-        """Lazy-load knowledge base only when actually needed."""
-        if self._knowledge_base_loaded:
-            return self.knowledge_base
-
-        self._knowledge_base_loaded = True
-        if RAG_AVAILABLE and get_knowledge_base:
-            try:
-                self.knowledge_base = get_knowledge_base()
-                if self.knowledge_base and self.knowledge_base.is_initialized():
-                    print("✓ RAG genre knowledge base lazily loaded")
-                else:
-                    print("⚠ RAG knowledge base not available, will use standard detection")
-                    self.knowledge_base = None
-            except Exception as e:
-                logger.warning(f"Failed to initialize RAG knowledge base: {e}")
-                self.knowledge_base = None
-        else:
-            if not RAG_AVAILABLE:
-                logger.debug("LangChain/RAG not available, using standard detection only")
-
-        return self.knowledge_base
-
     def detect_genre(self, artist: str, title: str, existing_genres: Optional[List[str]] = None, album_name: Optional[str] = None) -> Tuple[str, float]:
         """
         Multi-layered genre detection approach.
@@ -509,30 +472,14 @@ class EnhancedGenreDetector:
 
     def _analyze_with_ai(self, artist: str, title: str) -> Tuple[str, float]:
         """
-        Use OpenRouter Gemini 2.5 Flash to analyze genre, enhanced with RAG knowledge.
+        Use OpenRouter Gemini 2.5 Flash to analyze genre.
         """
         try:
-            # Retrieve relevant genre context from RAG if available (lazy loaded)
-            genre_context = ""
-            kb = self._ensure_knowledge_base_loaded()
-            if kb and kb.is_initialized():
-                try:
-                    genre_context = kb.get_relevant_genres(
-                        artist_name=artist,
-                        track_title=title,
-                        k=3
-                    )
-                except Exception:
-                    genre_context = ""
-
             prompt_text = f"""You are a music genre expert. Analyze this artist and song to determine the most likely genre.
 
 Artist: {artist}
 Song: {title}
 """
-
-            if genre_context:
-                prompt_text += f"\n{genre_context}\n"
 
             prompt_text += """
 Choose from: Electronic, Dancehall, Soca, Afrobeats, Hip-Hop, R&B, Reggae, Pop, Rock, Funk, Disco, Soul, Jazz, Blues.

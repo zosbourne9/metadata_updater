@@ -6,14 +6,6 @@ from constants import OPENROUTER_API_KEY, AI_MODEL
 from typing import Dict, List
 from enhanced_genre_detector import EnhancedGenreDetector
 
-# Import RAG knowledge base
-try:
-    from genre_knowledge_base import get_knowledge_base
-    RAG_AVAILABLE = True
-except ImportError:
-    RAG_AVAILABLE = False
-    get_knowledge_base = None
-
 logger = logging.getLogger(__name__)
 
 class GenreFinder:
@@ -56,42 +48,14 @@ class GenreFinder:
             if self.cache_manager:
                 self.cache_manager.clear('genre')
 
-            # Initialize RAG knowledge base for lazy loading (will be loaded only when needed)
-            self.knowledge_base = None
-            self._knowledge_base_loaded = False
-
         except Exception as e:
             print(f"Error initializing GenreFinder: {e}")
             self.enhanced_detector = None
             self.cache_manager = None
-            self.knowledge_base = None
-
-    def _ensure_knowledge_base_loaded(self):
-        """Lazy-load knowledge base only when actually needed."""
-        if self._knowledge_base_loaded:
-            return self.knowledge_base
-
-        self._knowledge_base_loaded = True
-        if RAG_AVAILABLE and get_knowledge_base:
-            try:
-                self.knowledge_base = get_knowledge_base()
-                if not (self.knowledge_base and self.knowledge_base.is_initialized()):
-                    self.knowledge_base = None
-            except Exception as e:
-                logger.warning(f"Failed to initialize RAG in GenreFinder: {e}")
-                self.knowledge_base = None
-        else:
-            if not RAG_AVAILABLE:
-                logger.debug("LangChain/RAG not available in GenreFinder")
-
-        return self.knowledge_base
 
     def get_artist_genre_from_ai(self, artist_name, song_title, audio_metadata=None):
         """
-        Enhanced AI genre detection with strategic prompting and RAG knowledge base.
-
-        Uses Retrieval-Augmented Generation (RAG) to provide the AI with curated genre
-        knowledge from config/genre_characteristics.json for more accurate classifications.
+        Enhanced AI genre detection with strategic prompting.
         """
         try:
             # Check cache first
@@ -107,22 +71,6 @@ class GenreFinder:
                     "subs": [],
                     "conf": 0
                 }
-
-            # Retrieve relevant genre context from RAG if available (lazy loaded)
-            genre_context = ""
-            kb = self._ensure_knowledge_base_loaded()
-            if kb and kb.is_initialized():
-                try:
-                    genre_context = kb.get_relevant_genres(
-                        artist_name=artist_name,
-                        track_title=song_title,
-                        k=3  # Get top 3 most relevant genres
-                    )
-                    if genre_context:
-                        logger.debug(f"Retrieved RAG context for {artist_name} - {song_title}")
-                except Exception as rag_error:
-                    logger.debug(f"RAG retrieval failed in GenreFinder: {rag_error}")
-                    genre_context = ""
 
             # Load categorized genres for the prompt
             try:
@@ -145,7 +93,7 @@ class GenreFinder:
                 primary_genres_str = "Hip-Hop, R&B, Pop, Electronic, Rock, Funk, Reggae, Soul, Jazz, Blues, Alternative, Soca, Afrobeats, World Music"
                 subgenres_str = "various"
 
-            # Create a more strategic prompt with optional RAG context
+            # Create a strategic prompt
             prompt = f"""You are a professional music curator and genre expert. Analyze this artist and song to determine the most accurate primary genre and 2-3 relevant subgenres.
 
     ARTIST: {artist_name}
@@ -154,10 +102,6 @@ class GenreFinder:
 
             if audio_metadata:
                 prompt += f"METADATA: {json.dumps(audio_metadata)}\n"
-
-            # Include RAG context if available
-            if genre_context:
-                prompt += f"\n{genre_context}\n"
 
             prompt += f"""
     VALID PRIMARY GENRES:

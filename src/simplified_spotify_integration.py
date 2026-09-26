@@ -39,34 +39,41 @@ class SimplifiedSpotifyIntegration:
             print(message)
 
     def _load_credentials(self):
-        """Load Spotify credentials from file if it exists."""
+        """Load Spotify credentials: .env (via constants) by default, optional local JSON override."""
         try:
+            from constants import CLIENT_ID, CLIENT_SECRET
+
+            if CLIENT_ID and CLIENT_SECRET:
+                self.client_id = CLIENT_ID
+                self.client_secret = CLIENT_SECRET
+                print("Spotify credentials loaded from environment")
+                return
+
+            # Optional untracked local override: config/spotify_credentials.json
             import json
             import os
-            from resource_path import get_resource_path
-            
-            # Try to find credentials file
+
             creds_path = os.path.join(
                 os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                 'config',
                 'spotify_credentials.json'
             )
-            
-            # If file doesn't exist, that's ok - Spotify integration is optional
+
             if not os.path.exists(creds_path):
+                print("Warning: No Spotify credentials found (.env or config/spotify_credentials.json)")
                 return
-            
+
             with open(creds_path, 'r') as f:
                 creds = json.load(f)
-                
+
             self.client_id = creds.get('client_id')
             self.client_secret = creds.get('client_secret')
-            
+
             if self.client_id and self.client_secret:
-                print("Spotify credentials loaded successfully")
+                print("Spotify credentials loaded from config file")
             else:
                 print("Warning: Spotify credentials file found but incomplete")
-                
+
         except Exception as e:
             print(f"Warning: Could not load Spotify credentials: {e}")
 
