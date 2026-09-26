@@ -4,12 +4,12 @@
 .env.*.local
 *.key
 *.pem
+config/spotify_credentials.json
 
-# Claude Code settings and local development
-.claude/
-CLAUDE.md
-
-# Artist cache
+# Local data files
+dataset.csv
+docs/*.log
+docs/*.txt
 .artist_variations_cache
 
 # Python
@@ -33,6 +33,3 @@ __pycache__/
 build/
 dist/
 *.egg-info/
-
-# App cache and user data
-docs/metadata_updater_debug.txt
