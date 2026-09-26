@@ -5,6 +5,8 @@ import logging
 import warnings
 from pathlib import Path
 
+logger = logging.getLogger(__name__)
+
 # Disable PostHog telemetry before importing pywebview
 os.environ['POSTHOG_DISABLED'] = '1'
 
@@ -27,43 +29,30 @@ logging.getLogger('botocore').setLevel(logging.WARNING)
 ENABLE_DEBUG_LOGGING = False  # Change to True to enable debug logging
 
 def setup_logging():
-    """Setup logging configuration for debugging."""
+    """Setup logging configuration."""
     if ENABLE_DEBUG_LOGGING:
         # Create logs directory in docs/ folder
         docs_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'docs')
         os.makedirs(docs_dir, exist_ok=True)
         log_file = os.path.join(docs_dir, 'metadata_updater_debug.txt')
-        
+
         # Configure logging to both file and console
         logging.basicConfig(
             level=logging.DEBUG,
             format='%(asctime)s - %(levelname)s - %(message)s',
             handlers=[
-                logging.FileHandler(log_file, mode='w'),  # Overwrite log file each run
+                logging.FileHandler(log_file, mode='w', encoding='utf-8'),  # Overwrite log file each run
                 logging.StreamHandler(sys.stdout)  # Also print to console
             ]
         )
-        
-        # Redirect print statements to logging
-        class LoggerWriter:
-            def __init__(self, level):
-                self.level = level
-            
-            def write(self, message):
-                if message.strip():  # Only log non-empty messages
-                    self.level(message.strip())
-            
-            def flush(self):
-                pass
-        
-        # Replace stdout and stderr with logger
-        sys.stdout = LoggerWriter(logging.info)
-        sys.stderr = LoggerWriter(logging.error)
-        
+
         logging.info("Debug logging enabled - logs will be written to: %s", log_file)
     else:
-        # Minimal logging setup when debugging is disabled
-        logging.basicConfig(level=logging.WARNING)
+        # Console-only INFO logging when debug file logging is disabled
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(levelname)s: %(message)s'
+        )
 
 def get_app_cache_dir():
     """Get the appropriate cache directory for the application."""
@@ -77,7 +66,7 @@ def get_app_cache_dir():
 def debug_print_env():
     """Print debug information about the environment."""
     for key in ['PYTHONPATH']:
-        print(f"{key}: {os.environ.get(key, 'Not set')}")
+        logger.info(f"{key}: {os.environ.get(key, 'Not set')}")
 
 def fix_macos_path():
     """Fix environment and paths for macOS bundled app."""
@@ -152,7 +141,7 @@ def initialize_app():
         # Setup logging first
         setup_logging()
         
-        print("Initializing Metadata Updater (pywebview)...")
+        logger.info("Initializing Metadata Updater (pywebview)...")
         
         # Fix paths for macOS if needed
         if platform.system() == 'Darwin':
@@ -165,17 +154,17 @@ def initialize_app():
         api = get_api()
         init_result = api.initialize_app()
         if not init_result['success']:
-            print(f"Warning: {init_result.get('message', 'Failed to initialize API')}")
+            logger.error(f"Warning: {init_result.get('message', 'Failed to initialize API')}")
         
         # Get HTML and icon paths
         html_path = get_html_path()
         icon_path = get_app_icon()
         
         if not os.path.exists(html_path):
-            print(f"Error: HTML file not found at {html_path}")
+            logger.error(f"Error: HTML file not found at {html_path}")
             sys.exit(1)
         
-        print(f"Loading HTML from: {html_path}")
+        logger.info(f"Loading HTML from: {html_path}")
         
         # Determine window size - optimized for two-panel layout
         if platform.system() == 'Darwin':
@@ -188,7 +177,7 @@ def initialize_app():
             height = 950
         
         # Create and show the webview window
-        print("Creating webview window...")
+        logger.info("Creating webview window...")
         window = webview.create_window(
             title='Metadata Updater',
             url=html_path,
@@ -202,14 +191,14 @@ def initialize_app():
         # Store view reference in API for callbacks
         api.set_view_reference(window)
         
-        print("Starting webview...")
+        logger.info("Starting webview...")
         webview.start(debug=False)
         
     except Exception as e:
-        print("\nError initializing application:")
-        print(f"Error type: {type(e).__name__}")
-        print(f"Error message: {str(e)}")
-        print("\nFull traceback:")
+        logger.info("\nError initializing application:")
+        logger.error(f"Error type: {type(e).__name__}")
+        logger.error(f"Error message: {str(e)}")
+        logger.error("\nFull traceback:")
         import traceback
         traceback.print_exc()
         sys.exit(1)

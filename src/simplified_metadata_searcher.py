@@ -9,6 +9,8 @@ from enhanced_genre_detector import EnhancedGenreDetector
 from constants import OPENROUTER_API_KEY
 from riddim_scraper import get_riddim_scraper
 
+logger = logging.getLogger(__name__)
+
 # Get the search logger (created in metadata_updater_webview)
 SEARCH_LOGGER = logging.getLogger('search_debug')
 
@@ -46,7 +48,7 @@ class SimplifiedMetadataSearcher:
         try:
             self.ai_genre_detector = EnhancedGenreDetector(api_key=OPENROUTER_API_KEY)
         except Exception as e:
-            print(f"Warning: AI genre detector not initialized: {e}")
+            logger.warning(f"Warning: AI genre detector not initialized: {e}")
             self.ai_genre_detector = None
 
         # Store last search results for candidate review (thread-local for safety)
@@ -54,7 +56,7 @@ class SimplifiedMetadataSearcher:
         self.last_mb_result = None
         self.last_spotify_result = None
 
-        print("Simplified metadata searcher initialized")
+        logger.info("Simplified metadata searcher initialized")
 
     def _should_prefer_spotify_album(self, mb_album: str, sp_album: str) -> bool:
         """
@@ -76,7 +78,7 @@ class SimplifiedMetadataSearcher:
 
         # Rule 1: If MB looks like a bootleg/compilation, definitely prefer Spotify
         if mb_has_red_flag:
-            print(f"  → MB album looks unreliable ('{mb_album}'), using Spotify")
+            logger.info(f"  → MB album looks unreliable ('{mb_album}'), using Spotify")
             return True
 
         # Otherwise, don't assume - let user decide
@@ -94,9 +96,9 @@ class SimplifiedMetadataSearcher:
                         When enabled, ONLY uses RiddimGuide scraper, skips other sources.
         """
         try:
-            print(f"\n=== SEARCHING METADATA ===")
-            print(f"Artist: {artist_name}")
-            print(f"Title: {track_title}")
+            logger.info(f"\n=== SEARCHING METADATA ===")
+            logger.info(f"Artist: {artist_name}")
+            logger.info(f"Title: {track_title}")
 
             # Normalize riddim_mode parameter
             if riddim_mode is None:
@@ -106,17 +108,17 @@ class SimplifiedMetadataSearcher:
 
             if is_riddim_mode:
                 riddim_type = "Dancehall" if riddim_mode.get('isDancehall') else "Reggae"
-                print(f"🎵 RIDDIM MODE ACTIVE: {riddim_type}")
-                print("--- Trying RiddimGuide Scraper First ---")
+                logger.info(f"🎵 RIDDIM MODE ACTIVE: {riddim_type}")
+                logger.info("--- Trying RiddimGuide Scraper First ---")
                 riddim_result = self._search_riddim_metadata(artist_name, track_title, riddim_type)
 
                 if riddim_result:
                     # Found on RiddimGuide, return it
-                    print("✅ RiddimGuide found the song")
+                    logger.info("✅ RiddimGuide found the song")
                     return riddim_result
                 else:
                     # Not found on RiddimGuide, fall back to regular search
-                    print("⚠️  Song not found on RiddimGuide, falling back to regular search (MusicBrainz/Spotify)")
+                    logger.warning("⚠️  Song not found on RiddimGuide, falling back to regular search (MusicBrainz/Spotify)")
                     # Continue with normal search flow below
                     pass
 
@@ -136,7 +138,7 @@ class SimplifiedMetadataSearcher:
             spotify_result = None
 
             # 1. Try MusicBrainz first (more reliable for metadata)
-            print("\n--- Trying MusicBrainz ---")
+            logger.info("\n--- Trying MusicBrainz ---")
             SEARCH_LOGGER.info(f"\n🎵 MUSICBRAINZ SEARCH")
             SEARCH_LOGGER.info(f"  Query: Artist='{normalized_artist}' | Title='{search_title}'")
             try:
@@ -149,10 +151,10 @@ class SimplifiedMetadataSearcher:
                     SEARCH_LOGGER.info(f"    Year: {mb_result.get('year', 'N/A')}")
                     SEARCH_LOGGER.info(f"    Genre: {mb_result.get('genre', 'N/A')}")
                 else:
-                    print("MusicBrainz: No results")
+                    logger.info("MusicBrainz: No results")
                     SEARCH_LOGGER.info(f"  ❌ NO RESULTS")
             except Exception as e:
-                print(f"MusicBrainz search error: {e}")
+                logger.error(f"MusicBrainz search error: {e}")
                 SEARCH_LOGGER.info(f"  ❌ ERROR: {e}")
 
             # Store MB result for candidate review (thread-local)
@@ -160,7 +162,7 @@ class SimplifiedMetadataSearcher:
             self.last_mb_result = mb_result  # backward compat for single-thread
 
             # 2. Try Spotify (for additional coverage)
-            print("\n--- Trying Spotify ---")
+            logger.info("\n--- Trying Spotify ---")
             SEARCH_LOGGER.info(f"\n🎵 SPOTIFY SEARCH")
             SEARCH_LOGGER.info(f"  Query: Artist='{normalized_artist}' | Title='{search_title}'")
             try:
@@ -176,10 +178,10 @@ class SimplifiedMetadataSearcher:
                     SEARCH_LOGGER.info(f"    Spotify ID: {spotify_result.get('spotify_id', 'N/A')}")
                     SEARCH_LOGGER.info(f"    Rating: {spotify_result.get('rating', 'N/A')}")
                 else:
-                    print("Spotify: No results")
+                    logger.info("Spotify: No results")
                     SEARCH_LOGGER.info(f"  ❌ NO RESULTS")
             except Exception as e:
-                print(f"Spotify search error: {e}")
+                logger.error(f"Spotify search error: {e}")
                 SEARCH_LOGGER.info(f"  ❌ ERROR: {e}")
 
             # Store Spotify result for candidate review (thread-local)
@@ -187,7 +189,7 @@ class SimplifiedMetadataSearcher:
             self.last_spotify_result = spotify_result  # backward compat for single-thread
 
             # 3. Merge results intelligently
-            print("\n--- Merging Results ---")
+            logger.info("\n--- Merging Results ---")
             SEARCH_LOGGER.info(f"\n📊 MERGE RESULTS")
             SEARCH_LOGGER.info(f"  MusicBrainz result: {'✅ FOUND' if mb_result else '❌ NOT FOUND'}")
             SEARCH_LOGGER.info(f"  Spotify result: {'✅ FOUND' if spotify_result else '❌ NOT FOUND'}")
@@ -211,15 +213,15 @@ class SimplifiedMetadataSearcher:
                     try:
                         self.cache_manager.set_metadata(normalized_artist, search_title, merged)
                     except Exception as e:
-                        print(f"Error caching merged metadata: {e}")
+                        logger.error(f"Error caching merged metadata: {e}")
             else:
-                print("No metadata found from any source")
+                logger.info("No metadata found from any source")
                 SEARCH_LOGGER.info(f"\n❌ NO METADATA FOUND FROM ANY SOURCE")
 
             return merged
 
         except Exception as e:
-            print(f"Error in search_metadata: {e}")
+            logger.error(f"Error in search_metadata: {e}")
             return None
 
     def _merge_metadata(self, mb_data: Optional[Dict], spotify_data: Optional[Dict], normalized_artist: str, original_artist: str, track_title: str, preserve_album: bool = False) -> Optional[Dict]:
@@ -237,13 +239,13 @@ class SimplifiedMetadataSearcher:
                 
             # Start with the better source
             if mb_data and spotify_data:
-                print("Merging MusicBrainz + Spotify data")
+                logger.info("Merging MusicBrainz + Spotify data")
                 result = mb_data.copy()  # Start with MusicBrainz (more accurate)
             elif mb_data:
-                print("Using MusicBrainz data only")
+                logger.info("Using MusicBrainz data only")
                 result = mb_data.copy()
             else:
-                print("Using Spotify data only")
+                logger.info("Using Spotify data only")
                 result = spotify_data.copy()
             
             # Fill in missing fields with Spotify data
@@ -254,7 +256,7 @@ class SimplifiedMetadataSearcher:
                         continue
                     if not result.get(key) and spotify_data.get(key):
                         result[key] = spotify_data[key]
-                        print(f"Filled {key} from Spotify: {spotify_data[key]}")
+                        logger.info(f"Filled {key} from Spotify: {spotify_data[key]}")
 
                 # Check for album discrepancy between sources
                 mb_album = result.get('album', '').lower().strip()
@@ -272,11 +274,11 @@ class SimplifiedMetadataSearcher:
                             # Spotify album is definitely more canonical, use it instead of MB
                             result['album'] = spotify_data['album']
                             spotify_album_chosen = True  # Mark that we chose Spotify
-                            print(f"✅ Album intelligent match: using Spotify '{spotify_data.get('album')}' over MB '{result.get('album')}'")
+                            logger.info(f"✅ Album intelligent match: using Spotify '{spotify_data.get('album')}' over MB '{result.get('album')}'")
                             SEARCH_LOGGER.info(f"  ✅ Album intelligent match: using Spotify '{spotify_data.get('album')}' (MB was '{mb_album}')")
                         else:
                             # Albums differ and we can't determine which is better - flag for review
-                            print(f"⚠️  Album discrepancy detected: MB='{result.get('album')}' vs Spotify='{spotify_data.get('album')}'")
+                            logger.info(f"⚠️  Album discrepancy detected: MB='{result.get('album')}' vs Spotify='{spotify_data.get('album')}'")
                             SEARCH_LOGGER.info(f"  ⚠️  Album mismatch: MB='{result.get('album')}' vs Spotify='{spotify_data.get('album')}' - flagging for review")
                             result['needs_review'] = True
 
@@ -289,10 +291,10 @@ class SimplifiedMetadataSearcher:
                     sp_count = sp_artist.count(',') + 1
                     if sp_count > mb_count:
                         result['artist'] = sp_artist
-                        print(f"Using Spotify artist (more complete with {sp_count} artists): {sp_artist}")
+                        logger.info(f"Using Spotify artist (more complete with {sp_count} artists): {sp_artist}")
                 elif not mb_artist and sp_artist:
                     result['artist'] = sp_artist
-                    print(f"Filled artist from Spotify: {sp_artist}")
+                    logger.info(f"Filled artist from Spotify: {sp_artist}")
 
                 # Special handling for year: consistency with album choice
                 if spotify_data.get('year'):
@@ -302,7 +304,7 @@ class SimplifiedMetadataSearcher:
                     # If we chose Spotify's album, also use Spotify's year for consistency
                     if spotify_album_chosen and sp_year:
                         result['year'] = sp_year
-                        print(f"Using Spotify year {sp_year} (consistent with Spotify album choice)")
+                        logger.info(f"Using Spotify year {sp_year} (consistent with Spotify album choice)")
                     elif mb_year and sp_year:
                         try:
                             mb_year_int = int(mb_year)
@@ -311,19 +313,19 @@ class SimplifiedMetadataSearcher:
                             # Check for year discrepancy (>5 years) - flag for manual review
                             year_diff = abs(mb_year_int - sp_year_int)
                             if year_diff > 5:
-                                print(f"⚠️  Year discrepancy detected: MB={mb_year} vs Spotify={sp_year} ({year_diff} year gap)")
+                                logger.info(f"⚠️  Year discrepancy detected: MB={mb_year} vs Spotify={sp_year} ({year_diff} year gap)")
                                 SEARCH_LOGGER.info(f"  ⚠️  Year mismatch: MB={mb_year} vs Spotify={sp_year} ({year_diff} year gap) - flagging for review")
                                 result['needs_review'] = True
 
                             # Prefer the earlier year (more likely the original)
                             if sp_year_int < mb_year_int:
                                 result['year'] = sp_year
-                                print(f"Using Spotify year {sp_year} (earlier than MB year {mb_year})")
+                                logger.info(f"Using Spotify year {sp_year} (earlier than MB year {mb_year})")
                         except (ValueError, TypeError):
                             pass
                     elif not result.get('year') and spotify_data.get('year'):
                         result['year'] = spotify_data['year']
-                        print(f"Filled year from Spotify: {spotify_data['year']}")
+                        logger.info(f"Filled year from Spotify: {spotify_data['year']}")
 
                 # Always preserve Spotify ID if available
                 if spotify_data.get('spotify_id'):
@@ -332,41 +334,41 @@ class SimplifiedMetadataSearcher:
                 # Use Spotify popularity as rating if available and not already present
                 if not result.get('rating') and spotify_data.get('rating'):
                     result['rating'] = spotify_data['rating']
-                    print(f"Filled rating from Spotify popularity: {spotify_data['rating']}")
+                    logger.info(f"Filled rating from Spotify popularity: {spotify_data['rating']}")
             
             # Get genre information if missing
             if not result.get('genre'):
-                print("No genre found, trying MusicBrainz artist lookup")
+                logger.info("No genre found, trying MusicBrainz artist lookup")
                 try:
                     # Use the artist from the metadata result for better accuracy
                     lookup_artist = result.get('artist', normalized_artist)
-                    print(f"Looking up genres for artist: {lookup_artist}")
+                    logger.info(f"Looking up genres for artist: {lookup_artist}")
                     artist_genres = self.musicbrainz.get_artist_genres_from_mb(lookup_artist)
                     if artist_genres and artist_genres[0]:
                         result['genre'] = artist_genres[0] or ''
                         result['subgenres'] = artist_genres[1] or ''
                         result['comments'] = artist_genres[1] or ''  # Also populate comments for backward compatibility
-                        print(f"Added genres from MusicBrainz: {artist_genres}")
+                        logger.info(f"Added genres from MusicBrainz: {artist_genres}")
                         
                         # Check if MB returned only 1 genre - suggests limited data
                         if result['genre'] and not result['subgenres']:
-                            print(f"Single genre from MB (limited data): {result['genre']} - using AI fallback")
+                            logger.info(f"Single genre from MB (limited data): {result['genre']} - using AI fallback")
                             try:
                                 self._use_ai_genre_fallback(result, lookup_artist, track_title)
                             except Exception as ai_err:
-                                print(f"AI fallback failed: {ai_err}")
+                                logger.error(f"AI fallback failed: {ai_err}")
                     else:
-                        print(f"No genres found for artist: {lookup_artist}, trying AI genre detection")
+                        logger.info(f"No genres found for artist: {lookup_artist}, trying AI genre detection")
                         # Fall back to AI genre detection
                         self._use_ai_genre_fallback(result, lookup_artist, track_title)
                 except Exception as e:
-                    print(f"Error getting artist genres: {e}")
+                    logger.error(f"Error getting artist genres: {e}")
                     # Try AI fallback if MusicBrainz lookup fails
                     try:
                         lookup_artist = result.get('artist', normalized_artist)
                         self._use_ai_genre_fallback(result, lookup_artist, track_title)
                     except Exception as ai_error:
-                        print(f"AI fallback also failed: {ai_error}")
+                        logger.error(f"AI fallback also failed: {ai_error}")
             
             # Ensure all required fields exist
             required_fields = ['title', 'artist', 'album', 'year', 'genre', 'comments', 'subgenres', 'rating']
@@ -380,7 +382,7 @@ class SimplifiedMetadataSearcher:
             return result
             
         except Exception as e:
-            print(f"Error merging metadata: {e}")
+            logger.error(f"Error merging metadata: {e}")
             return mb_data or spotify_data
 
     def _use_ai_genre_fallback(self, result: Dict, artist_name: str, track_title: str) -> None:
@@ -390,15 +392,15 @@ class SimplifiedMetadataSearcher:
         """
         try:
             if not self.ai_genre_detector:
-                print("AI genre detector not available, skipping fallback")
+                logger.warning("AI genre detector not available, skipping fallback")
                 return
             
-            print(f"Using AI genre detection for {artist_name} - {track_title}")
+            logger.info(f"Using AI genre detection for {artist_name} - {track_title}")
             
             # Get album name if available (useful for hints like "Get Soca 2017" which indicates Soca genre)
             album_name = result.get('album', '')
             if album_name:
-                print(f"Including album context for genre detection: {album_name}")
+                logger.info(f"Including album context for genre detection: {album_name}")
             
             # Detect genre using AI with album context
             detected_genre, confidence = self.ai_genre_detector.detect_genre(artist_name, track_title, album_name=album_name)
@@ -412,11 +414,11 @@ class SimplifiedMetadataSearcher:
                 result['subgenres'] = detected_genre
                 result['comments'] = detected_genre  # Also populate comments for backward compatibility
                 
-                print(f"AI detected genre: {formatted_genre} (confidence: {confidence:.2f})")
+                logger.info(f"AI detected genre: {formatted_genre} (confidence: {confidence:.2f})")
             else:
-                print(f"AI genre detection confidence too low: {confidence:.2f}")
+                logger.info(f"AI genre detection confidence too low: {confidence:.2f}")
         except Exception as e:
-            print(f"Error in AI genre fallback: {e}")
+            logger.error(f"Error in AI genre fallback: {e}")
 
     def _clean_metadata(self, metadata: Dict) -> Dict:
         """Clean and normalize metadata."""
@@ -452,7 +454,7 @@ class SimplifiedMetadataSearcher:
             return cleaned
             
         except Exception as e:
-            print(f"Error cleaning metadata: {e}")
+            logger.error(f"Error cleaning metadata: {e}")
             return metadata
 
     def _format_genre(self, genre: str) -> str:
@@ -478,7 +480,7 @@ class SimplifiedMetadataSearcher:
             return ' '.join(word.capitalize() for word in genre_lower.split())
             
         except Exception as e:
-            print(f"Error formatting genre: {e}")
+            logger.error(f"Error formatting genre: {e}")
             return genre
 
     def search_musicbrainz_only(self, artist_name: str, track_title: str) -> Optional[Dict]:
@@ -491,21 +493,21 @@ class SimplifiedMetadataSearcher:
                 try:
                     # Use the artist from the metadata result for better accuracy
                     lookup_artist = result.get('artist', artist_name)
-                    print(f"Looking up genres for artist: {lookup_artist}")
+                    logger.info(f"Looking up genres for artist: {lookup_artist}")
                     artist_genres = self.musicbrainz.get_artist_genres_from_mb(lookup_artist)
                     if artist_genres:
                         result['genre'] = artist_genres[0] or ''
                         result['comments'] = artist_genres[1] or ''
-                        print(f"Added genres from MusicBrainz: {artist_genres}")
+                        logger.info(f"Added genres from MusicBrainz: {artist_genres}")
                     else:
-                        print(f"No genres found for artist: {lookup_artist}")
+                        logger.info(f"No genres found for artist: {lookup_artist}")
                 except Exception as e:
-                    print(f"Error getting artist genres: {e}")
+                    logger.error(f"Error getting artist genres: {e}")
             
             return result
             
         except Exception as e:
-            print(f"Error in MusicBrainz-only search: {e}")
+            logger.error(f"Error in MusicBrainz-only search: {e}")
             return None
 
     def search_spotify_only(self, artist_name: str, track_title: str) -> Optional[Dict]:
@@ -513,7 +515,7 @@ class SimplifiedMetadataSearcher:
         try:
             return self.spotify.search_metadata(artist_name, track_title)
         except Exception as e:
-            print(f"Error in Spotify-only search: {e}")
+            logger.error(f"Error in Spotify-only search: {e}")
             return None
 
     def _search_riddim_metadata(self, artist_name: str, track_title: str, riddim_type: str) -> Optional[Dict]:
@@ -548,21 +550,21 @@ class SimplifiedMetadataSearcher:
             search_query = ""
 
             for query in search_queries:
-                print(f"Searching RiddimGuide for: {query}")
+                logger.info(f"Searching RiddimGuide for: {query}")
                 songs = scraper.search(query)
                 search_query = query
 
                 if songs:
-                    print(f"✅ RiddimGuide: Found {len(songs)} results")
+                    logger.info(f"✅ RiddimGuide: Found {len(songs)} results")
                     break
 
             if not songs:
-                print(f"❌ RiddimGuide: No results found with any query")
+                logger.info(f"❌ RiddimGuide: No results found with any query")
                 return None
 
             # Take the first (best) result
             best_match = songs[0]
-            print(f"Selected: {best_match['artist']} - {best_match['title']}")
+            logger.info(f"Selected: {best_match['artist']} - {best_match['title']}")
 
             # Format metadata from RiddimGuide result
             riddim_name = best_match.get('riddim', '')
@@ -589,7 +591,7 @@ class SimplifiedMetadataSearcher:
             return result
 
         except Exception as e:
-            print(f"❌ Error in RiddimGuide search: {e}")
+            logger.error(f"❌ Error in RiddimGuide search: {e}")
             import traceback
             traceback.print_exc()
             return None
@@ -602,13 +604,15 @@ class SimplifiedMetadataSearcher:
             # Test MusicBrainz (simple search)
             mb_test = self.musicbrainz.search_metadata("The Beatles", "Yesterday")
             results['musicbrainz'] = mb_test is not None
-        except:
+        except Exception as e:
+            logger.warning(f"MusicBrainz connection test failed: {e}")
             results['musicbrainz'] = False
 
         try:
             # Test Spotify
             results['spotify'] = self.spotify.test_connection()
-        except:
+        except Exception as e:
+            logger.warning(f"Spotify connection test failed: {e}")
             results['spotify'] = False
 
         return results
@@ -618,9 +622,9 @@ class SimplifiedMetadataSearcher:
         try:
             self.musicbrainz.clear_cache()
             self.spotify.clear_cache()
-            print("All caches cleared")
+            logger.info("All caches cleared")
         except Exception as e:
-            print(f"Error clearing caches: {e}")
+            logger.error(f"Error clearing caches: {e}")
 
     def get_service_stats(self) -> Dict:
         """Get statistics about service usage."""

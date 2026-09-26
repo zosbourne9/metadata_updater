@@ -45,7 +45,7 @@ def setup_search_logger():
 
 SEARCH_LOGGER = setup_search_logger()
 
-VERSION = "2.0"
+VERSION = "2.1"
 
 def extract_featured_artists(filename: str, artist_from_file: str = None) -> str:
     """
@@ -172,7 +172,7 @@ class ProcessingPool(Thread):
             if callback:
                 callback(*args)
         except Exception as e:
-            print(f"Callback error: {e}")
+            logger.error(f"Callback error: {e}")
 
     def requeue_reviewed_file(self, file_path, selected_metadata):
         """Re-queue a file that has been reviewed by the user."""
@@ -183,7 +183,7 @@ class ProcessingPool(Thread):
         if selected_metadata:
             # Add back to work queue as a tuple (file_path, metadata)
             self.work_queue.append((file_path, selected_metadata))
-            print(f"Re-queued file for writing: {os.path.basename(file_path)}")
+            logger.info(f"Re-queued file for writing: {os.path.basename(file_path)}")
         else:
             # User skipped or cancelled - count as finished but no success
             with self.counter_lock:
@@ -199,7 +199,7 @@ class ProcessingPool(Thread):
                     f"Processed {self.processed_count} of {self.total_files} files "
                     f"(Success: {self.successful_files}, Errors: {self.error_files})"
                 )
-            print(f"User skipped file review: {os.path.basename(file_path)}")
+            logger.warning(f"User skipped file review: {os.path.basename(file_path)}")
 
     def run(self):
         try:
@@ -333,7 +333,7 @@ class ProcessingPool(Thread):
                 )
 
         except Exception as e:
-            print(f"Worker error for {file_path}: {e}")
+            logger.error(f"Worker error for {file_path}: {e}")
             with self.counter_lock:
                 self.processed_count += 1
                 self.error_files += 1
@@ -355,7 +355,7 @@ class MetadataUpdater:
     """Core metadata updater logic without UI dependencies"""
     
     def __init__(self):
-        print("\nInitializing MetadataUpdater (webview)...")
+        logger.info("\nInitializing MetadataUpdater (webview)...")
         try:
             http = urllib3.PoolManager(
                 cert_reqs='CERT_REQUIRED',
@@ -363,17 +363,17 @@ class MetadataUpdater:
             )
 
             # Initialize core components
-            print("Starting cache initialization...")
+            logger.info("Starting cache initialization...")
             self.cache_manager = UnifiedCacheManager()
-            print("Cache manager initialized")
+            logger.info("Cache manager initialized")
 
-            print("Initializing core components...")
+            logger.info("Initializing core components...")
             self.utility_tools = AudioUtilities(status_update_callback=self._update_status)
             self.artist_normalizer = ArtistNormalizer(api_key=OPENROUTER_API_KEY)
-            print("Core components initialized")
+            logger.info("Core components initialized")
 
             # Initialize API clients with simplified integration
-            print("Initializing API clients...")
+            logger.info("Initializing API clients...")
             
             # Use simplified unified integration
             self.simplified_integration = SimplifiedMetadataIntegration(
@@ -392,10 +392,10 @@ class MetadataUpdater:
                 self.utility_tools,
                 cache_manager=self.cache_manager
             )
-            print("Genre finder initialized")
+            logger.info("Genre finder initialized")
 
             # Initialize state variables
-            print("Initializing state variables...")
+            logger.info("Initializing state variables...")
             self.selected_files = []
             self.unfound_files = []
             self.current_file_index = 0
@@ -405,21 +405,21 @@ class MetadataUpdater:
             self.processing_thread = None
             self.last_search_candidates = []  # Store top candidates for review
             self.last_search_best = None  # Store the best match for review
-            print("State variables initialized")
+            logger.info("State variables initialized")
             
-            print("MetadataUpdater initialization complete!")
+            logger.info("MetadataUpdater initialization complete!")
 
         except Exception as e:
-            print("\nError during MetadataUpdater initialization:")
-            print(f"Error type: {type(e).__name__}")
-            print(f"Error message: {str(e)}")
+            logger.info("\nError during MetadataUpdater initialization:")
+            logger.error(f"Error type: {type(e).__name__}")
+            logger.error(f"Error message: {str(e)}")
             import traceback
             traceback.print_exc()
             raise
     
     def _update_status(self, status):
         """Callback for status updates"""
-        print(f"Status: {status}")
+        logger.info(f"Status: {status}")
 
     def get_candidates(self, merged_metadata=None):
         """Get the last search candidates for review modal.
@@ -468,7 +468,7 @@ class MetadataUpdater:
                 return [b]
 
         except Exception as e:
-            print(f"Error getting candidates: {e}")
+            logger.error(f"Error getting candidates: {e}")
             import traceback
             traceback.print_exc()
 
@@ -488,7 +488,7 @@ class MetadataUpdater:
             # Load the audio file
             audio = self.utility_tools.load_audio_file(file_path)
             if not audio:
-                print(f"Could not load file: {file_path}")
+                logger.error(f"Could not load file: {file_path}")
                 return False, None
 
             # Rename-only mode: if the only selected action is "rename" (no metadata
@@ -510,7 +510,7 @@ class MetadataUpdater:
                         result['renamed_to'] = os.path.basename(new_path)
                     return True, result
                 # Nothing selected at all
-                print(f"No fields selected for: {file_path}")
+                logger.info(f"No fields selected for: {file_path}")
                 return False, None
 
             if pre_selected_metadata:
@@ -555,7 +555,7 @@ class MetadataUpdater:
 
             if not metadata:
                 SEARCH_LOGGER.info(f"❌ NO METADATA FOUND")
-                print(f"No metadata found for: {file_path}")
+                logger.info(f"No metadata found for: {file_path}")
                 return False, None
 
             if not pre_selected_metadata:
@@ -604,9 +604,9 @@ class MetadataUpdater:
 
             if not needs_review:
                 # No review needed, write the metadata immediately
-                print(f"Filtered metadata to write for {os.path.basename(file_path)}: {filtered_metadata}")
+                logger.info(f"Filtered metadata to write for {os.path.basename(file_path)}: {filtered_metadata}")
                 self.utility_tools.set_metadata(audio, filtered_metadata, file_path)
-                print(f"Successfully updated: {file_path}")
+                logger.info(f"Successfully updated: {file_path}")
 
                 # Rename the file to "Main Artist - Title (Version)" if requested
                 if selected_fields.get('rename'):
@@ -618,12 +618,12 @@ class MetadataUpdater:
                         file_path = new_path
             else:
                 # Review is needed, don't write yet - ProcessingPool will handle it
-                print(f"⏸️  Review needed - deferring metadata write until user confirms")
+                logger.info(f"⏸️  Review needed - deferring metadata write until user confirms")
 
             return True, metadata  # Return success and full metadata (with needs_review flag)
 
         except Exception as e:
-            print(f"Error updating metadata for {file_path}: {e}")
+            logger.error(f"Error updating metadata for {file_path}: {e}")
             import traceback
             traceback.print_exc()
             return False, None

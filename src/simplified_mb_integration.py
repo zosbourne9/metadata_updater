@@ -5,6 +5,8 @@ import logging
 import socket
 import random
 from datetime import datetime, timedelta
+
+logger = logging.getLogger(__name__)
 from typing import Optional, Dict, Callable
 from urllib.error import URLError
 from rate_limiter import UnifiedRateLimiter
@@ -45,7 +47,7 @@ class SimplifiedMusicBrainzIntegration:
         # Track connection errors separately for diagnostics
         self.connection_error_count = 0
 
-        print("Simplified MusicBrainz integration initialized")
+        logger.info("Simplified MusicBrainz integration initialized")
 
     def emit_status(self, message):
         """Emit status update through callback."""
@@ -53,9 +55,9 @@ class SimplifiedMusicBrainzIntegration:
             try:
                 self.status_update_callback(message)
             except Exception as e:
-                print(f"Error in status callback: {e}")
+                logger.error(f"Error in status callback: {e}")
         else:
-            print(message)
+            logger.info(message)
 
     def _api_call(self, method_name, *args, **kwargs):
         """Make MusicBrainz API calls with rate limiting and exponential backoff.
@@ -96,10 +98,10 @@ class SimplifiedMusicBrainzIntegration:
                 error_type = type(e).__name__
                 error_msg = f"Status: Connection error in MusicBrainz API call (attempt {retries}/{max_retries}): {error_type}: {e}"
                 self.emit_status(error_msg)
-                print(error_msg)
+                logger.info(error_msg)
 
                 if retries == max_retries:
-                    print(f"Failed after {max_retries} connection attempts")
+                    logger.error(f"Failed after {max_retries} connection attempts")
                     return None
 
                 # Exponential backoff with jitter: base delay + random component
@@ -107,7 +109,7 @@ class SimplifiedMusicBrainzIntegration:
                 jitter = random.uniform(0, base_delay * 0.1)  # Up to 10% jitter
                 delay = base_delay + jitter
 
-                print(f"Connection error (attempt {retries}/{max_retries}). Retrying in {delay:.1f}s...")
+                logger.error(f"Connection error (attempt {retries}/{max_retries}). Retrying in {delay:.1f}s...")
                 time.sleep(delay)
 
             except Exception as e:
@@ -116,10 +118,10 @@ class SimplifiedMusicBrainzIntegration:
                 error_type = type(e).__name__
                 error_msg = f"Status: Error in MusicBrainz API call (attempt {retries}/{max_retries}): {error_type}: {e}"
                 self.emit_status(error_msg)
-                print(error_msg)
+                logger.info(error_msg)
 
                 if retries == max_retries:
-                    print(f"Failed after {max_retries} attempts")
+                    logger.error(f"Failed after {max_retries} attempts")
                     return None
 
                 # Exponential backoff with jitter for non-connection errors too
@@ -127,7 +129,7 @@ class SimplifiedMusicBrainzIntegration:
                 jitter = random.uniform(0, base_delay * 0.1)
                 delay = base_delay + jitter
 
-                print(f"API error (attempt {retries}/{max_retries}). Retrying in {delay:.1f}s...")
+                logger.error(f"API error (attempt {retries}/{max_retries}). Retrying in {delay:.1f}s...")
                 time.sleep(delay)
 
         return None
@@ -135,53 +137,53 @@ class SimplifiedMusicBrainzIntegration:
     def search_metadata(self, artist_name: str, track_title: str) -> Optional[Dict]:
         """Main search method."""
         try:
-            print(f"\nSimplified MusicBrainz search: {artist_name} - {track_title}")
+            logger.info(f"\nSimplified MusicBrainz search: {artist_name} - {track_title}")
             
             # Check cache first
             if self.cache_manager:
                 cached = self.cache_manager.get_metadata(artist_name, track_title)
                 if cached:
-                    print("Found cached metadata")
+                    logger.info("Found cached metadata")
                     return cached
 
             # 1. Try exact search first
             metadata = self._exact_search(artist_name, track_title)
             if metadata:
-                print("Found via exact search")
+                logger.info("Found via exact search")
                 # NOTE: Caching is now handled by SimplifiedMetadataSearcher after genre lookup
                 return metadata
                 
             # 2. Try with cleaned artist name (remove features)
             clean_artist = self._clean_artist_name(artist_name)
             if clean_artist != artist_name:
-                print(f"Trying with clean artist name: {clean_artist}")
+                logger.info(f"Trying with clean artist name: {clean_artist}")
                 metadata = self._exact_search(clean_artist, track_title)
                 if metadata:
-                    print("Found via clean artist search")
+                    logger.info("Found via clean artist search")
                     # NOTE: Caching is now handled by SimplifiedMetadataSearcher after genre lookup
                     return metadata
 
             # 3. Try with cleaned title (remove parenthetical content)
             clean_title = self._clean_title(track_title)
             if clean_title != track_title:
-                print(f"Trying with clean title: {clean_title}")
+                logger.info(f"Trying with clean title: {clean_title}")
                 metadata = self._exact_search(artist_name, clean_title)
                 if metadata:
-                    print("Found via clean title search")
+                    logger.info("Found via clean title search")
                     # NOTE: Caching is now handled by SimplifiedMetadataSearcher after genre lookup
                     return metadata
 
                 # Also try with both clean artist and clean title
                 if clean_artist != artist_name:
-                    print(f"Trying with both clean artist and title: {clean_artist} - {clean_title}")
+                    logger.info(f"Trying with both clean artist and title: {clean_artist} - {clean_title}")
                     metadata = self._exact_search(clean_artist, clean_title)
                     if metadata:
-                        print("Found via clean artist and title search")
+                        logger.info("Found via clean artist and title search")
                         # NOTE: Caching is now handled by SimplifiedMetadataSearcher after genre lookup
                         return metadata
 
             # 4. Try fuzzy search as last resort
-            print("Falling back to fuzzy search")
+            logger.info("Falling back to fuzzy search")
             # Use cleaned artist and title for fuzzy search to ensure consistent results
             # regardless of version markers (Clean/Dirty/Explicit) or featuring artists
             fuzzy_artist = self._clean_artist_name(artist_name)
@@ -192,7 +194,7 @@ class SimplifiedMusicBrainzIntegration:
             return metadata
             
         except Exception as e:
-            print(f"Error in search_metadata: {e}")
+            logger.error(f"Error in search_metadata: {e}")
             return None
 
     def _exact_search(self, artist: str, title: str) -> Optional[Dict]:
@@ -200,7 +202,7 @@ class SimplifiedMusicBrainzIntegration:
         try:
             # Simple, targeted query
             query = f'artist:"{artist}" AND recording:"{title}"'
-            print(f"Exact search query: {query}")
+            logger.info(f"Exact search query: {query}")
             
             response = self._api_call('search_recordings', query=query, limit=25)
             if not response or 'recording-list' not in response:
@@ -224,7 +226,7 @@ class SimplifiedMusicBrainzIntegration:
             return None
             
         except Exception as e:
-            print(f"Error in exact search: {e}")
+            logger.error(f"Error in exact search: {e}")
             return None
 
     def _get_title_variations(self, title: str) -> list:
@@ -270,7 +272,7 @@ class SimplifiedMusicBrainzIntegration:
         try:
             # Broader search - start with small limit to reduce payload size
             query = f'artist:{artist} AND recording:{title}'
-            print(f"Fuzzy search query: {query}")
+            logger.info(f"Fuzzy search query: {query}")
 
             # First attempt: small limit (20) to reduce response size and connection issues
             response = self._api_call('search_recordings', query=query, limit=20)
@@ -313,16 +315,16 @@ class SimplifiedMusicBrainzIntegration:
                 # it means MusicBrainz has the recording but only bootleg/low-quality releases.
                 # Don't waste time on title variations - go straight to Spotify fallback.
                 if best_score >= 90:
-                    print(f"Found good recording match (score {best_score}) but only bootleg/low-quality releases. Falling back to Spotify...")
+                    logger.info(f"Found good recording match (score {best_score}) but only bootleg/low-quality releases. Falling back to Spotify...")
                     return None
 
                 # If extract_metadata returned None but the fuzzy match score was weak (< 90),
                 # try searching with different title variations first
-                print(f"Best recording has weak match (score {best_score}). Trying title variations...")
+                logger.info(f"Best recording has weak match (score {best_score}). Trying title variations...")
 
                 # Try title variations (e.g., singular/plural)
                 for title_variation in self._get_title_variations(title)[1:]:  # Skip first one (original)
-                    print(f"Trying title variation: {title_variation}")
+                    logger.info(f"Trying title variation: {title_variation}")
                     query = f'artist:{artist} AND recording:{title_variation}'
                     var_response = self._api_call('search_recordings', query=query, limit=20)
                     if var_response and 'recording-list' in var_response:
@@ -333,7 +335,7 @@ class SimplifiedMusicBrainzIntegration:
                                 score = self._score_recording(recording, artist)
                                 metadata = self._extract_metadata(recording)
                                 if metadata:
-                                    print(f"Found acceptable metadata with title variation: {metadata.get('album')}")
+                                    logger.info(f"Found acceptable metadata with title variation: {metadata.get('album')}")
                                     return metadata
 
             # Fallback: try with just the first/primary artist if we have multiple artists
@@ -341,7 +343,7 @@ class SimplifiedMusicBrainzIntegration:
             primary_artist = artist.split(',')[0].split('&')[0].strip()
 
             if primary_artist != artist and len(primary_artist) > 2:
-                print(f"Multi-artist query failed. Trying primary artist only: {primary_artist}")
+                logger.error(f"Multi-artist query failed. Trying primary artist only: {primary_artist}")
                 primary_query = f'artist:{primary_artist} AND recording:{title}'
                 primary_response = self._api_call('search_recordings', query=primary_query, limit=25)
                 if primary_response and 'recording-list' in primary_response:
@@ -353,11 +355,11 @@ class SimplifiedMusicBrainzIntegration:
                             if score > 100:
                                 metadata = self._extract_metadata(recording)
                                 if metadata:
-                                    print(f"Found acceptable release via primary artist search: {metadata.get('album')}")
+                                    logger.info(f"Found acceptable release via primary artist search: {metadata.get('album')}")
                                     return metadata
 
             # Fallback: search by artist only, but FILTER for recordings that share words with the original title
-            print(f"Falling back to full artist-only search with title filtering: {artist}")
+            logger.info(f"Falling back to full artist-only search with title filtering: {artist}")
             artist_query = f'artist:{artist}'
             artist_response = self._api_call('search_recordings', query=artist_query, limit=100)
             if artist_response and 'recording-list' in artist_response:
@@ -383,7 +385,7 @@ class SimplifiedMusicBrainzIntegration:
                         if score > 100:  # Only consider recordings with positive scores
                             metadata = self._extract_metadata(recording)
                             if metadata:
-                                print(f"Found acceptable release via artist-only search: {metadata.get('album')}")
+                                logger.info(f"Found acceptable release via artist-only search: {metadata.get('album')}")
                                 return metadata
 
             # Final fallback: try searching with just the first word of the title
@@ -391,7 +393,7 @@ class SimplifiedMusicBrainzIntegration:
             title_words = title.split()
             if title_words and len(title_words[0]) > 3:
                 first_word = title_words[0]
-                print(f"Final fallback: searching for artist + first word only: {artist} + {first_word}")
+                logger.info(f"Final fallback: searching for artist + first word only: {artist} + {first_word}")
                 keyword_query = f'artist:{artist} AND recording:{first_word}'
                 keyword_response = self._api_call('search_recordings', query=keyword_query, limit=30)
                 if keyword_response and 'recording-list' in keyword_response:
@@ -415,13 +417,13 @@ class SimplifiedMusicBrainzIntegration:
                         if score > 100:
                             metadata = self._extract_metadata(recording)
                             if metadata:
-                                print(f"Found acceptable release via keyword search: {metadata.get('album')}")
+                                logger.info(f"Found acceptable release via keyword search: {metadata.get('album')}")
                                 return metadata
 
             return None
 
         except Exception as e:
-            print(f"Error in fuzzy search: {e}")
+            logger.error(f"Error in fuzzy search: {e}")
             return None
 
     def _is_exact_match(self, recording: dict, target_artist: str, target_title: str) -> bool:
@@ -454,7 +456,7 @@ class SimplifiedMusicBrainzIntegration:
             return False
             
         except Exception as e:
-            print(f"Error in exact match check: {e}")
+            logger.error(f"Error in exact match check: {e}")
             return False
 
     def _is_fuzzy_match(self, recording: dict, target_artist: str, target_title: str) -> bool:
@@ -527,7 +529,7 @@ class SimplifiedMusicBrainzIntegration:
             return False
 
         except Exception as e:
-            print(f"Error in fuzzy match check: {e}")
+            logger.error(f"Error in fuzzy match check: {e}")
             return False
 
     def _string_similarity(self, str1: str, str2: str) -> float:
@@ -686,18 +688,18 @@ class SimplifiedMusicBrainzIntegration:
                     if 1975 <= earliest_year <= 1985:
                         # This recording has a genuine 1980s original - huge bonus!
                         best_release_score += 50
-                        print(f"  Recording has earliest release from {earliest_year} - adding +50 bonus")
+                        logger.info(f"  Recording has earliest release from {earliest_year} - adding +50 bonus")
                     elif 1960 <= earliest_year < 1975:
                         # Even older original
                         best_release_score += 60
-                        print(f"  Recording has earliest release from {earliest_year} - adding +60 bonus")
+                        logger.info(f"  Recording has earliest release from {earliest_year} - adding +60 bonus")
                 except (ValueError, TypeError):
                     pass
 
             return score + best_release_score
             
         except Exception as e:
-            print(f"Error scoring recording: {e}")
+            logger.error(f"Error scoring recording: {e}")
             return 50  # Neutral score
 
     def _extract_metadata(self, recording: dict) -> Optional[Dict]:
@@ -724,7 +726,7 @@ class SimplifiedMusicBrainzIntegration:
             # Handle featuring artists - include them in the artist name
             final_artist = main_artist or ''
             if featuring_artists:
-                print(f"Found featuring artists: {featuring_artists}")
+                logger.info(f"Found featuring artists: {featuring_artists}")
                 # In webview context, always include featuring artists
                 if len(featuring_artists) == 1:
                     final_artist = f"{main_artist} feat. {featuring_artists[0]}"
@@ -759,7 +761,7 @@ class SimplifiedMusicBrainzIntegration:
                                 current_year = datetime.datetime.now().year
                                 if 1900 <= year_val <= current_year + 2:
                                     year = str(year_val)
-                                    print(f"Using fallback year {year} from alternate release")
+                                    logger.info(f"Using fallback year {year} from alternate release")
                                     break
                         except (ValueError, TypeError):
                             continue
@@ -774,11 +776,11 @@ class SimplifiedMusicBrainzIntegration:
                 'rating': ''  # MusicBrainz doesn't provide track ratings
             }
 
-            print(f"Extracted metadata: {metadata}")
+            logger.info(f"Extracted metadata: {metadata}")
             return metadata
             
         except Exception as e:
-            print(f"Error extracting metadata: {e}")
+            logger.error(f"Error extracting metadata: {e}")
             return None
 
     def _find_best_release(self, recording: dict) -> Optional[Dict]:
@@ -808,7 +810,7 @@ class SimplifiedMusicBrainzIntegration:
             track_title = recording.get('title', '')
 
             # Group releases by release-group ID to avoid duplicate fetches
-            print(f"Found {len(releases)} total releases")
+            logger.info(f"Found {len(releases)} total releases")
             release_groups_seen = {}
             release_group_data = {}
             release_dates = {}  # Store dates from enriched releases
@@ -822,7 +824,7 @@ class SimplifiedMusicBrainzIntegration:
                     release_groups_seen[rg_id] = release
 
             # Second pass: enrich only unique release-groups (not every single release!)
-            print(f"Deduped to {len(release_groups_seen)} unique release-groups (fetching details for these only)")
+            logger.info(f"Deduped to {len(release_groups_seen)} unique release-groups (fetching details for these only)")
             for rg_id, representative_release in release_groups_seen.items():
                 rg = representative_release.get('release-group', {}) or {}
                 sec_types = rg.get('secondary-type-list', [])
@@ -852,7 +854,7 @@ class SimplifiedMusicBrainzIntegration:
                                     rg_data = rg_enriched['release-group']
                                     if 'release-list' in rg_data:
                                         release_list = rg_data['release-list']
-                                        print(f"  Found {len(release_list)} releases in release-group {rg_id}")
+                                        logger.info(f"  Found {len(release_list)} releases in release-group {rg_id}")
                                         for rel in release_list:
                                             rel_date = rel.get('date')
                                             if rel_date:
@@ -860,25 +862,25 @@ class SimplifiedMusicBrainzIntegration:
                                                     # Compare dates as strings (YYYY-MM-DD format compares correctly)
                                                     if earliest_date is None or rel_date < earliest_date:
                                                         earliest_date = rel_date
-                                                        print(f"    New earliest: {rel_date}")
+                                                        logger.info(f"    New earliest: {rel_date}")
                                                 except (TypeError, ValueError):
                                                     pass
                                     else:
-                                        print(f"  Release-group {rg_id} has no release-list")
+                                        logger.info(f"  Release-group {rg_id} has no release-list")
                                 else:
-                                    print(f"  Failed to fetch full release-group {rg_id}")
+                                    logger.error(f"  Failed to fetch full release-group {rg_id}")
                             except Exception as rg_err:
-                                print(f"  Could not fetch release-group {rg_id}: {rg_err}")
+                                logger.error(f"  Could not fetch release-group {rg_id}: {rg_err}")
                                 # Fallback: use what we have from the single release
-                                print(f"  Falling back to single release date: {earliest_date}")
+                                logger.info(f"  Falling back to single release date: {earliest_date}")
 
                             if earliest_date:
                                 release_dates[rg_id] = earliest_date
                                 # Log if we found a different (earlier) date than the initial capture
                                 if enriched_release.get('date') and earliest_date != enriched_release.get('date'):
-                                    print(f"  Found earlier date '{earliest_date}' (vs initial '{enriched_release['date']}') for release-group {rg_id}")
+                                    logger.info(f"  Found earlier date '{earliest_date}' (vs initial '{enriched_release['date']}') for release-group {rg_id}")
                                 else:
-                                    print(f"  Captured date '{earliest_date}' for release-group {rg_id}")
+                                    logger.info(f"  Captured date '{earliest_date}' for release-group {rg_id}")
                     except Exception:
                         pass
 
@@ -909,16 +911,16 @@ class SimplifiedMusicBrainzIntegration:
             MIN_ACCEPTABLE_SCORE = 100
             if scored_releases and scored_releases[0][1] >= MIN_ACCEPTABLE_SCORE:
                 best_release = scored_releases[0][0]
-                print(f"Best release: {best_release.get('title')} (score: {scored_releases[0][1]})")
+                logger.info(f"Best release: {best_release.get('title')} (score: {scored_releases[0][1]})")
                 return best_release
             else:
                 # No acceptable release found (best score below minimum)
                 best_score = scored_releases[0][1] if scored_releases else 'N/A'
-                print(f"No acceptable release found (best score: {best_score}, minimum required: {MIN_ACCEPTABLE_SCORE})")
+                logger.info(f"No acceptable release found (best score: {best_score}, minimum required: {MIN_ACCEPTABLE_SCORE})")
                 return None
             
         except Exception as e:
-            print(f"Error finding best release: {e}")
+            logger.error(f"Error finding best release: {e}")
             # Safe fallback: return first release if available
             try:
                 return recording.get('release-list', [None])[0]
@@ -1108,12 +1110,12 @@ class SimplifiedMusicBrainzIntegration:
                 release_artist_names = []
                 rg_artists = []
 
-            print(f"    Release debug: title='{release.get('title','')}', primary_type='{primary_type}', secondary={secondary_types}, status='{release.get('status')}', date='{release.get('date')}', release_artists={release_artist_names}, release_group_artists={rg_artists}, final_score={score}")
+            logger.info(f"    Release debug: title='{release.get('title','')}', primary_type='{primary_type}', secondary={secondary_types}, status='{release.get('status')}', date='{release.get('date')}', release_artists={release_artist_names}, release_group_artists={rg_artists}, final_score={score}")
 
             return score
             
         except Exception as e:
-            print(f"Error scoring release: {e}")
+            logger.error(f"Error scoring release: {e}")
             return 50
 
     def _clean_artist_name(self, artist_name: str) -> str:
@@ -1138,7 +1140,7 @@ class SimplifiedMusicBrainzIntegration:
             return cleaned.strip()
 
         except Exception as e:
-            print(f"Error cleaning artist name: {e}")
+            logger.error(f"Error cleaning artist name: {e}")
             return artist_name
 
     def _clean_title(self, title: str) -> str:
@@ -1183,13 +1185,13 @@ class SimplifiedMusicBrainzIntegration:
             return cleaned.strip()
 
         except Exception as e:
-            print(f"Error cleaning title: {e}")
+            logger.error(f"Error cleaning title: {e}")
             return title
 
     def get_artist_genres_from_mb(self, artist_name: str) -> Optional[tuple]:
         """Get artist genres from MusicBrainz."""
         try:
-            print(f"Getting artist genres for: {artist_name}")
+            logger.info(f"Getting artist genres for: {artist_name}")
             
             # Search for artist
             response = self._api_call('search_artists', query=f'artist:"{artist_name}"', limit=10)
@@ -1210,7 +1212,7 @@ class SimplifiedMusicBrainzIntegration:
                     best_artist = artist
             
             if not best_artist or best_score < 0.8:
-                print(f"No good artist match found (best score: {best_score})")
+                logger.info(f"No good artist match found (best score: {best_score})")
                 return None
             
             # Get detailed artist info with tags
@@ -1246,7 +1248,7 @@ class SimplifiedMusicBrainzIntegration:
             return None
             
         except Exception as e:
-            print(f"Error getting artist genres: {e}")
+            logger.error(f"Error getting artist genres: {e}")
             return None
 
     def _process_genre_tags(self, genre_tags: list) -> tuple:
@@ -1306,7 +1308,7 @@ class SimplifiedMusicBrainzIntegration:
             return primary_genre, sorted(list(subgenres))[:3]  # Limit subgenres
             
         except Exception as e:
-            print(f"Error processing genre tags: {e}")
+            logger.error(f"Error processing genre tags: {e}")
             return '', []
     def clear_cache(self):
         """Clear MusicBrainz cache."""
@@ -1327,4 +1329,4 @@ class SimplifiedMusicBrainzIntegration:
             else:
                 return False
         except Exception as e:
-            print(f"✗ MusicBrainz API health check failed: {e}")
+            logger.error(f"✗ MusicBrainz API health check failed: {e}")

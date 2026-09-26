@@ -36,12 +36,12 @@ class EnhancedGenreDetector:
 
             # Get the path to genre characteristics using the helper
             characteristics_path = get_resource_path('config/genre_characteristics.json')
-            print(f"Loading genre characteristics in EnhancedGenreDetector from: {characteristics_path}")
+            logger.info(f"Loading genre characteristics in EnhancedGenreDetector from: {characteristics_path}")
 
             with open(characteristics_path, 'r') as f:
                 self.genre_characteristics = json.load(f)
         except Exception as e:
-            print(f"Error loading genre characteristics: {e}")
+            logger.error(f"Error loading genre characteristics: {e}")
             self.genre_characteristics = {}
 
         # Enhanced patterns that strongly indicate genres
@@ -467,7 +467,7 @@ class EnhancedGenreDetector:
             return sorted_tags
 
         except Exception as e:
-            print(f"Error in validate_genre_tags: {e}")
+            logger.error(f"Error in validate_genre_tags: {e}")
             return []
 
     def _analyze_with_ai(self, artist: str, title: str) -> Tuple[str, float]:

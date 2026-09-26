@@ -25,3 +25,8 @@ OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY', '')
 #   - openai/gpt-4-turbo
 #   - openai/gpt-3.5-turbo (cheapest)
 AI_MODEL = os.getenv('AI_MODEL', 'google/gemini-2.5-flash')
+
+# Network timeouts (seconds)
+SPOTIFY_TIMEOUT = 10
+HTTP_TIMEOUT = 30
+THREAD_JOIN_TIMEOUT = 5.0

@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 import json
 import os
 import re
@@ -62,24 +66,24 @@ class ArtistNormalizer:
 
         # NEW: Check if this is a simple single-word artist name
         if re.match(r'^[A-Za-z]+$', artist_name):
-            print(f"Simple single-name artist found: '{artist_name}', keeping as-is")
+            logger.info(f"Simple single-name artist found: '{artist_name}', keeping as-is")
             return False, artist_name
         
         # First check if this contains any featuring patterns
         artist_name_lower = artist_name.lower()
         for pattern in feature_patterns:
             if re.search(pattern, artist_name_lower):
-                print(f"Found featuring pattern in '{artist_name}', will clean")
+                logger.info(f"Found featuring pattern in '{artist_name}', will clean")
                 return True, artist_name
         
         # Then check if this matches any known group patterns
         for pattern in group_patterns:
             if re.match(pattern, artist_name, re.IGNORECASE):
-                print(f"Found group pattern match for '{artist_name}', keeping as-is")
+                logger.info(f"Found group pattern match for '{artist_name}', keeping as-is")
                 return False, artist_name
         
         # If no patterns match, should clean
-        print(f"No specific patterns match for '{artist_name}', will clean")
+        logger.info(f"No specific patterns match for '{artist_name}', will clean")
         return True, artist_name
 
     def normalize_artist_name(self, artist_name: str) -> List[str]:
@@ -149,11 +153,11 @@ Return only a JSON array of strings with all known variations:
             else:
                 variations = []
                 
-            print(f"AI generated variations for {artist_name}: {variations}")
+            logger.info(f"AI generated variations for {artist_name}: {variations}")
             return variations
 
         except Exception as e:
-            print(f"Error getting AI variations: {e}")
+            logger.error(f"Error getting AI variations: {e}")
             return []
 
     def generate_format_variations(self, name: str) -> set:
@@ -180,7 +184,7 @@ Return only a JSON array of strings with all known variations:
                 if new_variation != name:
                     variations.add(new_variation)
             except Exception as e:
-                print(f"Error generating variation: {e}")
+                logger.error(f"Error generating variation: {e}")
                 continue
         
         return variations
@@ -216,7 +220,7 @@ Return only a JSON array of strings with all known variations:
             return best_score
 
         except Exception as e:
-            print(f"Error in fuzzy matching: {e}")
+            logger.error(f"Error in fuzzy matching: {e}")
             return 0
 
     def clean_artist_name(self, name: str) -> str:
@@ -273,7 +277,7 @@ Return only a JSON array of strings with all known variations:
             return name.strip()
 
         except Exception as e:
-            print(f"Error cleaning artist name: {e}")
+            logger.error(f"Error cleaning artist name: {e}")
             return name
 
     def load_cache(self) -> Dict[str, List[str]]:
@@ -284,7 +288,7 @@ Return only a JSON array of strings with all known variations:
             with open(self.cache_path, 'r') as f:
                 return json.load(f)
         except Exception as e:
-            print(f"Error loading cache: {e}")
+            logger.error(f"Error loading cache: {e}")
             return {}
 
     def save_cache(self) -> None:
@@ -293,4 +297,4 @@ Return only a JSON array of strings with all known variations:
             with open(self.cache_path, 'w') as f:
                 json.dump(self.cache, f)
         except Exception as e:
-            print(f"Error saving cache: {e}")
+            logger.error(f"Error saving cache: {e}")

@@ -4,6 +4,10 @@ Integration helper to swap out the old complex system with the simplified one.
 This provides a drop-in replacement that maintains the same interface
 but uses the new simplified backend.
 """
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 from simplified_metadata_searcher import SimplifiedMetadataSearcher
 
@@ -28,7 +32,7 @@ class SimplifiedMetadataIntegration:
         # Expose artist_normalizer for compatibility
         self.artist_normalizer = self.searcher.artist_normalizer
 
-        print("✅ Simplified metadata integration loaded")
+        logger.info("✅ Simplified metadata integration loaded")
 
     def search_metadata(self, artist_name, track_title, riddim_mode=None):
         """Main search method - same interface as old system.
@@ -77,7 +81,7 @@ def replace_integrations_in_main(main_instance):
         replace_integrations_in_main(self)  # Call from within your main class
     """
     try:
-        print("🔄 Replacing old integrations with simplified system...")
+        logger.info("🔄 Replacing old integrations with simplified system...")
         
         # Get existing parameters
         parent = getattr(main_instance, 'parent', None)
@@ -94,11 +98,11 @@ def replace_integrations_in_main(main_instance):
         # Replace the old integrations
         if hasattr(main_instance, 'mb_integration'):
             main_instance.mb_integration = new_integration
-            print("✅ Replaced MusicBrainz integration")
+            logger.info("✅ Replaced MusicBrainz integration")
             
         if hasattr(main_instance, 'musicbrainz_integration'):
             main_instance.musicbrainz_integration = new_integration
-            print("✅ Replaced MusicBrainz integration (alt name)")
+            logger.info("✅ Replaced MusicBrainz integration (alt name)")
         
         if hasattr(main_instance, 'spotify_integration'):
             # Keep reference for any Spotify-specific calls, but route search through new system
@@ -106,19 +110,19 @@ def replace_integrations_in_main(main_instance):
             main_instance.spotify_integration = new_integration
             # Store old one as backup if needed
             main_instance._old_spotify_integration = old_spotify
-            print("✅ Replaced Spotify integration")
+            logger.info("✅ Replaced Spotify integration")
         
-        print("🎉 Integration replacement complete!")
+        logger.info("🎉 Integration replacement complete!")
         return True
         
     except Exception as e:
-        print(f"❌ Error replacing integrations: {e}")
+        logger.error(f"❌ Error replacing integrations: {e}")
         return False
 
 # Simple test function
 def test_replacement():
     """Test the replacement system."""
-    print("🧪 Testing simplified integration...")
+    logger.info("🧪 Testing simplified integration...")
     
     integration = SimplifiedMetadataIntegration()
     
@@ -126,12 +130,12 @@ def test_replacement():
     result = integration.search_metadata("Kendrick Lamar", "DNA.")
     
     if result and result.get('album') == 'DAMN.':
-        print("✅ Integration replacement working correctly!")
-        print(f"Found: {result}")
+        logger.info("✅ Integration replacement working correctly!")
+        logger.info(f"Found: {result}")
         return True
     else:
-        print("❌ Integration replacement failed")
-        print(f"Result: {result}")
+        logger.error("❌ Integration replacement failed")
+        logger.info(f"Result: {result}")
         return False
 
 if __name__ == "__main__":

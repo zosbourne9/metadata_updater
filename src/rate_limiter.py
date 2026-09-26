@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 import time
 import threading
 from datetime import datetime, timedelta
@@ -59,7 +63,7 @@ class UnifiedRateLimiter:
         can schedule their own slots in parallel.
         """
         if service not in self.service_gaps:
-            print(f"Warning: Unknown service '{service}' for rate limiting")
+            logger.warning(f"Warning: Unknown service '{service}' for rate limiting")
             return
 
         gap = self.service_gaps[service]

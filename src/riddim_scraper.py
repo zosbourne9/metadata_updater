@@ -13,6 +13,8 @@ Usage:
 
 import httpx
 from bs4 import BeautifulSoup
+
+from constants import HTTP_TIMEOUT
 from typing import List, Dict, Any, Optional
 import logging
 
@@ -32,7 +34,7 @@ class RiddimScraper:
     def __init__(self):
         """Initialize the HTTP client with proper headers and timeout."""
         self.client = httpx.Client(
-            timeout=30,
+            timeout=HTTP_TIMEOUT,
             headers={
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
             }
@@ -127,7 +129,7 @@ class RiddimScraper:
             if cell.find("a"):
                 return cell.find("a").get_text(strip=True)
             return cell.get_text(strip=True)
-        except:
+        except AttributeError:
             return ""
 
     def _parse_year(self, cell) -> Optional[int]:
@@ -142,7 +144,7 @@ class RiddimScraper:
         """Close HTTP client."""
         try:
             self.client.close()
-        except:
+        except Exception:
             pass
 
 

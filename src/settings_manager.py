@@ -2,6 +2,10 @@
 Settings manager for Metadata Updater
 Handles persistence of user settings like Serato library path
 """
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 import json
 from pathlib import Path
@@ -24,12 +28,12 @@ class SettingsManager:
             if self._settings_file.exists():
                 with open(self._settings_file, 'r') as f:
                     self._settings = json.load(f)
-                print(f"✓ Settings loaded from {self._settings_file}")
+                logger.info(f"✓ Settings loaded from {self._settings_file}")
             else:
                 self._settings = {}
-                print("No existing settings file found, starting with defaults")
+                logger.info("No existing settings file found, starting with defaults")
         except Exception as e:
-            print(f"Error loading settings: {e}")
+            logger.error(f"Error loading settings: {e}")
             self._settings = {}
     
     def save_settings(self) -> None:
@@ -37,9 +41,9 @@ class SettingsManager:
         try:
             with open(self._settings_file, 'w') as f:
                 json.dump(self._settings, f, indent=2)
-            print(f"✓ Settings saved to {self._settings_file}")
+            logger.info(f"✓ Settings saved to {self._settings_file}")
         except Exception as e:
-            print(f"Error saving settings: {e}")
+            logger.error(f"Error saving settings: {e}")
             raise
     
     def get(self, key: str, default: Any = None) -> Any:

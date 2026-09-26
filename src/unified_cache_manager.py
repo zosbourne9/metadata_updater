@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 import os
 import json
 import time
@@ -71,7 +75,7 @@ class UnifiedCacheManager:
                 
                 return cache_data
         except Exception as e:
-            print(f"Error loading {cache_type} cache: {e}")
+            logger.error(f"Error loading {cache_type} cache: {e}")
         return {}
 
     def _save_cache(self, cache_type: str) -> None:
@@ -87,7 +91,7 @@ class UnifiedCacheManager:
                 self._create_backup(cache_type)
                 self.last_backup = current_time
         except Exception as e:
-            print(f"Error saving {cache_type} cache: {e}")
+            logger.error(f"Error saving {cache_type} cache: {e}")
 
     def _create_backup(self, cache_type: str) -> None:
         """Create a backup of a specific cache file."""
@@ -111,7 +115,7 @@ class UnifiedCacheManager:
                         except Exception:
                             pass
         except Exception as e:
-            print(f"Error creating backup for {cache_type}: {e}")
+            logger.error(f"Error creating backup for {cache_type}: {e}")
 
     # Metadata-specific methods
     def generate_metadata_key(self, artist_name: str, title: str) -> str:
@@ -122,9 +126,9 @@ class UnifiedCacheManager:
         - "YAYA (SheMix) (Clean)" → "yaya"
         - Result: "artist1_yaya"
         """
-        print(f"\nGenerating cache key:")
-        print(f"Input artist: {artist_name}")
-        print(f"Input title: {title}")
+        logger.info(f"\nGenerating cache key:")
+        logger.info(f"Input artist: {artist_name}")
+        logger.info(f"Input title: {title}")
 
         # Extract PRIMARY ARTIST ONLY (first artist before any separator)
         # Handles: "Artist1, Artist2", "Artist1 & Artist2", "Artist1 feat Artist2", etc.
@@ -143,7 +147,7 @@ class UnifiedCacheManager:
         primary_artist = re.sub(r"[^a-z0-9\s\-']", '', primary_artist)
         primary_artist = re.sub(r'\s+', ' ', primary_artist).strip()
 
-        print(f"Primary artist: {primary_artist}")
+        logger.info(f"Primary artist: {primary_artist}")
 
         # CLEAN TITLE: Remove all version indicators and extra info
         base_title = title.lower()
@@ -163,12 +167,12 @@ class UnifiedCacheManager:
         # Create simple title key (just use the cleaned title as-is)
         title_key = normalized_title if normalized_title else 'unknown'
 
-        print(f"Cleaned title: {base_title}")
-        print(f"Title key: {title_key}")
+        logger.info(f"Cleaned title: {base_title}")
+        logger.info(f"Title key: {title_key}")
 
         # Combine for final key: "artist_title"
         key = f"{primary_artist}_{title_key}"
-        print(f"Generated cache key: {key}")
+        logger.info(f"Generated cache key: {key}")
         return key
 
     def get_metadata(self, artist_name: str, title: str) -> Optional[Dict]:
@@ -178,10 +182,10 @@ class UnifiedCacheManager:
         
         # If we got data from cache, validate it
         if data:
-            print("\n=== Cache Metadata Validation ===")
+            logger.info("\n=== Cache Metadata Validation ===")
             # Must be a dictionary
             if not isinstance(data, dict):
-                print(f"Invalid data type: {type(data)}")
+                logger.warning(f"Invalid data type: {type(data)}")
                 return None
                 
             # Check required fields (relaxed requirements)
@@ -189,12 +193,12 @@ class UnifiedCacheManager:
             missing = [field for field in required_fields if field not in data or not data[field]]
             
             if missing:
-                print(f"Missing required fields: {missing}")
+                logger.warning(f"Missing required fields: {missing}")
                 # Only return None if critical fields are missing
                 critical_fields = ['artist', 'title']
                 critical_missing = [field for field in critical_fields if field in missing]
                 if critical_missing:
-                    print(f"Critical fields missing: {critical_missing}")
+                    logger.warning(f"Critical fields missing: {critical_missing}")
                     return None
                 # For non-critical fields, we'll add defaults
                 
@@ -219,7 +223,7 @@ class UnifiedCacheManager:
             if 'genre' not in validated_data or not validated_data['genre']:
                 validated_data['genre'] = 'No Genre'
 
-            print("Cache metadata validated and enhanced successfully")
+            logger.info("Cache metadata validated and enhanced successfully")
             time.sleep(1)
             return validated_data
         
@@ -227,9 +231,9 @@ class UnifiedCacheManager:
     
     def set_metadata(self, artist_name: str, title: str, metadata: Dict) -> None:
         """Set metadata using improved cache key with enhanced validation."""
-        print(f"\nAttempting to set metadata in cache for: {artist_name} - {title}")
+        logger.info(f"\nAttempting to set metadata in cache for: {artist_name} - {title}")
         if not isinstance(metadata, dict):
-            print(f"Warning: Expected dict for metadata, got {type(metadata)}")
+            logger.warning(f"Warning: Expected dict for metadata, got {type(metadata)}")
             return
 
         # Enhanced metadata validation - allow partial metadata
@@ -251,7 +255,7 @@ class UnifiedCacheManager:
         if 'comments' not in validated_metadata:
             validated_metadata['comments'] = ''
 
-        print(f"Validated metadata keys: {list(validated_metadata.keys())}")
+        logger.info(f"Validated metadata keys: {list(validated_metadata.keys())}")
         # Use the artist from the metadata dict for cache key generation to ensure consistency
         # This is especially important when the metadata contains a full artist name (e.g., "Cardi B feat. Tyla")
         # but we're searching with a normalized name (e.g., "cardi b")
@@ -264,44 +268,44 @@ class UnifiedCacheManager:
     def get(self, cache_type: str, key: str, fuzzy_match: bool = False) -> Optional[Dict]:
         """Get a value from a specific cache."""
         start_time = time.time()
-        print(f"\n=== Cache GET Operation ===")
-        print(f"Cache Type: {cache_type}")
-        print(f"Key: {key}")
-        print(f"Fuzzy Match Enabled: {fuzzy_match}")
+        logger.info(f"\n=== Cache GET Operation ===")
+        logger.info(f"Cache Type: {cache_type}")
+        logger.info(f"Key: {key}")
+        logger.info(f"Fuzzy Match Enabled: {fuzzy_match}")
         
         try:
             if cache_type not in self.caches:
-                print(f"Cache type '{cache_type}' not found in available caches: {list(self.caches.keys())}")
+                logger.warning(f"Cache type '{cache_type}' not found in available caches: {list(self.caches.keys())}")
                 return None
                 
             cache = self.caches[cache_type]
-            print(f"Cache size: {len(cache)} entries")
+            logger.info(f"Cache size: {len(cache)} entries")
             
             # Try exact match first
             if key in cache:
-                print(f"Found exact key match: {key}")
+                logger.info(f"Found exact key match: {key}")
                 data = cache[key]
                 current_time = time.time()
                 cache_age = current_time - data.get('timestamp', 0)
                 cache_age_limit = self.max_artist_genre_age if cache_type == 'artist_genre' else self.max_cache_age
                 
-                print(f"Cache entry age: {cache_age:.2f} seconds")
-                print(f"Max allowed age: {cache_age_limit} seconds")
+                logger.info(f"Cache entry age: {cache_age:.2f} seconds")
+                logger.info(f"Max allowed age: {cache_age_limit} seconds")
                 
                 if cache_age <= cache_age_limit:
                     value = data.get('value')
-                    print(f"Cache entry valid - Returning value type: {type(value)}")
+                    logger.info(f"Cache entry valid - Returning value type: {type(value)}")
                     if isinstance(value, dict):
-                        print("Found cached dictionary data:")
+                        logger.info("Found cached dictionary data:")
                         for k, v in value.items():
-                            print(f"  {k}: {v}")
+                            logger.info(f"  {k}: {v}")
                     return value
                 else:
-                    print("Cache entry expired")
+                    logger.info("Cache entry expired")
                     
             # Try fuzzy matching if enabled
             if fuzzy_match:
-                print("\nAttempting fuzzy matching...")
+                logger.info("\nAttempting fuzzy matching...")
                 best_match = None
                 best_score = 0
                 cache_age_limit = self.max_artist_genre_age if cache_type == 'artist_genre' else self.max_cache_age
@@ -309,7 +313,7 @@ class UnifiedCacheManager:
                 for cached_key, data in cache.items():
                     # Check age first
                     if data.get('timestamp', 0) + cache_age_limit <= time.time():
-                        print(f"Skipping expired entry: {cached_key}")
+                        logger.warning(f"Skipping expired entry: {cached_key}")
                         continue
 
                     # Split keys into artist and title components when possible
@@ -371,7 +375,7 @@ class UnifiedCacheManager:
                     if target_words and target_words.issubset(cached_words) and target_words != {'feat'}:
                         # Main artist matches, just has additional features - strong match
                         artist_score = 90
-                        print(f"  Featuring relationship detected: '{target_artist}' is core of '{artist_to_compare}'")
+                        logger.info(f"  Featuring relationship detected: '{target_artist}' is core of '{artist_to_compare}'")
                     else:
                         # Use token set ratio for other cases
                         artist_score = fuzz.token_set_ratio(_normalize_key_part(target_artist), _normalize_key_part(artist_to_compare))
@@ -386,14 +390,14 @@ class UnifiedCacheManager:
                     # Use the highest score among the three methods
                     max_score = max(score, partial_score, token_score)
                     
-                    print(f"Fuzzy match scores for '{cached_key}':")
-                    print(f"  Overall - Ratio: {score}, Partial: {partial_score}, Token: {token_score}, Max: {max_score}")
-                    print(f"  Artist score: {artist_score}, Title score: {title_score}")
+                    logger.info(f"Fuzzy match scores for '{cached_key}':")
+                    logger.info(f"  Overall - Ratio: {score}, Partial: {partial_score}, Token: {token_score}, Max: {max_score}")
+                    logger.info(f"  Artist score: {artist_score}, Title score: {title_score}")
 
                     # Require a stronger artist similarity to consider cross-artist fuzzy matches
                     # (prevents selecting entries for different artists that happen to share similar titles)
                     if artist_score < 75:
-                        print(f"  Skipping '{cached_key}' due to low artist match: {artist_score}")
+                        logger.warning(f"  Skipping '{cached_key}' due to low artist match: {artist_score}")
                         continue
 
                     # Enhanced matching logic for entries passing artist check
@@ -420,66 +424,66 @@ class UnifiedCacheManager:
 
                         best_score = max_score
                         best_match = data.get('value')
-                        print(f"New best match found - Score: {max_score}")
+                        logger.info(f"New best match found - Score: {max_score}")
                         if isinstance(best_match, dict):
-                            print("Best match data:")
+                            logger.info("Best match data:")
                             for k, v in best_match.items():
-                                print(f"  {k}: {v}")
+                                logger.info(f"  {k}: {v}")
                         
                 if best_match:
-                    print(f"Returning best fuzzy match (score: {best_score})")
+                    logger.info(f"Returning best fuzzy match (score: {best_score})")
                     return best_match
                 else:
-                    print("No suitable fuzzy matches found")
+                    logger.info("No suitable fuzzy matches found")
                     
-            print("No matching cache entry found")
+            logger.info("No matching cache entry found")
             return None
             
         except Exception as e:
-            print(f"Error retrieving from {cache_type} cache: {e}")
+            logger.error(f"Error retrieving from {cache_type} cache: {e}")
             import traceback
             traceback.print_exc()
             return None
             
         finally:
             elapsed_time = time.time() - start_time
-            print(f"Cache GET operation completed in {elapsed_time:.3f} seconds")
+            logger.info(f"Cache GET operation completed in {elapsed_time:.3f} seconds")
 
     def set(self, cache_type: str, key: str, value: Any, preserve_existing: bool = True) -> None:
         """Set a value in a specific cache."""
         start_time = time.time()
-        print(f"\n=== Cache SET Operation ===")
-        print(f"Cache Type: {cache_type}")
-        print(f"Key: {key}")
-        print(f"Value Type: {type(value)}")
-        print(f"Preserve Existing: {preserve_existing}")
+        logger.info(f"\n=== Cache SET Operation ===")
+        logger.info(f"Cache Type: {cache_type}")
+        logger.info(f"Key: {key}")
+        logger.info(f"Value Type: {type(value)}")
+        logger.info(f"Preserve Existing: {preserve_existing}")
         
         try:
             if cache_type not in self.caches:
-                print(f"Invalid cache type '{cache_type}'. Available types: {list(self.caches.keys())}")
+                logger.warning(f"Invalid cache type '{cache_type}'. Available types: {list(self.caches.keys())}")
                 return
                     
             # If preserving existing and we have existing data
             if preserve_existing and key in self.caches[cache_type]:
-                print("Found existing cache entry - attempting merge")
+                logger.info("Found existing cache entry - attempting merge")
                 
                 existing_data = self.caches[cache_type][key].get('value', {})
-                print(f"Existing data type: {type(existing_data)}")
+                logger.info(f"Existing data type: {type(existing_data)}")
                 
                 if isinstance(existing_data, dict) and isinstance(value, dict):
-                    print("Both existing and new values are dictionaries - performing merge")
-                    print(f"Existing keys: {list(existing_data.keys())}")
-                    print(f"New keys: {list(value.keys())}")
+                    logger.info("Both existing and new values are dictionaries - performing merge")
+                    logger.info(f"Existing keys: {list(existing_data.keys())}")
+                    logger.info(f"New keys: {list(value.keys())}")
                     
                     # Merge new data with existing data
                     merged_value = existing_data.copy()
                     merged_value.update(value)
                     value = merged_value
                     
-                    print("Merge completed")
-                    print(f"Final merged keys: {list(value.keys())}")
+                    logger.info("Merge completed")
+                    logger.info(f"Final merged keys: {list(value.keys())}")
                 else:
-                    print(f"Skipping merge - incompatible types: existing={type(existing_data)}, new={type(value)}")
+                    logger.warning(f"Skipping merge - incompatible types: existing={type(existing_data)}, new={type(value)}")
 
             # Create cache entry
             current_time = time.time()
@@ -489,27 +493,27 @@ class UnifiedCacheManager:
                 'last_accessed': current_time
             }
             
-            print("\nCreating new cache entry:")
-            print(f"Timestamp: {current_time}")
-            print(f"Entry size: {sys.getsizeof(cache_entry)} bytes")
+            logger.info("\nCreating new cache entry:")
+            logger.info(f"Timestamp: {current_time}")
+            logger.info(f"Entry size: {sys.getsizeof(cache_entry)} bytes")
 
             self.caches[cache_type][key] = cache_entry
             
             # Save to disk
-            print("\nSaving cache to disk...")
+            logger.info("\nSaving cache to disk...")
             save_start = time.time()
             self._save_cache(cache_type)
             save_time = time.time() - save_start
-            print(f"Cache saved to disk in {save_time:.3f} seconds")
+            logger.info(f"Cache saved to disk in {save_time:.3f} seconds")
                 
         except Exception as e:
-            print(f"Error setting {cache_type} cache: {e}")
+            logger.error(f"Error setting {cache_type} cache: {e}")
             import traceback
             traceback.print_exc()
             
         finally:
             elapsed_time = time.time() - start_time
-            print(f"Cache SET operation completed in {elapsed_time:.3f} seconds")
+            logger.info(f"Cache SET operation completed in {elapsed_time:.3f} seconds")
 
 
     def get_cache_stats(self) -> Dict[str, Dict]:
@@ -549,7 +553,7 @@ class UnifiedCacheManager:
                     if os.path.exists(cache_path):
                         os.remove(cache_path)
                         
-            print(f"Cleared {'all caches' if cache_type is None else f'{cache_type} cache'}")
+            logger.info(f"Cleared {'all caches' if cache_type is None else f'{cache_type} cache'}")
             
         except Exception as e:
-            print(f"Error clearing cache: {e}")
+            logger.error(f"Error clearing cache: {e}")

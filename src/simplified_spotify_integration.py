@@ -1,7 +1,13 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 import requests
 import base64
 import time
 from typing import Optional, Dict
+
+from constants import SPOTIFY_TIMEOUT
 
 class SimplifiedSpotifyIntegration:
     """
@@ -29,14 +35,14 @@ class SimplifiedSpotifyIntegration:
         # Load credentials
         self._load_credentials()
 
-        print("Simplified Spotify integration initialized")
+        logger.info("Simplified Spotify integration initialized")
 
     def emit_status(self, message):
         """Emit status update through callback."""
         if self.status_update_callback:
             self.status_update_callback(message)
         else:
-            print(message)
+            logger.info(message)
 
     def _load_credentials(self):
         """Load Spotify credentials: .env (via constants) by default, optional local JSON override."""
@@ -46,7 +52,7 @@ class SimplifiedSpotifyIntegration:
             if CLIENT_ID and CLIENT_SECRET:
                 self.client_id = CLIENT_ID
                 self.client_secret = CLIENT_SECRET
-                print("Spotify credentials loaded from environment")
+                logger.info("Spotify credentials loaded from environment")
                 return
 
             # Optional untracked local override: config/spotify_credentials.json
@@ -60,7 +66,7 @@ class SimplifiedSpotifyIntegration:
             )
 
             if not os.path.exists(creds_path):
-                print("Warning: No Spotify credentials found (.env or config/spotify_credentials.json)")
+                logger.warning("Warning: No Spotify credentials found (.env or config/spotify_credentials.json)")
                 return
 
             with open(creds_path, 'r') as f:
@@ -70,12 +76,12 @@ class SimplifiedSpotifyIntegration:
             self.client_secret = creds.get('client_secret')
 
             if self.client_id and self.client_secret:
-                print("Spotify credentials loaded from config file")
+                logger.info("Spotify credentials loaded from config file")
             else:
-                print("Warning: Spotify credentials file found but incomplete")
+                logger.warning("Warning: Spotify credentials file found but incomplete")
 
         except Exception as e:
-            print(f"Warning: Could not load Spotify credentials: {e}")
+            logger.error(f"Warning: Could not load Spotify credentials: {e}")
 
     def _get_access_token(self):
         """Get access token using client credentials flow."""
@@ -105,7 +111,7 @@ class SimplifiedSpotifyIntegration:
                 'grant_type': 'client_credentials'
             }
             
-            response = requests.post(auth_url, headers=headers, data=data, timeout=10)
+            response = requests.post(auth_url, headers=headers, data=data, timeout=SPOTIFY_TIMEOUT)
             response.raise_for_status()
             
             token_data = response.json()
@@ -113,11 +119,11 @@ class SimplifiedSpotifyIntegration:
             expires_in = token_data.get('expires_in', 3600)
             self.token_expires_at = current_time + expires_in - 60  # 60s buffer
             
-            print("Spotify access token obtained")
+            logger.info("Spotify access token obtained")
             return self.access_token
             
         except Exception as e:
-            print(f"Error getting Spotify access token: {e}")
+            logger.error(f"Error getting Spotify access token: {e}")
             return None
 
     def _make_request(self, endpoint, params=None):
@@ -133,7 +139,7 @@ class SimplifiedSpotifyIntegration:
             }
             
             url = f'https://api.spotify.com/v1/{endpoint}'
-            response = requests.get(url, headers=headers, params=params or {}, timeout=10)
+            response = requests.get(url, headers=headers, params=params or {}, timeout=SPOTIFY_TIMEOUT)
             
             if response.status_code == 401:
                 # Token expired, try to refresh
@@ -141,13 +147,13 @@ class SimplifiedSpotifyIntegration:
                 token = self._get_access_token()
                 if token:
                     headers['Authorization'] = f'Bearer {token}'
-                    response = requests.get(url, headers=headers, params=params or {}, timeout=10)
+                    response = requests.get(url, headers=headers, params=params or {}, timeout=SPOTIFY_TIMEOUT)
             
             response.raise_for_status()
             return response.json()
             
         except Exception as e:
-            print(f"Error making Spotify request to {endpoint}: {e}")
+            logger.error(f"Error making Spotify request to {endpoint}: {e}")
             return None
 
     def _simplify_track_title(self, title: str) -> str:
@@ -171,13 +177,13 @@ class SimplifiedSpotifyIntegration:
             return None
 
         try:
-            print(f"Spotify search: {artist_name} - {track_title}")
+            logger.info(f"Spotify search: {artist_name} - {track_title}")
 
             # Check cache first
             if self.cache_manager:
                 cached = self.cache_manager.get_metadata(artist_name, track_title)
                 if cached and cached.get('spotify_id'):
-                    print("Found cached Spotify metadata")
+                    logger.info("Found cached Spotify metadata")
                     return cached
 
             # Build query list - try original title with special chars FIRST if available
@@ -204,7 +210,7 @@ class SimplifiedSpotifyIntegration:
             ])
             
             for query_idx, query in enumerate(queries):
-                print(f"Trying Spotify query: {query}")
+                logger.info(f"Trying Spotify query: {query}")
                 params = {
                     'q': query,
                     'type': 'track',
@@ -216,7 +222,7 @@ class SimplifiedSpotifyIntegration:
                     continue
 
                 tracks = results['tracks']['items']
-                print(f"Found {len(tracks)} Spotify tracks")
+                logger.info(f"Found {len(tracks)} Spotify tracks")
 
                 if not tracks:
                     continue
@@ -227,44 +233,44 @@ class SimplifiedSpotifyIntegration:
                         album_name = track['album']['name']
                         # Reject if album looks like a compilation
                         if self._is_likely_compilation(album_name):
-                            print(f"  Skipping compilation album: {album_name}")
+                            logger.warning(f"  Skipping compilation album: {album_name}")
                             continue
                         metadata = self._extract_track_metadata(track)
-                        print(f"Exact Spotify match: {metadata}")
+                        logger.info(f"Exact Spotify match: {metadata}")
 
                         # NOTE: Caching is now handled by SimplifiedMetadataSearcher after genre lookup
                         return metadata
 
                 # If no exact match, try fuzzy matching on the first few results
-                print("No exact match, trying fuzzy matching")
+                logger.info("No exact match, trying fuzzy matching")
                 # For title-only searches (last query), be more lenient with artist matching
                 is_title_only_search = (query_idx == len(queries) - 1)
                 if is_title_only_search:
-                    print(f"  Title-only search mode: will use 0.70 artist threshold")
+                    logger.info(f"  Title-only search mode: will use 0.70 artist threshold")
                 for idx, track in enumerate(tracks[:5]):  # Only check top 5
                     track_artists_str = ', '.join([a['name'] for a in track.get('artists', [])])
                     track_title_str = track.get('name', '')
                     album_name = track['album']['name']
                     if is_title_only_search:
-                        print(f"  Track {idx+1}: '{track_title_str}' by {track_artists_str} | Album: {album_name}")
+                        logger.info(f"  Track {idx+1}: '{track_title_str}' by {track_artists_str} | Album: {album_name}")
                     if self._is_fuzzy_match(track, artist_name, track_title, is_title_only_search):
                         # Reject if album looks like a compilation
                         if self._is_likely_compilation(album_name):
-                            print(f"  Skipping compilation album: {album_name}")
+                            logger.warning(f"  Skipping compilation album: {album_name}")
                             continue
                         metadata = self._extract_track_metadata(track)
-                        print(f"Fuzzy Spotify match: {metadata}")
+                        logger.info(f"Fuzzy Spotify match: {metadata}")
 
                         # NOTE: Caching is now handled by SimplifiedMetadataSearcher after genre lookup
                         return metadata
 
                 if is_title_only_search:
-                    print(f"  All {len(tracks[:5])} tracks rejected by fuzzy matching")
+                    logger.info(f"  All {len(tracks[:5])} tracks rejected by fuzzy matching")
                     
             return None
             
         except Exception as e:
-            print(f"Error in Spotify search: {e}")
+            logger.error(f"Error in Spotify search: {e}")
             return None
 
     def _is_exact_match(self, track: dict, target_artist: str, target_title: str) -> bool:
@@ -288,7 +294,7 @@ class SimplifiedSpotifyIntegration:
             return target_artist_clean == main_artist or target_artist_clean in track_artists
             
         except Exception as e:
-            print(f"Error checking exact match: {e}")
+            logger.error(f"Error checking exact match: {e}")
             return False
 
     def _is_fuzzy_match(self, track: dict, target_artist: str, target_title: str, is_title_only_search: bool = False) -> bool:
@@ -345,7 +351,7 @@ class SimplifiedSpotifyIntegration:
             if title_similarity < 0.75:
                 if is_title_only_search:
                     rejection_msg = f"      Rejected: title similarity {title_similarity:.2f} < 0.75 | Title: '{track_title_str}' | Artist: '{track_artists_str}' | Album: '{album_name}'"
-                    print(rejection_msg)
+                    logger.info(rejection_msg)
                     if self.debug_logger:
                         self.debug_logger.info(rejection_msg)
                 return False
@@ -373,7 +379,7 @@ class SimplifiedSpotifyIntegration:
                         threshold_reason = ""
                         if title_similarity >= 0.99:
                             threshold_reason = " (perfect title → relaxed threshold)"
-                        print(f"      ✓ Title-only match: title sim {title_similarity:.2f}, artist '{artist}' sim {artist_similarity:.2f} > {artist_threshold}{threshold_reason}")
+                        logger.info(f"      ✓ Title-only match: title sim {title_similarity:.2f}, artist '{artist}' sim {artist_similarity:.2f} > {artist_threshold}{threshold_reason}")
                     return True
 
             if is_title_only_search:
@@ -381,13 +387,13 @@ class SimplifiedSpotifyIntegration:
                 if title_similarity >= 0.99:
                     threshold_reason = " (perfect title match → relaxed threshold)"
                 rejection_msg = f"      Rejected: title sim {title_similarity:.2f}, best artist sim {best_artist_similarity:.2f} <= {artist_threshold}{threshold_reason} | Title: '{track_title_str}' | Artist: '{track_artists_str}' | Album: '{album_name}'"
-                print(rejection_msg)
+                logger.info(rejection_msg)
                 if self.debug_logger:
                     self.debug_logger.info(rejection_msg)
             return False
 
         except Exception as e:
-            print(f"Error checking fuzzy match: {e}")
+            logger.error(f"Error checking fuzzy match: {e}")
             return False
 
     def _is_likely_compilation(self, album_name: str) -> bool:
@@ -405,7 +411,7 @@ class SimplifiedSpotifyIntegration:
 
         for keyword in compilation_keywords:
             if keyword in album_lower:
-                print(f"  Likely compilation: '{album_name}' contains keyword '{keyword}'")
+                logger.info(f"  Likely compilation: '{album_name}' contains keyword '{keyword}'")
                 return True
 
         return False
@@ -441,7 +447,7 @@ class SimplifiedSpotifyIntegration:
             if release_date:
                 try:
                     metadata['year'] = release_date.split('-')[0]  # Get year part
-                except:
+                except (IndexError, AttributeError):
                     pass
 
             # Extract Spotify popularity (0-100 scale) and convert to Serato 0-5 star rating
@@ -460,14 +466,14 @@ class SimplifiedSpotifyIntegration:
                     serato_rating = star_to_rating.get(stars, 0)
 
                     metadata['rating'] = str(serato_rating)
-                    print(f"Converted Spotify popularity {popularity} to {stars} stars (Serato rating {serato_rating})")
+                    logger.info(f"Converted Spotify popularity {popularity} to {stars} stars (Serato rating {serato_rating})")
                 except Exception as e:
-                    print(f"Error converting popularity: {e}")
+                    logger.error(f"Error converting popularity: {e}")
 
             return metadata
 
         except Exception as e:
-            print(f"Error extracting track metadata: {e}")
+            logger.error(f"Error extracting track metadata: {e}")
             return {}
 
     def get_track_info(self, spotify_id: str) -> Optional[Dict]:
@@ -483,7 +489,7 @@ class SimplifiedSpotifyIntegration:
             return None
             
         except Exception as e:
-            print(f"Error getting track info: {e}")
+            logger.error(f"Error getting track info: {e}")
             return None
 
     def get_album_info(self, album_id: str) -> Optional[Dict]:
@@ -508,7 +514,7 @@ class SimplifiedSpotifyIntegration:
             return info
             
         except Exception as e:
-            print(f"Error getting album info: {e}")
+            logger.error(f"Error getting album info: {e}")
             return None
 
     def test_connection(self) -> bool:
@@ -530,7 +536,7 @@ class SimplifiedSpotifyIntegration:
             return result is not None
             
         except Exception as e:
-            print(f"Spotify connection test failed: {e}")
+            logger.error(f"Spotify connection test failed: {e}")
             return False
 
     def clear_cache(self):

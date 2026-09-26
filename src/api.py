@@ -2,6 +2,10 @@
 API module for pywebview - exposes backend functionality to frontend
 Handles communication between JavaScript frontend and Python backend
 """
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 import os
 import json
@@ -11,6 +15,7 @@ from pathlib import Path
 from typing import List, Dict, Any, Callable, Optional
 from metadata_updater_webview import MetadataUpdater, ProcessingThread
 from settings_manager import SettingsManager
+from constants import THREAD_JOIN_TIMEOUT
 
 class MetadataUpdaterAPI:
     """API interface for the Metadata Updater application"""
@@ -37,9 +42,9 @@ class MetadataUpdaterAPI:
                 self.serato_library_paths = detected_paths
                 self.serato_library_path = detected_paths[0]  # Primary library is first
                 self.settings_manager.set_serato_library_paths(detected_paths)
-                print(f"✓ Auto-detected {len(detected_paths)} Serato database(s)")
+                logger.info(f"✓ Auto-detected {len(detected_paths)} Serato database(s)")
                 for i, path in enumerate(detected_paths, 1):
-                    print(f"  [{i}] {path}")
+                    logger.info(f"  [{i}] {path}")
         
     def initialize_app(self):
         """Initialize the metadata updater instance"""
@@ -53,7 +58,7 @@ class MetadataUpdaterAPI:
             return {
                 'success': True,
                 'message': 'Application initialized',
-                'version': '2.0'
+                'version': '2.1'
             }
         except Exception as e:
             return {
@@ -89,11 +94,11 @@ class MetadataUpdaterAPI:
                     resolved = self._resolve_serato_filename(file_path)
                     if resolved:
                         valid_files.append(resolved)
-                        print(f"✓ Resolved Serato file: {file_path} → {resolved}")
+                        logger.info(f"✓ Resolved Serato file: {file_path} → {resolved}")
                     else:
-                        print(f"⚠ Could not find file: {file_path}")
+                        logger.error(f"⚠ Could not find file: {file_path}")
                         if not self.serato_library_path:
-                            print(f"  Tip: Set Serato library path to enable filename resolution")
+                            logger.info(f"  Tip: Set Serato library path to enable filename resolution")
             
             if not valid_files:
                 return {
@@ -251,7 +256,7 @@ class MetadataUpdaterAPI:
             if self.processing_thread and self.processing_active:
                 self.processing_thread.cancel_requested = True
                 # Wait for thread to finish
-                self.processing_thread.join(timeout=5.0)
+                self.processing_thread.join(timeout=THREAD_JOIN_TIMEOUT)
                 self.processing_active = False
                 return {'success': True, 'message': 'Processing cancelled'}
             return {'success': False, 'message': 'No processing in progress'}
@@ -275,7 +280,7 @@ class MetadataUpdaterAPI:
                 return {'success': False, 'message': 'No processing in progress'}
 
             # Use ProcessingPool's requeue method
-            print(f"API: Re-queuing reviewed file with metadata: {selected_metadata}")
+            logger.info(f"API: Re-queuing reviewed file with metadata: {selected_metadata}")
             self.processing_thread.requeue_reviewed_file(file_path, selected_metadata)
 
             return {
@@ -374,7 +379,7 @@ class MetadataUpdaterAPI:
             self.serato_library_paths = [path]
             # Cache the path for next app startup
             self.settings_manager.set_serato_library_paths([path])
-            print(f"✓ Serato library path set to: {path}")
+            logger.info(f"✓ Serato library path set to: {path}")
             return {
                 'success': True,
                 'message': f'Serato library path set',
@@ -421,9 +426,9 @@ class MetadataUpdaterAPI:
             self.serato_library_paths = valid_paths
             self.serato_library_path = valid_paths[0]  # Primary is first
             self.settings_manager.set_serato_library_paths(valid_paths)
-            print(f"✓ Set {len(valid_paths)} Serato library path(s)")
+            logger.info(f"✓ Set {len(valid_paths)} Serato library path(s)")
             for i, path in enumerate(valid_paths, 1):
-                print(f"  [{i}] {path}")
+                logger.info(f"  [{i}] {path}")
             return {
                 'success': True,
                 'message': f'Set {len(valid_paths)} library path(s)',
@@ -514,22 +519,22 @@ class MetadataUpdaterAPI:
                 if not lib_path.exists():
                     continue
 
-                print(f"  Searching in: {lib_path}")
+                logger.info(f"  Searching in: {lib_path}")
 
                 # Try exact filename match
                 for audio_file in lib_path.rglob(filename):
                     if audio_file.is_file():
-                        print(f"  ✓ Found at: {audio_file}")
+                        logger.info(f"  ✓ Found at: {audio_file}")
                         return str(audio_file)
 
                 # If exact filename not found, try case-insensitive search
                 filename_lower = filename.lower()
                 for audio_file in lib_path.rglob('*'):
                     if audio_file.is_file() and audio_file.name.lower() == filename_lower:
-                        print(f"  ✓ Found (case-insensitive) at: {audio_file}")
+                        logger.info(f"  ✓ Found (case-insensitive) at: {audio_file}")
                         return str(audio_file)
         except Exception as e:
-            print(f"Error resolving Serato filename '{filename}': {e}")
+            logger.error(f"Error resolving Serato filename '{filename}': {e}")
 
         return None
 
@@ -568,8 +573,8 @@ class MetadataUpdaterAPI:
             except Exception:
                 pass
 
-        print("🔍 Auto-detecting Serato database(s)...")
-        print(f"Searching in: {len(search_order)} locations")
+        logger.info("🔍 Auto-detecting Serato database(s)...")
+        logger.info(f"Searching in: {len(search_order)} locations")
 
         # Search for _Serato_ folder and collect all matches
         for base_path, location_type in search_order:
@@ -583,7 +588,7 @@ class MetadataUpdaterAPI:
                     path_str = str(serato_path)
                     if path_str not in found_libraries:  # Avoid duplicates
                         found_libraries.append(path_str)
-                        print(f"  ✓ Found {location_type} library: {serato_path}")
+                        logger.info(f"  ✓ Found {location_type} library: {serato_path}")
 
                 # Also search recursively for _Serato_ folder
                 # (limit depth to avoid scanning everything)
@@ -597,18 +602,18 @@ class MetadataUpdaterAPI:
                                 depth = len(item.relative_to(base_path).parts)
                                 if depth <= 2:  # Max 2 levels deep
                                     found_libraries.append(path_str)
-                                    print(f"  ✓ Found {location_type} library: {item}")
+                                    logger.info(f"  ✓ Found {location_type} library: {item}")
                 except Exception:
                     pass
 
             except Exception as e:
-                print(f"  ⚠ Error searching {base_path}: {e}")
+                logger.error(f"  ⚠ Error searching {base_path}: {e}")
                 continue
 
         if found_libraries:
-            print(f"✓ Found {len(found_libraries)} Serato database(s)")
+            logger.info(f"✓ Found {len(found_libraries)} Serato database(s)")
         else:
-            print("  ℹ No Serato database found. You can set it manually in settings.")
+            logger.info("  ℹ No Serato database found. You can set it manually in settings.")
 
         return found_libraries
 
@@ -620,7 +625,7 @@ class MetadataUpdaterAPI:
                 self._view.evaluate_js(js_cmd)
         except Exception as e:
             # Avoid raising exceptions that break background threads; log and continue
-            print(f"JS evaluation error: {e}")
+            logger.error(f"JS evaluation error: {e}")
 
     def _on_progress(self, progress: int):
         """Handle progress updates"""
@@ -649,7 +654,7 @@ class MetadataUpdaterAPI:
                     'metadata': metadata
                 })
             except Exception as _e:
-                print(f"Error storing processed file metadata: {_e}")
+                logger.error(f"Error storing processed file metadata: {_e}")
 
         self._safe_eval(f"window.onFileCompleted({index}, {successful}, {errors})")
     
@@ -672,7 +677,7 @@ class MetadataUpdaterAPI:
                     import subprocess
                     subprocess.run(['osascript', '-e', 'display notification "Action Required" with title "Metadata Updater"'], check=False)
             except Exception as e:
-                print(f"Failed to request user attention on macOS: {e}")
+                logger.error(f"Failed to request user attention on macOS: {e}")
 
     def _on_review_needed(self, file_path: str, candidates: List[Dict[str, Any]], best_match: Dict[str, Any]):
         """Handle manual review request when metadata sources differ"""
@@ -686,17 +691,17 @@ class MetadataUpdaterAPI:
             candidates_json = json.dumps(candidates)
             best_match_json = json.dumps(best_match)
 
-            print(f"DEBUG _on_review_needed: candidates_json={candidates_json}")
-            print(f"DEBUG _on_review_needed: best_match_json={best_match_json[:200]}...")
+            logger.info(f"DEBUG _on_review_needed: candidates_json={candidates_json}")
+            logger.info(f"DEBUG _on_review_needed: best_match_json={best_match_json[:200]}...")
 
             # Escape file path for JavaScript
             escaped_path = file_path.replace("'", "\\'")
 
             # Call frontend to show review modal
-            print(f"DEBUG _on_review_needed: Calling window.onReviewNeeded with {len(candidates)} candidates")
+            logger.info(f"DEBUG _on_review_needed: Calling window.onReviewNeeded with {len(candidates)} candidates")
             self._safe_eval(f"window.onReviewNeeded('{escaped_path}', {candidates_json}, {best_match_json})")
         except Exception as e:
-            print(f"Error handling review needed: {e}")
+            logger.error(f"Error handling review needed: {e}")
             import traceback
             traceback.print_exc()
 
@@ -705,14 +710,14 @@ class MetadataUpdaterAPI:
         self.processing_active = False
         import json
         try:
-            print(f"DEBUG: Sending {len(self.processed_files_metadata)} files to frontend")
-            print(f"DEBUG: Metadata: {self.processed_files_metadata}")
+            logger.info(f"DEBUG: Sending {len(self.processed_files_metadata)} files to frontend")
+            logger.info(f"DEBUG: Metadata: {self.processed_files_metadata}")
             metadata_json = json.dumps(self.processed_files_metadata)
             # Send processed files metadata to frontend safely
             # Use the safe eval helper which logs errors instead of raising
             self._safe_eval(f"window.onProcessingFinished({metadata_json})")
         except Exception as e:
-            print(f"Error serializing processed files metadata: {e}")
+            logger.error(f"Error serializing processed files metadata: {e}")
     
     def set_view_reference(self, view):
         """Set reference to the webview for callbacks"""
@@ -745,50 +750,50 @@ class MetadataUpdaterAPI:
                 """Handle file drop events with full paths and comprehensive logging"""
                 try:
                     # ===== COMPREHENSIVE LOGGING FOR DEBUGGING =====
-                    print("\n" + "="*70)
-                    print("DROP EVENT RECEIVED - Comprehensive Debug Info")
-                    print("="*70)
+                    logger.info("\n" + "="*70)
+                    logger.info("DROP EVENT RECEIVED - Comprehensive Debug Info")
+                    logger.info("="*70)
                     
                     # Log the entire event structure
-                    print(f"Event keys: {list(e.keys()) if isinstance(e, dict) else 'N/A'}")
+                    logger.info(f"Event keys: {list(e.keys()) if isinstance(e, dict) else 'N/A'}")
                     
                     data_transfer = e.get('dataTransfer', {})
-                    print(f"\nDataTransfer keys: {list(data_transfer.keys())}")
+                    logger.info(f"\nDataTransfer keys: {list(data_transfer.keys())}")
                     
                     # Log all available data types
                     if 'types' in data_transfer:
-                        print(f"DataTransfer types: {data_transfer['types']}")
+                        logger.info(f"DataTransfer types: {data_transfer['types']}")
                     
                     # Log files details
                     files = data_transfer.get('files', [])
-                    print(f"\nFiles count: {len(files)}")
+                    logger.info(f"\nFiles count: {len(files)}")
                     for idx, file in enumerate(files):
-                        print(f"\n  File {idx}:")
-                        print(f"    Keys: {list(file.keys())}")
+                        logger.info(f"\n  File {idx}:")
+                        logger.info(f"    Keys: {list(file.keys())}")
                         for key in sorted(file.keys()):
                             value = file[key]
                             # Truncate long values for readability
                             if isinstance(value, str) and len(value) > 100:
                                 value = value[:97] + "..."
-                            print(f"    {key}: {value}")
+                            logger.info(f"    {key}: {value}")
                     
                     # Log items if available
                     items = data_transfer.get('items', [])
                     if items:
-                        print(f"\nDataTransfer items count: {len(items)}")
+                        logger.info(f"\nDataTransfer items count: {len(items)}")
                         for idx, item in enumerate(items):
-                            print(f"  Item {idx}: {item}")
+                            logger.info(f"  Item {idx}: {item}")
                     
                     # Log raw data types
                     raw_data = data_transfer.get('data', {})
                     if raw_data:
-                        print(f"\nRaw data types available:")
+                        logger.info(f"\nRaw data types available:")
                         for dtype, dvalue in raw_data.items():
                             if isinstance(dvalue, str) and len(dvalue) > 100:
                                 dvalue = dvalue[:97] + "..."
-                            print(f"  {dtype}: {dvalue}")
+                            logger.info(f"  {dtype}: {dvalue}")
                     
-                    print("="*70 + "\n")
+                    logger.info("="*70 + "\n")
                     # ===== END LOGGING =====
 
                     # Extract file paths/names from dropped files
@@ -799,18 +804,18 @@ class MetadataUpdaterAPI:
                         # Try to get full path first
                         full_path = file.get('pywebviewFullPath')
                         if full_path:
-                            print(f"✓ Got pywebviewFullPath: {full_path}")
+                            logger.info(f"✓ Got pywebviewFullPath: {full_path}")
                             if full_path.lower().endswith(('.mp3', '.m4a')):
                                 file_paths.append(full_path)
                         else:
                             # No full path - likely Serato or other drag-drop source
                             file_name = file.get('name', 'unknown')
-                            print(f"⚠ No pywebviewFullPath. File: {file_name}")
+                            logger.info(f"⚠ No pywebviewFullPath. File: {file_name}")
                             
                             # For Serato and similar DJ apps, use the filename
                             # The file object might be used later if we get File API support
                             if file_name and file_name.lower().endswith(('.mp3', '.m4a')):
-                                print(f"  → Adding Serato file by name: {file_name}")
+                                logger.info(f"  → Adding Serato file by name: {file_name}")
                                 file_paths.append(file_name)
                                 serato_files.append({
                                     'name': file_name,
@@ -820,18 +825,18 @@ class MetadataUpdaterAPI:
                                 })
                             else:
                                 # Log what we got instead
-                                print(f"  ✗ File not supported. Available keys: {list(file.keys())}")
+                                logger.info(f"  ✗ File not supported. Available keys: {list(file.keys())}")
                                 for alt_key in ['path', 'webkitRelativePath', 'name', 'filename']:
                                     if alt_key in file and file[alt_key]:
-                                        print(f"    Alternative '{alt_key}': {file[alt_key]}")
+                                        logger.info(f"    Alternative '{alt_key}': {file[alt_key]}")
 
                     # Add files to the app
                     if file_paths:
-                        print(f"\n✓ Processing {len(file_paths)} valid audio files")
+                        logger.info(f"\n✓ Processing {len(file_paths)} valid audio files")
                         if serato_files:
-                            print(f"  → {len(serato_files)} from Serato DJ or similar DJ app")
+                            logger.info(f"  → {len(serato_files)} from Serato DJ or similar DJ app")
                         result = self.add_files(file_paths)
-                        print(f"  Result: {result.get('message', 'Success')}")
+                        logger.info(f"  Result: {result.get('message', 'Success')}")
                         
                         # Notify frontend via JS callback
                         if hasattr(self, '_view') and self._view and result.get('success'):
@@ -840,30 +845,30 @@ class MetadataUpdaterAPI:
                                 # Ensure proper JS boolean/null literals
                                 self._view.evaluate_js(f"if (window.handleDroppedFiles) window.handleDroppedFiles({payload});")
                             except Exception as _e:
-                                print(f"Error sending drop result to frontend: {_e}")
+                                logger.error(f"Error sending drop result to frontend: {_e}")
                     else:
-                        print("\n✗ No valid audio files found in drop event")
-                        print("  Files may be from unsupported sources or formats")
-                        print("  Supported: .mp3, .m4a files from filesystem, Serato DJ, or other drag sources")
+                        logger.info("\n✗ No valid audio files found in drop event")
+                        logger.info("  Files may be from unsupported sources or formats")
+                        logger.info("  Supported: .mp3, .m4a files from filesystem, Serato DJ, or other drag sources")
                         
                 except Exception as e:
-                    print(f"Error in drop handler: {e}")
+                    logger.error(f"Error in drop handler: {e}")
                     import traceback
                     traceback.print_exc()
 
             # Bind the drop event handler only if view and DOM are ready
             if not hasattr(self, '_view') or not self._view:
-                print("View not set; deferring drag-and-drop setup")
+                logger.info("View not set; deferring drag-and-drop setup")
                 return
 
             if not hasattr(self._view, 'dom'):
-                print("View DOM not ready; deferring drag-and-drop setup")
+                logger.info("View DOM not ready; deferring drag-and-drop setup")
                 return
 
             self._view.dom.document.events.drop += DOMEventHandler(on_drop, True, True)
-            print("Drag-and-drop handler registered successfully")
+            logger.info("Drag-and-drop handler registered successfully")
         except Exception as e:
-            print(f"Error setting up drag-and-drop: {e}")
+            logger.error(f"Error setting up drag-and-drop: {e}")
             import traceback
             traceback.print_exc()
 
@@ -874,7 +879,7 @@ class MetadataUpdaterAPI:
             from webview import FileDialog
             # Use pywebview's file dialog to get full file paths
             if not self._view:
-                print("Error: View not initialized")
+                logger.error("Error: View not initialized")
                 return []
             
             file_types = ('Audio Files (*.mp3;*.m4a)', 'All files (*.*)')
@@ -888,7 +893,7 @@ class MetadataUpdaterAPI:
                 return result
             return []
         except Exception as e:
-            print(f"Error in choose_files: {e}")
+            logger.error(f"Error in choose_files: {e}")
             import traceback
             traceback.print_exc()
             return []
@@ -900,7 +905,7 @@ class MetadataUpdaterAPI:
             from webview import FileDialog
             # Use pywebview's folder dialog to get directory path
             if not self._view:
-                print("Error: View not initialized")
+                logger.error("Error: View not initialized")
                 return None
             
             result = self._view.create_file_dialog(
@@ -913,7 +918,7 @@ class MetadataUpdaterAPI:
                 return result[0] if isinstance(result, list) else result
             return None
         except Exception as e:
-            print(f"Error in choose_folder: {e}")
+            logger.error(f"Error in choose_folder: {e}")
             import traceback
             traceback.print_exc()
             return None

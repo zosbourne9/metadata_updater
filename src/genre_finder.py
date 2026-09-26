@@ -49,7 +49,7 @@ class GenreFinder:
                 self.cache_manager.clear('genre')
 
         except Exception as e:
-            print(f"Error initializing GenreFinder: {e}")
+            logger.error(f"Error initializing GenreFinder: {e}")
             self.enhanced_detector = None
             self.cache_manager = None
 
@@ -204,7 +204,7 @@ class GenreFinder:
             return result
             
         except Exception as e:
-            print(f"Error processing LLM genre result: {e}")
+            logger.error(f"Error processing LLM genre result: {e}")
             return llm_result  # Return original if processing fails
     
     def map_genre_to_categories(self, llm_genre, categorized_genres):
@@ -347,7 +347,7 @@ class GenreFinder:
             return ' '.join(word.capitalize() for word in genre.split()) if genre else genre
 
         except Exception as e:
-            print(f"Error standardizing genre: {e}")
+            logger.error(f"Error standardizing genre: {e}")
             return genre
 
     def get_cached_artist_genres(self, artist_name):
@@ -365,7 +365,7 @@ class GenreFinder:
             return None, None
                     
         except Exception as e:
-            print(f"Error checking artist cache: {e}")
+            logger.error(f"Error checking artist cache: {e}")
             return None, None
 
     def _cache_and_save_results(self, cleaned_artist, query_title, genre, subgenres, audio_file):
@@ -395,7 +395,7 @@ class GenreFinder:
             return False
                 
         except Exception as e:
-            print(f"Error in cache_and_save_results: {e}")
+            logger.error(f"Error in cache_and_save_results: {e}")
             return False
 
     def cache_artist_genres(self, artist_name, artist_id, genre, subgenres):
@@ -410,11 +410,11 @@ class GenreFinder:
                     'timestamp': time.time()
                 }
                 
-                print(f"Caching genres for {artist_name} (ID: {artist_id}): {cache_data}")
+                logger.info(f"Caching genres for {artist_name} (ID: {artist_id}): {cache_data}")
                 self.cache_manager.set('artist_genre', artist_name.lower().strip(), cache_data)
             
         except Exception as e:
-            print(f"Error caching artist genres: {e}")
+            logger.error(f"Error caching artist genres: {e}")
 
     def _write_genres_to_file(self, audio_file, genre, subgenres):
         """Write genre information to audio file."""
@@ -424,14 +424,14 @@ class GenreFinder:
                 'subgenres': subgenres
             }
             self.utility_tools.set_metadata(audio_file, metadata)
-            print(f"Genre information written to file: {genre} | {subgenres}")
+            logger.info(f"Genre information written to file: {genre} | {subgenres}")
         except Exception as e:
-            print(f"Error writing genres to file: {e}")
+            logger.error(f"Error writing genres to file: {e}")
 
     def clear_cache(self):
         """Clear the genre cache."""
         try:
             self.metadata_cache.clear()
-            print("Genre cache cleared successfully")
+            logger.info("Genre cache cleared successfully")
         except Exception as e:
-            print(f"Error clearing genre cache: {e}")
+            logger.error(f"Error clearing genre cache: {e}")
